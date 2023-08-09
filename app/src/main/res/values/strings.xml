@@ -1,0 +1,87 @@
+<resources>
+    <string name="app_name">MKRemoteGW</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="save">Save</string>
+    <string name="mqtt_connecting">Connecting...</string>
+    <string name="mqtt_connect_failed">Connect Failed</string>
+    <string name="network_error">Network error,please check.</string>
+    <string name="device_offline">Device is offline,please check!</string>
+    <string name="main_welcome">Please add new device!</string>
+    <string name="main_add_device">Add Devices</string>
+    <string name="add_device_title">Add Device</string>
+    <string name="main_exit_tips">Are you sure you want to quit?</string>
+    <string name="setting_syncing">syncing</string>
+
+    <string name="password_null">Password cannot be empty!</string>
+    <string name="mqtt_verify_client_id_empty">ClientId error</string>
+    <string name="mqtt_verify_host">Host error</string>
+    <string name="mqtt_verify_port">Port range is 1~65535</string>
+    <string name="mqtt_verify_port_empty">Port error</string>
+    <string name="mqtt_verify_firmware_file_url">Firmware file Url error</string>
+    <string name="mqtt_verify_ca">CA error</string>
+    <string name="mqtt_verify_topic_subscribe">Subscribed Topic error</string>
+    <string name="mqtt_verify_topic_publish">Published Topic error</string>
+    <string name="mqtt_verify_client_key">Client Key error</string>
+    <string name="mqtt_verify_client_cert">Client Cert error</string>
+    <string name="success">Success</string>
+    <string name="update_success">Update Success</string>
+    <string name="update_failed">Update Failed</string>
+    <string name="device_state_offline">Off-line</string>
+    <string name="device_state_online">On-line</string>
+    <string name="mqtt_connecting_title">Connecting now</string>
+    <string name="mqtt_connecting_content">Make sure your phone and device are \nas close to your router as possible.</string>
+    <string name="mqtt_connecting_timeout">connect timeout</string>
+
+    <string name="modify_device_name_conn_success">Connection successful</string>
+    <string name="modify_device_name_done">Done</string>
+    <string name="modify_device_name_empty">Device name can\'t be blank</string>
+
+
+    <string name="more_modify_name_tips">Device name can\'t be blank</string>
+    <string name="more_device_info">Device information</string>
+
+    <string name="device_info_manufacturer">Manufacturer</string>
+    <string name="device_info_device_name">Device name</string>
+    <string name="device_info_product_model">Product Model</string>
+    <string name="device_info_hardware_version">Hardware Version</string>
+    <string name="device_info_software_version">Software Version</string>
+    <string name="device_info_firmware_version">Firmware Version</string>
+    <string name="device_info_sta_mac">WIFI STA MAC</string>
+    <string name="device_info_bt_mac">BT MAC</string>
+
+    <string name="permission_storage_close_content">Please find it in cellphone setting- permission, and allow MKRemoteGW use the Storage and location permission</string>
+    <string name="permission_ble_close_content">Please find it in cellphone setting- permission, and allow MKRemoteGW use the bluetooth and location permission</string>
+    <string name="permission_open">OK</string>
+    <string name="permission_storage_need_content">MKRemoteGW requires access to Storage and location permission. If the permissions are not on, MKRemoteGW cannot be used normally.</string>
+    <string name="location_need_title">Turn on Location permission</string>
+    <string name="location_need_content">After that, MKRemoteGW could search and connect with the device</string>
+    <string name="permission_location_close_content">Please find it in cellphone setting- permission, and allow MKRemoteGW use the Location permission</string>
+    <string name="permission_location_need_content">MKRemoteGW requires access to Location permission. If the permissions are not on, MKRemoteGW cannot be used normally.</string>
+    <string name="permission_ble_content">MKRemoteGW requires access to bluetooth scan contract and location permission. If the permissions are not on, MKRemoteGW cannot be used normally.</string>
+    
+    
+    <string name="version_info">Version:%s</string>
+    <string name="about_moko_name">MOKO TECHNOLOGY LTD.</string>
+    <string name="company_website">www.mokosmart.com</string>
+    <string name="scan_device_total">Total %d pieces of data</string>
+    <string name="bxp_t_h"><![CDATA[BXP - T&H]]></string>
+    <string name="rssi_filter">*The device will uplink valid ADV data with RSSI no less than %ddBm.</string>
+    <string name="filter_adv_name_raw_data"><![CDATA[ADV name&Raw data]]></string>
+    <string name="ntp_timezone"><![CDATA[NTP & Timezone]]></string>
+    <string name="wifi_settings">WIFI Settings</string>
+    <string name="mqtt_settings">MQTT Settings</string>
+    <string name="network_settings">Network Settings</string>
+    <string name="scanner_filter">Scanner Filter</string>
+    <string name="device_information">Device Information</string>
+    <string name="indicator_settings">Indicator settings</string>
+    <string name="network_status_report_interval">Network status report interval</string>
+    <string name="reconnect_timeout">Reconnect timeout</string>
+    <string name="communication_timeout">Communication timeout</string>
+    <string name="data_report_timeout">Data report timeout</string>
+    <string name="system_time">System time</string>
+    <string name="modify_network_settings">Modify Network Settings</string>
+    <string name="reset_device_by_button">Reset device by button</string>
+
+
+</resources>

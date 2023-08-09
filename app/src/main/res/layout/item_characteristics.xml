@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white_ffffff"
+    android:paddingLeft="12dp"
+    android:paddingTop="5dp"
+    android:paddingRight="12dp"
+    android:paddingBottom="5dp">
+
+    <TextView
+        android:id="@+id/tv_characteristics_uuid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Characteristics UUID:0xAA00"
+        android:textColor="@color/black_333333"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_characteristics_properties"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Properties:NOTIFY,READ,WRITE"
+        android:textColor="@color/black_333333"
+        android:textSize="15sp"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/iv_read"
+        app:layout_constraintTop_toBottomOf="@id/tv_characteristics_uuid" />
+
+    <TextView
+        android:id="@+id/tv_characteristics_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Value:"
+        android:textColor="@color/black_333333"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_characteristics_properties" />
+
+    <ImageView
+        android:id="@+id/iv_notify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:src="@drawable/ic_notify_close"
+        app:layout_constraintBottom_toBottomOf="@id/tv_characteristics_properties"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_characteristics_properties" />
+
+    <ImageView
+        android:id="@+id/iv_write"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:src="@drawable/ic_write"
+        app:layout_constraintBottom_toBottomOf="@id/tv_characteristics_properties"
+        app:layout_constraintRight_toLeftOf="@id/iv_notify"
+        app:layout_constraintTop_toTopOf="@id/tv_characteristics_properties" />
+
+    <ImageView
+        android:id="@+id/iv_read"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:src="@drawable/ic_read"
+        app:layout_constraintBottom_toBottomOf="@id/tv_characteristics_properties"
+        app:layout_constraintRight_toLeftOf="@id/iv_write"
+        app:layout_constraintTop_toTopOf="@id/tv_characteristics_properties" />
+</androidx.constraintlayout.widget.ConstraintLayout>

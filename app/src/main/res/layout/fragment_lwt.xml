@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white_ffffff"
+    android:minHeight="270dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp">
+
+    <CheckBox
+        android:id="@+id/cb_lwt"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:button="@null"
+        android:drawableRight="@drawable/selector_cb_btn"
+        android:text="LWT"
+        android:textColor="@color/black_333333"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/cb_lwt_retain"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:button="@null"
+        android:drawableRight="@drawable/selector_cb_btn"
+        android:text="Retain"
+        android:textColor="@color/black_333333"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cb_lwt" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="Qos"
+        android:textColor="@color/black_333333"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@id/rg_qos"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/rg_qos" />
+
+    <RadioGroup
+        android:id="@+id/rg_qos"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape_stroke_rg_bg"
+        android:orientation="horizontal"
+        android:padding="1px"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cb_lwt_retain"
+        app:layout_constraintWidth_percent="0.7">
+
+        <RadioButton
+            android:id="@+id/rb_qos_1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:background="@drawable/selector_rb_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp" />
+
+        <RadioButton
+            android:id="@+id/rb_qos_2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:background="@drawable/selector_rb_bg"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp" />
+
+        <RadioButton
+            android:id="@+id/rb_qos_3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:background="@drawable/selector_rb_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="2"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:text="Topic"
+        android:textColor="@color/black_333333"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@id/et_lwt_topic"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_lwt_topic" />
+
+    <EditText
+        android:id="@+id/et_lwt_topic"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape_radius_edit_bg"
+        android:hint="1-128 Characters"
+        android:maxLength="128"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:singleLine="true"
+        android:text=""
+        android:textColor="@color/black_333333"
+        android:textSize="15sp"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rg_qos"
+        app:layout_constraintWidth_percent="0.65" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="Payload"
+        android:textColor="@color/black_333333"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@id/et_lwt_payload"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_lwt_payload" />
+
+    <EditText
+        android:id="@+id/et_lwt_payload"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape_radius_edit_bg"
+        android:hint="1-128 Characters"
+        android:maxLength="128"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:singleLine="true"
+        android:text=""
+        android:textColor="@color/black_333333"
+        android:textSize="15sp"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_lwt_topic"
+        app:layout_constraintWidth_percent="0.65" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

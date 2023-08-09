@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_ffffff"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:background="@color/blue_0188cc">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:onClick="onBack"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/indicator_settings"
+            android:textColor="@color/white_ffffff"
+            android:textSize="17sp" />
+
+        <ImageView
+            android:id="@+id/iv_save"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:onClick="onSave"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:src="@drawable/ic_save" />
+    </RelativeLayout>
+
+
+    <CheckBox
+        android:id="@+id/cb_ble_broadcast"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:button="@null"
+        android:drawableRight="@drawable/selector_cb_btn"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:text="Bluetooth advertising indicator" />
+
+    <View style="@style/divider_line" />
+
+    <CheckBox
+        android:id="@+id/cb_ble_connected"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:button="@null"
+        android:drawableRight="@drawable/selector_cb_btn"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:text="Bluetooth connected indicator" />
+
+    <View style="@style/divider_line" />
+
+    <CheckBox
+        android:id="@+id/cb_server_connecting"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:button="@null"
+        android:drawableRight="@drawable/selector_cb_btn"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:text="Server connecting indicator" />
+
+    <View style="@style/divider_line" />
+
+    <CheckBox
+        android:id="@+id/cb_server_connected"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:button="@null"
+        android:drawableRight="@drawable/selector_cb_btn"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:text="Server connected indicator" />
+
+    <View style="@style/divider_line" />
+</LinearLayout>
