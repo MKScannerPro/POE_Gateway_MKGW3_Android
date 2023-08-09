@@ -10,14 +10,14 @@ android {
 
     defaultConfig {
         if (!isLibrary.toBoolean()) {
-            applicationId "com.moko.mkremotegw"
+            applicationId "com.moko.mkgw3"
         }
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 1
+        versionName "1.0.0"
         def formatDate = new Date().format("yyyyMMddHHmm")
-        setProperty("archivesBaseName", "MKRemoteGW_${versionName}_${formatDate}")
+        setProperty("archivesBaseName", "MKGW3_${versionName}_${formatDate}")
     }
 
     buildTypes {
@@ -68,7 +68,7 @@ android {
                 // 修改aar名称
                 variant.outputs.all { output ->
                     def formatDate = new Date().format("yyyyMMddHHmm")
-                    outputFileName = "MKRemoteGW_${android.defaultConfig.versionName}_${formatDate}.aar"
+                    outputFileName = "MKGW3_${android.defaultConfig.versionName}_${formatDate}.aar"
                 }
                 // 复制aar到指定目录
                 variant.assemble.doLast {
