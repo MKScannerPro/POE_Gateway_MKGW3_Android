@@ -66,7 +66,6 @@ public class DeviceSettingActivity extends BaseActivity<ActivityDeviceSettingRem
             if (!(source + "").matches(FILTER_ASCII)) {
                 return "";
             }
-
             return null;
         };
         mMokoDevice = (MokoDevice) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);

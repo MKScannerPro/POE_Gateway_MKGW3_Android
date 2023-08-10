@@ -49,8 +49,11 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_WIFI_EAP_PASSWORD(0x45),
     KEY_WIFI_EAP_DOMAIN_ID(0x46),
     KEY_WIFI_EAP_VERIFY_SERVICE_ENABLE(0x47),
-    KEY_NETWORK_DHCP(0x4B),
-    KEY_NETWORK_IP_INFO(0x4C),
+    KEY_WIFI_DHCP(0x4B),
+    KEY_WIFI_IP_INFO(0x4C),
+    KEY_NETWORK_TYPE(0x4D),
+    KEY_ETHERNET_DHCP(0x4E),
+    KEY_ETHERNET_IP_INFO(0x4F),
     // OTHER
     KEY_FILTER_RSSI(0x60),
     KEY_FILTER_RELATIONSHIP(0x61),
@@ -59,9 +62,16 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_FILTER_MAC_RULES(0x64),
     KEY_FILTER_NAME_PRECISE(0x65),
     KEY_FILTER_NAME_REVERSE(0x66),
+
+    KEY_I_BEACON_SWITCH(0x70),
+    KEY_I_BEACON_MAJOR(0x71),
+    KEY_I_BEACON_MINOR(0x72),
+    KEY_I_BEACON_UUID(0x73),
+    KEY_I_BEACON_AD_INTERVAL(0x74),
+    KEY_I_BEACON_TX_POWER(0x75),
     ;
 
-    private int paramsKey;
+    private final int paramsKey;
 
     ParamsKeyEnum(int paramsKey) {
         this.paramsKey = paramsKey;

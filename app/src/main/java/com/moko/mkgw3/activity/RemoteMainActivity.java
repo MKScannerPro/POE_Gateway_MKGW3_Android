@@ -74,13 +74,13 @@ public class RemoteMainActivity extends BaseActivity<ActivityMainRemoteBinding> 
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             // 优先保存到SD卡中
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                PATH_LOGCAT = getExternalFilesDir(null).getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MKScannerPro" : "MKRemoteGW");
+                PATH_LOGCAT = getExternalFilesDir(null).getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MKScannerPro" : "MKGW3");
             } else {
-                PATH_LOGCAT = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MKScannerPro" : "MKRemoteGW");
+                PATH_LOGCAT = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MKScannerPro" : "MKGW3");
             }
         } else {
             // 如果SD卡不存在，就保存到本应用的目录下
-            PATH_LOGCAT = getFilesDir().getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MKScannerPro" : "MKRemoteGW");
+            PATH_LOGCAT = getFilesDir().getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MKScannerPro" : "MKGW3");
         }
         MokoSupport.getInstance().init(getApplicationContext());
         MQTTSupport.getInstance().init(getApplicationContext());
@@ -272,14 +272,12 @@ public class RemoteMainActivity extends BaseActivity<ActivityMainRemoteBinding> 
     }
 
     public void setAppMQTTConfig(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         startActivityForResult(new Intent(this, SetAppMQTTActivity.class), AppConstants.REQUEST_CODE_MQTT_CONFIG_APP);
     }
 
     public void mainAddDevices(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         if (TextUtils.isEmpty(mAppMqttConfigStr)) {
             startActivityForResult(new Intent(this, SetAppMQTTActivity.class), AppConstants.REQUEST_CODE_MQTT_CONFIG_APP);
             return;
@@ -384,13 +382,10 @@ public class RemoteMainActivity extends BaseActivity<ActivityMainRemoteBinding> 
     }
 
     private void updateDeviceNetworkStatus(MQTTMessageArrivedEvent event) {
-        if (devices.isEmpty()) {
-            return;
-        }
+        if (devices.isEmpty()) return;
         final String topic = event.getTopic();
         final String message = event.getMessage();
-        if (TextUtils.isEmpty(message))
-            return;
+        if (TextUtils.isEmpty(message)) return;
         int msg_id;
         try {
             JsonObject object = new Gson().fromJson(message, JsonObject.class);
@@ -401,8 +396,7 @@ public class RemoteMainActivity extends BaseActivity<ActivityMainRemoteBinding> 
             return;
         }
         // 收到任何信息都认为在线，除了遗愿信息
-        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_SCAN_RESULT && isDurationVoid())
-            return;
+        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_SCAN_RESULT && isDurationVoid()) return;
         Type type = new TypeToken<MsgNotify<Object>>() {
         }.getType();
         MsgNotify<Object> msgNotify = new Gson().fromJson(message, type);
@@ -425,7 +419,8 @@ public class RemoteMainActivity extends BaseActivity<ActivityMainRemoteBinding> 
                     Type netType = new TypeToken<MsgNotify<JsonObject>>() {
                     }.getType();
                     MsgNotify<JsonObject> netMsgNotify = new Gson().fromJson(message, netType);
-                    device.netStatus = netMsgNotify.data.get("net_status").getAsInt();
+                    device.netStatus = netMsgNotify.data.get("wifi_rssi").getAsInt();
+                    device.networkType = netMsgNotify.data.get("net_interface").getAsInt();
                 }
                 device.isOnline = true;
                 if (mHandler.hasMessages(device.id)) {

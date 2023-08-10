@@ -79,7 +79,7 @@ public class SSLFragment extends Fragment {
         });
         values = new ArrayList<>();
         values.add("CA signed server certificate");
-        values.add("CA certificate file");
+        values.add("CA certificate");
         values.add("Self signed certificates");
         if (connectMode > 0) {
             selected = connectMode - 1;

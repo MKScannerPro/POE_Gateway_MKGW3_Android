@@ -47,8 +47,8 @@ public class NetworkSettingsActivity extends BaseActivity<ActivityNetworkSetting
         showLoadingProgressDialog();
         mBind.tvTitle.postDelayed(() -> {
             List<OrderTask> orderTasks = new ArrayList<>();
-            orderTasks.add(OrderTaskAssembler.getNetworkDHCP());
-            orderTasks.add(OrderTaskAssembler.getNetworkIPInfo());
+            orderTasks.add(OrderTaskAssembler.getWifiDHCP());
+            orderTasks.add(OrderTaskAssembler.getWifiIPInfo());
             MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         }, 500);
     }
@@ -91,12 +91,12 @@ public class NetworkSettingsActivity extends BaseActivity<ActivityNetworkSetting
                                 // write
                                 int result = value[4] & 0xFF;
                                 switch (configKeyEnum) {
-                                    case KEY_NETWORK_IP_INFO:
+                                    case KEY_WIFI_IP_INFO:
                                         if (result != 1) {
                                             mSavedParamsError = true;
                                         }
                                         break;
-                                    case KEY_NETWORK_DHCP:
+                                    case KEY_WIFI_DHCP:
                                         if (result != 1) {
                                             mSavedParamsError = true;
                                         }
@@ -113,12 +113,12 @@ public class NetworkSettingsActivity extends BaseActivity<ActivityNetworkSetting
                                     return;
                                 // read
                                 switch (configKeyEnum) {
-                                    case KEY_NETWORK_DHCP:
+                                    case KEY_WIFI_DHCP:
                                         int enable = value[4];
                                         mBind.cbDhcp.setChecked(enable == 1);
                                         mBind.clIp.setVisibility(enable == 1 ? View.GONE : View.VISIBLE);
                                         break;
-                                    case KEY_NETWORK_IP_INFO:
+                                    case KEY_WIFI_IP_INFO:
                                         if (length == 16) {
                                             String ip = String.format(Locale.getDefault(), "%d.%d.%d.%d",
                                                     value[4] & 0xFF, value[5] & 0xFF, value[6] & 0xFF, value[7] & 0xFF);
@@ -204,9 +204,9 @@ public class NetworkSettingsActivity extends BaseActivity<ActivityNetworkSetting
                     MokoUtils.int2HexString(Integer.parseInt(dnsArray[1])),
                     MokoUtils.int2HexString(Integer.parseInt(dnsArray[2])),
                     MokoUtils.int2HexString(Integer.parseInt(dnsArray[3])));
-            orderTasks.add(OrderTaskAssembler.setNetworkIPInfo(ipHex, maskHex, gatewayHex, dnsHex));
+            orderTasks.add(OrderTaskAssembler.setWifiIPInfo(ipHex, maskHex, gatewayHex, dnsHex));
         }
-        orderTasks.add(OrderTaskAssembler.setNetworkDHCP(mBind.cbDhcp.isChecked() ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.setWifiDHCP(mBind.cbDhcp.isChecked() ? 1 : 0));
         MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
 
     }

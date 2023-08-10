@@ -73,11 +73,12 @@
     <string name="mqtt_settings">MQTT Settings</string>
     <string name="network_settings">Network Settings</string>
     <string name="scanner_filter">Scanner Filter</string>
+    <string name="advertise_iBeacon">Advertise iBeacon</string>
     <string name="device_information">Device Information</string>
     <string name="indicator_settings">Indicator settings</string>
     <string name="network_status_report_interval">Network status report interval</string>
     <string name="reconnect_timeout">Reconnect timeout</string>
-    <string name="communication_timeout">Communication timeout</string>
+    <string name="communicate_timeout">Communicate timeout</string>
     <string name="data_report_timeout">Data report timeout</string>
     <string name="system_time">System time</string>
     <string name="modify_network_settings">Modify Network Settings</string>

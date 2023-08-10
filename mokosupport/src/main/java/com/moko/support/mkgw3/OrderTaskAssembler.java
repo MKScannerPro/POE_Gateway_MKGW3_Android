@@ -1,5 +1,7 @@
 package com.moko.support.mkgw3;
 
+import androidx.annotation.IntRange;
+
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.support.mkgw3.entity.ParamsKeyEnum;
 import com.moko.support.mkgw3.entity.ParamsLongKeyEnum;
@@ -13,8 +15,6 @@ import com.moko.support.mkgw3.task.SetPasswordTask;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import androidx.annotation.IntRange;
 
 public class OrderTaskAssembler {
     ///////////////////////////////////////////////////////////////////////////
@@ -268,15 +268,27 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask getNetworkDHCP() {
+    public static OrderTask getWifiDHCP() {
         ParamsTask task = new ParamsTask();
-        task.setData(ParamsKeyEnum.KEY_NETWORK_DHCP);
+        task.setData(ParamsKeyEnum.KEY_WIFI_DHCP);
         return task;
     }
 
-    public static OrderTask getNetworkIPInfo() {
+    public static OrderTask getWifiIPInfo() {
         ParamsTask task = new ParamsTask();
-        task.setData(ParamsKeyEnum.KEY_NETWORK_IP_INFO);
+        task.setData(ParamsKeyEnum.KEY_WIFI_IP_INFO);
+        return task;
+    }
+
+    public static OrderTask getEthernetDHCP() {
+        ParamsTask task = new ParamsTask();
+        task.setData(ParamsKeyEnum.KEY_ETHERNET_DHCP);
+        return task;
+    }
+
+    public static OrderTask getEthernetIPInfo() {
+        ParamsTask task = new ParamsTask();
+        task.setData(ParamsKeyEnum.KEY_ETHERNET_IP_INFO);
         return task;
     }
 
@@ -328,10 +340,82 @@ public class OrderTaskAssembler {
         return task;
     }
 
+    public static OrderTask getIBeaconEnable() {
+        ParamsTask task = new ParamsTask();
+        task.setData(ParamsKeyEnum.KEY_I_BEACON_SWITCH);
+        return task;
+    }
+
+    public static OrderTask getIBeaconMajor() {
+        ParamsTask task = new ParamsTask();
+        task.setData(ParamsKeyEnum.KEY_I_BEACON_MAJOR);
+        return task;
+    }
+
+    public static OrderTask getIBeaconMinor() {
+        ParamsTask task = new ParamsTask();
+        task.setData(ParamsKeyEnum.KEY_I_BEACON_MINOR);
+        return task;
+    }
+
+    public static OrderTask getIBeaconUUid() {
+        ParamsTask task = new ParamsTask();
+        task.setData(ParamsKeyEnum.KEY_I_BEACON_UUID);
+        return task;
+    }
+
+    public static OrderTask getIBeaconAdInterval() {
+        ParamsTask task = new ParamsTask();
+        task.setData(ParamsKeyEnum.KEY_I_BEACON_AD_INTERVAL);
+        return task;
+    }
+
+    public static OrderTask getIBeaconTxPower() {
+        ParamsTask task = new ParamsTask();
+        task.setData(ParamsKeyEnum.KEY_I_BEACON_TX_POWER);
+        return task;
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////
     // WRITE
     ///////////////////////////////////////////////////////////////////////////
+
+    public static OrderTask setIBeaconEnable(@IntRange(from = 0, to = 1) int enable) {
+        ParamsTask task = new ParamsTask();
+        task.setIBeaconEnable(enable);
+        return task;
+    }
+
+    public static OrderTask setIBeaconMajor(@IntRange(from = 0, to = 65535) int major) {
+        ParamsTask task = new ParamsTask();
+        task.setIBeaconMajor(major);
+        return task;
+    }
+
+    public static OrderTask setIBeaconMinor(@IntRange(from = 0, to = 65535) int minor) {
+        ParamsTask task = new ParamsTask();
+        task.setIBeaconMinor(minor);
+        return task;
+    }
+
+    public static OrderTask setIBeaconUuid(String uuid) {
+        ParamsTask task = new ParamsTask();
+        task.setIBeaconUuid(uuid);
+        return task;
+    }
+
+    public static OrderTask setIBeaconAdInterval(@IntRange(from = 1, to = 100) int interval) {
+        ParamsTask task = new ParamsTask();
+        task.setIBeaconAdInterval(interval);
+        return task;
+    }
+
+    public static OrderTask setIBeaconTxPower(@IntRange(from = 0, to = 15) int txPower) {
+        ParamsTask task = new ParamsTask();
+        task.setIBeaconTxPower(txPower);
+        return task;
+    }
 
     public static OrderTask reboot() {
         ParamsTask task = new ParamsTask();
@@ -563,15 +647,27 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setNetworkDHCP(@IntRange(from = 0, to = 1) int enable) {
+    public static OrderTask setWifiDHCP(@IntRange(from = 0, to = 1) int enable) {
         ParamsTask task = new ParamsTask();
-        task.setNetworkDHCP(enable);
+        task.setWifiDHCP(enable);
         return task;
     }
 
-    public static OrderTask setNetworkIPInfo(String ip, String sbNetworkMask, String gateway, String dns) {
+    public static OrderTask setWifiIPInfo(String ip, String sbNetworkMask, String gateway, String dns) {
         ParamsTask task = new ParamsTask();
-        task.setNetworkIPInfo(ip, sbNetworkMask, gateway, dns);
+        task.setWifiIPInfo(ip, sbNetworkMask, gateway, dns);
+        return task;
+    }
+
+    public static OrderTask setEthernetDHCP(@IntRange(from = 0, to = 1) int enable) {
+        ParamsTask task = new ParamsTask();
+        task.setEthernetDHCP(enable);
+        return task;
+    }
+
+    public static OrderTask setEthernetIPInfo(String ip, String sbNetworkMask, String gateway, String dns) {
+        ParamsTask task = new ParamsTask();
+        task.setEthernetIPInfo(ip, sbNetworkMask, gateway, dns);
         return task;
     }
 
@@ -668,6 +764,18 @@ public class OrderTaskAssembler {
     public static OrderTask setWifiClientKey(File file) throws Exception {
         ParamsTask task = new ParamsTask();
         task.setFile(ParamsLongKeyEnum.KEY_WIFI_CLIENT_KEY, file);
+        return task;
+    }
+
+    public static OrderTask getNetworkType() {
+        ParamsTask task = new ParamsTask();
+        task.setData(ParamsKeyEnum.KEY_NETWORK_TYPE);
+        return task;
+    }
+
+    public static OrderTask setNetworkType(@IntRange(from = 0, to = 1) int type) {
+        ParamsTask task = new ParamsTask();
+        task.setNetworkType(type);
         return task;
     }
 }

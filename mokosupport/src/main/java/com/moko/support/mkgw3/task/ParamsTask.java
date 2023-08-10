@@ -1,5 +1,7 @@
 package com.moko.support.mkgw3.task;
 
+import androidx.annotation.IntRange;
+
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.support.mkgw3.MokoSupport;
@@ -11,8 +13,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import androidx.annotation.IntRange;
 
 public class ParamsTask extends OrderTask {
     public byte[] data;
@@ -27,60 +27,7 @@ public class ParamsTask extends OrderTask {
     }
 
     public void setData(ParamsKeyEnum key) {
-        switch (key) {
-            case KEY_PASSWORD:
-            case KEY_RESET_PARAMS_TYPE:
-            case KEY_DEVICE_NAME:
-            case KEY_PRODUCT_MODEL:
-            case KEY_HARDWARE_VERSION:
-            case KEY_MANUFACTURER:
-            case KEY_BLE_MAC:
-            case KEY_WIFI_MAC:
-                // ====TEST
-            case KEY_PRODUCT_TEST_BUTTON_STATE:
-            case KEY_PRODUCT_TEST_DEVICE_STATE:
-                // ====
-            case KEY_INDICATOR_SWITCH:
-            case KEY_NTP_ENABLE:
-            case KEY_NTP_URL:
-            case KEY_NTP_TIME_ZONE:
-                // MQTT
-            case KEY_MQTT_HOST:
-            case KEY_MQTT_PORT:
-            case KEY_MQTT_CLIENT_ID:
-            case KEY_MQTT_CLEAN_SESSION:
-            case KEY_MQTT_KEEP_ALIVE:
-            case KEY_MQTT_QOS:
-            case KEY_MQTT_SUBSCRIBE_TOPIC:
-            case KEY_MQTT_PUBLISH_TOPIC:
-            case KEY_MQTT_LWT_ENABLE:
-            case KEY_MQTT_LWT_QOS:
-            case KEY_MQTT_LWT_RETAIN:
-            case KEY_MQTT_LWT_TOPIC:
-            case KEY_MQTT_LWT_PAYLOAD:
-            case KEY_MQTT_CONNECT_MODE:
-                // WIFI
-            case KEY_WIFI_SECURITY_TYPE:
-            case KEY_WIFI_SSID:
-            case KEY_WIFI_PASSWORD:
-            case KEY_WIFI_EAP_TYPE:
-            case KEY_WIFI_EAP_USERNAME:
-            case KEY_WIFI_EAP_PASSWORD:
-            case KEY_WIFI_EAP_DOMAIN_ID:
-            case KEY_WIFI_EAP_VERIFY_SERVICE_ENABLE:
-            case KEY_NETWORK_DHCP:
-            case KEY_NETWORK_IP_INFO:
-                // OTHER
-            case KEY_FILTER_RSSI:
-            case KEY_FILTER_RELATIONSHIP:
-            case KEY_FILTER_MAC_PRECISE:
-            case KEY_FILTER_MAC_REVERSE:
-            case KEY_FILTER_MAC_RULES:
-            case KEY_FILTER_NAME_PRECISE:
-            case KEY_FILTER_NAME_REVERSE:
-                createGetConfigData(key.getParamsKey());
-                break;
-        }
+        createGetConfigData(key.getParamsKey());
     }
 
     public void setData(ParamsLongKeyEnum key) {
@@ -111,6 +58,74 @@ public class ParamsTask extends OrderTask {
                 (byte) 0x00
         };
         response.responseValue = data;
+    }
+
+    public void setIBeaconEnable(@IntRange(from = 0, to = 1) int enable) {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_I_BEACON_SWITCH.getParamsKey(),
+                (byte) 0x01,
+                (byte) enable
+        };
+    }
+
+    public void setIBeaconMajor(@IntRange(from = 0, to = 65535) int major) {
+        byte[] bytes = MokoUtils.toByteArray(major, 2);
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_I_BEACON_MAJOR.getParamsKey(),
+                (byte) 0x02,
+                bytes[0],
+                bytes[1]
+        };
+    }
+
+    public void setIBeaconMinor(@IntRange(from = 0, to = 65535) int minor) {
+        byte[] bytes = MokoUtils.toByteArray(minor, 2);
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_I_BEACON_MINOR.getParamsKey(),
+                (byte) 0x02,
+                bytes[0],
+                bytes[1]
+        };
+    }
+
+    public void setIBeaconUuid(String uuid) {
+        byte[] uuidBytes = MokoUtils.hex2bytes(uuid);
+        int length = uuidBytes.length;
+        data = new byte[length + 4];
+        data[0] = (byte) 0xED;
+        data[1] = (byte) 0x01;
+        data[2] = (byte) ParamsKeyEnum.KEY_I_BEACON_UUID.getParamsKey();
+        data[3] = (byte) length;
+        for (int i = 0; i < uuidBytes.length; i++) {
+            data[i + 4] = uuidBytes[i];
+        }
+        response.responseValue = data;
+    }
+
+    public void setIBeaconAdInterval(@IntRange(from = 1, to = 100) int interval) {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_I_BEACON_AD_INTERVAL.getParamsKey(),
+                (byte) 0x01,
+                (byte) interval
+        };
+    }
+
+    public void setIBeaconTxPower(@IntRange(from = 0, to = 15) int txPower) {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_I_BEACON_TX_POWER.getParamsKey(),
+                (byte) 0x01,
+                (byte) txPower
+        };
     }
 
     public void reboot() {
@@ -156,6 +171,16 @@ public class ParamsTask extends OrderTask {
                 (byte) type
         };
         response.responseValue = data;
+    }
+
+    public void setNetworkType(@IntRange(from = 0, to = 1) int type) {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_NETWORK_TYPE.getParamsKey(),
+                (byte) 0x01,
+                (byte) type
+        };
     }
 
     public void setDeviceName(String deviceName) {
@@ -571,18 +596,29 @@ public class ParamsTask extends OrderTask {
         response.responseValue = data;
     }
 
-    public void setNetworkDHCP(@IntRange(from = 0, to = 1) int enable) {
+    public void setWifiDHCP(@IntRange(from = 0, to = 1) int enable) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_NETWORK_DHCP.getParamsKey(),
+                (byte) ParamsKeyEnum.KEY_WIFI_DHCP.getParamsKey(),
                 (byte) 0x01,
                 (byte) enable
         };
         response.responseValue = data;
     }
 
-    public void setNetworkIPInfo(String ip, String sbNetworkMask, String gateway, String dns) {
+    public void setEthernetDHCP(@IntRange(from = 0, to = 1) int enable) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_ETHERNET_DHCP.getParamsKey(),
+                (byte) 0x01,
+                (byte) enable
+        };
+        response.responseValue = data;
+    }
+
+    public void setWifiIPInfo(String ip, String sbNetworkMask, String gateway, String dns) {
         byte[] ipBytes = MokoUtils.hex2bytes(ip);
         byte[] sbNetworkMaskBytes = MokoUtils.hex2bytes(sbNetworkMask);
         byte[] gatewayBytes = MokoUtils.hex2bytes(gateway);
@@ -590,7 +626,37 @@ public class ParamsTask extends OrderTask {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_NETWORK_IP_INFO.getParamsKey(),
+                (byte) ParamsKeyEnum.KEY_WIFI_IP_INFO.getParamsKey(),
+                (byte) 0x10,
+                (byte) ipBytes[0],
+                (byte) ipBytes[1],
+                (byte) ipBytes[2],
+                (byte) ipBytes[3],
+                (byte) sbNetworkMaskBytes[0],
+                (byte) sbNetworkMaskBytes[1],
+                (byte) sbNetworkMaskBytes[2],
+                (byte) sbNetworkMaskBytes[3],
+                (byte) gatewayBytes[0],
+                (byte) gatewayBytes[1],
+                (byte) gatewayBytes[2],
+                (byte) gatewayBytes[3],
+                (byte) dnsBytes[0],
+                (byte) dnsBytes[1],
+                (byte) dnsBytes[2],
+                (byte) dnsBytes[3],
+        };
+        response.responseValue = data;
+    }
+
+    public void setEthernetIPInfo(String ip, String sbNetworkMask, String gateway, String dns) {
+        byte[] ipBytes = MokoUtils.hex2bytes(ip);
+        byte[] sbNetworkMaskBytes = MokoUtils.hex2bytes(sbNetworkMask);
+        byte[] gatewayBytes = MokoUtils.hex2bytes(gateway);
+        byte[] dnsBytes = MokoUtils.hex2bytes(dns);
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_ETHERNET_IP_INFO.getParamsKey(),
                 (byte) 0x10,
                 (byte) ipBytes[0],
                 (byte) ipBytes[1],
@@ -883,7 +949,7 @@ public class ParamsTask extends OrderTask {
                 byte[] remainBytes = Arrays.copyOfRange(value, 6, 6 + length);
                 dataBytesStr += MokoUtils.bytesToHexString(remainBytes);
             } else {
-                if (length == 0){
+                if (length == 0) {
                     data = new byte[5];
                     data[0] = (byte) 0xEE;
                     data[1] = (byte) 0x00;

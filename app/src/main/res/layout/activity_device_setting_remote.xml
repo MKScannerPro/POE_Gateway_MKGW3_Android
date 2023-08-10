@@ -106,7 +106,7 @@
                 android:onClick="onCommunicationTimeout"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
-                android:text="@string/communication_timeout"
+                android:text="@string/communicate_timeout"
                 android:textColor="@color/black_333333"
                 android:textSize="15sp" />
 

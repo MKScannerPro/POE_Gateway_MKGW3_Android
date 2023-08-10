@@ -7,6 +7,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+
 import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -41,9 +44,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Type;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 
 public class DeviceConfigActivity extends BaseActivity<ActivityDeviceConfigBinding> {
 
@@ -218,6 +218,11 @@ public class DeviceConfigActivity extends BaseActivity<ActivityDeviceConfigBindi
         MokoSupport.getInstance().disConnectBle();
     }
 
+    public void onAdvertiseIBeacon(View view) {
+        if (isWindowLocked()) return;
+        Intent intent = new Intent(this, AdvertiseIBeaconActivity.class);
+        startActivity(intent);
+    }
 
     public void onWifiSettings(View view) {
         if (isWindowLocked()) return;
