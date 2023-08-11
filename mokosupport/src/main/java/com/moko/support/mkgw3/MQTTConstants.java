@@ -16,6 +16,8 @@ public class MQTTConstants {
     public static final int CONFIG_MSG_ID_WIFI_SETTINGS = 1020;
     public static final int CONFIG_MSG_ID_WIFI_CERT_FILE = 1021;
     public static final int CONFIG_MSG_ID_NETWORK_SETTINGS = 1023;
+    public static final int CONFIG_MSG_ID_NETWORK_TYPE = 1024;
+    public static final int CONFIG_MSG_ID_ETHERNET_PARAMS = 1025;
     public static final int CONFIG_MSG_ID_MQTT_SETTINGS = 1030;
     public static final int CONFIG_MSG_ID_MQTT_CERT_FILE = 1031;
     public static final int CONFIG_MSG_ID_SCAN_CONFIG = 1040;
@@ -37,6 +39,7 @@ public class MQTTConstants {
     public static final int CONFIG_MSG_ID_DUPLICATE_DATA_FILTER = 1057;
     public static final int CONFIG_MSG_ID_DATA_REPORT_TIMEOUT = 1058;
     public static final int CONFIG_MSG_ID_UPLOAD_DATA_OPTION= 1059;
+    public static final int CONFIG_MSG_ID_FILTER_PHY = 1060;
     public static final int CONFIG_MSG_ID_BEACON_PARAMS = 1061;
     public static final int CONFIG_MSG_ID_BLE_BXP_BUTTON_CONNECT = 1100;
     public static final int CONFIG_MSG_ID_BLE_BXP_BUTTON_INFO = 1102;
@@ -62,6 +65,8 @@ public class MQTTConstants {
     public static final int READ_MSG_ID_ADV_STATE = 2016;
     public static final int READ_MSG_ID_WIFI_SETTINGS = 2020;
     public static final int READ_MSG_ID_NETWORK_SETTINGS = 2023;
+    public static final int READ_MSG_ID_NETWORK_TYPE = 2024;
+    public static final int READ_MSG_ID_ETHERNET_PARAMS = 2025;
     public static final int READ_MSG_ID_MQTT_SETTINGS = 2030;
     public static final int READ_MSG_ID_SCAN_CONFIG = 2040;
     public static final int READ_MSG_ID_FILTER_RELATIONSHIP = 2041;
@@ -80,6 +85,7 @@ public class MQTTConstants {
     public static final int READ_MSG_ID_DUPLICATE_DATA_FILTER = 2057;
     public static final int READ_MSG_ID_DATA_REPORT_TIMEOUT = 2058;
     public static final int READ_MSG_ID_UPLOAD_DATA_OPTION = 2059;
+    public static final int READ_MSG_ID_FILTER_PHY = 2060;
     public static final int READ_MSG_ID_BEACON_PARAMS = 2061;
     public static final int READ_MSG_ID_BLE_CONNECTED_LIST = 2201;
     // NOTIFY

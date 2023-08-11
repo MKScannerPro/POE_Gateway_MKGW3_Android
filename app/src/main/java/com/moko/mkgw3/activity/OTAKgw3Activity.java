@@ -34,11 +34,9 @@ import java.lang.reflect.Type;
 
 public class OTAKgw3Activity extends BaseActivity<ActivityOtaKgw3Binding> {
     private final String FILTER_ASCII = "[ -~]*";
-
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
     private String mAppTopic;
-
     private Handler mHandler;
 
     @Override
@@ -67,8 +65,7 @@ public class OTAKgw3Activity extends BaseActivity<ActivityOtaKgw3Binding> {
         // 更新所有设备的网络状态
         final String topic = event.getTopic();
         final String message = event.getMessage();
-        if (TextUtils.isEmpty(message))
-            return;
+        if (TextUtils.isEmpty(message)) return;
         int msg_id;
         try {
             JsonObject object = new Gson().fromJson(message, JsonObject.class);
@@ -82,8 +79,7 @@ public class OTAKgw3Activity extends BaseActivity<ActivityOtaKgw3Binding> {
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
             }.getType();
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             int status = result.data.get("status").getAsInt();
@@ -104,8 +100,7 @@ public class OTAKgw3Activity extends BaseActivity<ActivityOtaKgw3Binding> {
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
             }.getType();
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             int resultCode = result.data.get("result_code").getAsInt();
@@ -119,8 +114,7 @@ public class OTAKgw3Activity extends BaseActivity<ActivityOtaKgw3Binding> {
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
 //            dismissLoadingProgressDialog();
 //            mHandler.removeMessages(0);
             if (result.result_code == 0) {

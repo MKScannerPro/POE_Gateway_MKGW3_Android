@@ -41,50 +41,38 @@
 
 
     <CheckBox
-        android:id="@+id/cb_ble_broadcast"
+        android:id="@+id/cbSystemIndicator"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:button="@null"
         android:drawableRight="@drawable/selector_cb_btn"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
-        android:text="Bluetooth advertising indicator" />
+        android:text="System indicator" />
 
     <View style="@style/divider_line" />
 
     <CheckBox
-        android:id="@+id/cb_ble_connected"
+        android:id="@+id/cbNetworkIndicator"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:button="@null"
         android:drawableRight="@drawable/selector_cb_btn"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
-        android:text="Bluetooth connected indicator" />
+        android:text="Network indicator" />
 
     <View style="@style/divider_line" />
 
     <CheckBox
-        android:id="@+id/cb_server_connecting"
+        android:id="@+id/cbSeverIndicator"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:button="@null"
         android:drawableRight="@drawable/selector_cb_btn"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
-        android:text="Server connecting indicator" />
-
-    <View style="@style/divider_line" />
-
-    <CheckBox
-        android:id="@+id/cb_server_connected"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:button="@null"
-        android:drawableRight="@drawable/selector_cb_btn"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:text="Server connected indicator" />
+        android:text="Server indicator" />
 
     <View style="@style/divider_line" />
 </LinearLayout>

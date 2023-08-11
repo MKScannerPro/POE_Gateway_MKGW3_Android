@@ -31,11 +31,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.lang.reflect.Type;
 
 public class ReconnectTimeoutKgw3Activity extends BaseActivity<ActivityReconnectTimeoutKgw3Binding> {
-
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
     private String mAppTopic;
-
     public Handler mHandler;
 
     @Override

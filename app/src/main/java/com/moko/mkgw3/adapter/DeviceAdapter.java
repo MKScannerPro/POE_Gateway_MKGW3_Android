@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat;
 public class DeviceAdapter extends BaseQuickAdapter<MokoDevice, BaseViewHolder> {
 
     public DeviceAdapter() {
-        super(R.layout.device_item_remote);
+        super(R.layout.device_item_kgw3);
     }
 
     @Override
@@ -21,16 +21,20 @@ public class DeviceAdapter extends BaseQuickAdapter<MokoDevice, BaseViewHolder> 
         if (!item.isOnline) {
             helper.setText(R.id.tv_device_status, mContext.getString(R.string.device_state_offline));
             helper.setTextColor(R.id.tv_device_status, ContextCompat.getColor(mContext, R.color.grey_b3b3b3));
-            helper.setImageResource(R.id.iv_net_status, R.drawable.ic_net_offline);
+            helper.setImageResource(R.id.iv_net_status, item.networkType == 1 ? R.drawable.ic_net_offline : R.drawable.ethernet_offline);
         } else {
             helper.setText(R.id.tv_device_status, mContext.getString(R.string.device_state_online));
             helper.setTextColor(R.id.tv_device_status, ContextCompat.getColor(mContext, R.color.blue_0188cc));
-            if (item.netStatus == 0)
-                helper.setImageResource(R.id.iv_net_status, R.drawable.ic_net_good);
-            else if (item.netStatus == 1)
-                helper.setImageResource(R.id.iv_net_status, R.drawable.ic_net_medium);
-            else if (item.netStatus == 2)
-                helper.setImageResource(R.id.iv_net_status, R.drawable.ic_net_poor);
+            if (item.networkType == 1) {
+                if (item.netStatus == 0)
+                    helper.setImageResource(R.id.iv_net_status, R.drawable.ic_net_good);
+                else if (item.netStatus == 1)
+                    helper.setImageResource(R.id.iv_net_status, R.drawable.ic_net_medium);
+                else if (item.netStatus == 2)
+                    helper.setImageResource(R.id.iv_net_status, R.drawable.ic_net_poor);
+            } else {
+                helper.setImageResource(R.id.iv_net_status, R.drawable.ethernet_online);
+            }
         }
     }
 }

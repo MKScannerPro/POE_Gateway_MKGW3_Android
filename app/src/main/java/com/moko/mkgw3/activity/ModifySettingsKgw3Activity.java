@@ -43,9 +43,7 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
     private String mAppTopic;
-
     public Handler mHandler;
-
     private MQTTConfig mqttDeviceConfig;
 
     @Override
@@ -123,20 +121,20 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
                 mMokoDevice.topicSubscribe = mqttDeviceConfig.topicSubscribe;
                 MQTTConfig mqttConfig = new Gson().fromJson(mMokoDevice.mqttInfo, MQTTConfig.class);
                 mqttConfig.host = mqttDeviceConfig.host;
-                mqttConfig.port =  mqttDeviceConfig.port;
+                mqttConfig.port = mqttDeviceConfig.port;
                 mqttConfig.clientId = mqttDeviceConfig.clientId;
                 mqttConfig.username = mqttDeviceConfig.username;
                 mqttConfig.password = mqttDeviceConfig.password;
-                mqttConfig.topicSubscribe =  mqttDeviceConfig.topicSubscribe;
+                mqttConfig.topicSubscribe = mqttDeviceConfig.topicSubscribe;
                 mqttConfig.topicPublish = mqttDeviceConfig.topicPublish;
-                mqttConfig.qos = mqttDeviceConfig.qos ;
+                mqttConfig.qos = mqttDeviceConfig.qos;
                 mqttConfig.cleanSession = mqttDeviceConfig.cleanSession;
                 mqttConfig.connectMode = mqttDeviceConfig.connectMode;
-                mqttConfig.keepAlive =  mqttDeviceConfig.keepAlive;
+                mqttConfig.keepAlive = mqttDeviceConfig.keepAlive;
                 mqttConfig.lwtEnable = mqttDeviceConfig.lwtEnable;
                 mqttConfig.lwtQos = mqttDeviceConfig.lwtQos;
-                mqttConfig.lwtRetain =  mqttDeviceConfig.lwtRetain;
-                mqttConfig.lwtTopic =  mqttDeviceConfig.lwtTopic;
+                mqttConfig.lwtRetain = mqttDeviceConfig.lwtRetain;
+                mqttConfig.lwtTopic = mqttDeviceConfig.lwtTopic;
                 mqttConfig.lwtPayload = mqttDeviceConfig.lwtPayload;
                 mMokoDevice.mqttInfo = new Gson().toJson(mqttConfig, MQTTConfig.class);
                 DBTools.getInstance(this).updateDevice(mMokoDevice);
@@ -145,7 +143,7 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
                     mHandler.removeMessages(0);
                     ToastUtils.showToast(this, "Set up succeed");
                     // 跳转首页，刷新数据
-                    Intent intent = new Intent(this, RemoteMainActivity.class);
+                    Intent intent = new Intent(this, MKGW3MainActivity.class);
                     intent.putExtra(AppConstants.EXTRA_KEY_FROM_ACTIVITY, TAG);
                     intent.putExtra(AppConstants.EXTRA_KEY_MAC, mMokoDevice.mac);
                     startActivity(intent);
@@ -167,10 +165,8 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
         finish();
     }
 
-
     public void onWifiSettings(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         if (!MQTTSupport.getInstance().isConnected()) {
             ToastUtils.showToast(this, R.string.network_error);
             return;
@@ -181,8 +177,7 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
     }
 
     public void onMqttSettings(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         if (!MQTTSupport.getInstance().isConnected()) {
             ToastUtils.showToast(this, R.string.network_error);
             return;
@@ -198,17 +193,6 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
         if (result.getResultCode() == RESULT_OK) {
             mqttDeviceConfig = (MQTTConfig) result.getData().getSerializableExtra(AppConstants.EXTRA_KEY_MQTT_CONFIG_DEVICE);
         }
-    }
-
-    public void onNetworkSettings(View view) {
-        if (isWindowLocked()) return;
-        if (!MQTTSupport.getInstance().isConnected()) {
-            ToastUtils.showToast(this, R.string.network_error);
-            return;
-        }
-        Intent i = new Intent(this, ModifyNetworkSettingsActivity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
-        startActivity(i);
     }
 
     private void getMqttSettings() {

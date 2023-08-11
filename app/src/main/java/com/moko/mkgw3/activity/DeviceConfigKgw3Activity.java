@@ -46,17 +46,12 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.lang.reflect.Type;
 
 public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigKgw3Binding> {
-
     private MQTTConfig mAppMqttConfig;
     private MQTTConfig mDeviceMqttConfig;
-
     private Handler mHandler;
-
     private int mSelectedDeviceType;
-
     private boolean mIsMQTTConfigFinished;
     private boolean mIsWIFIConfigFinished;
-
     private CustomDialog mqttConnDialog;
     private DonutProgress donutProgress;
     private boolean isSettingSuccess;
@@ -74,7 +69,6 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
     protected ActivityDeviceConfigKgw3Binding getViewBinding() {
         return ActivityDeviceConfigKgw3Binding.inflate(getLayoutInflater());
     }
-
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 50)
     public void onConnectStatusEvent(ConnectStatusEvent event) {
@@ -100,38 +94,33 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
         if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
             OrderTaskResponse response = event.getResponse();
             OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
-            int responseType = response.responseType;
             byte[] value = response.responseValue;
-            switch (orderCHAR) {
-                case CHAR_PARAMS:
-                    if (value.length >= 4) {
-                        int header = value[0] & 0xFF;// 0xED
-                        int flag = value[1] & 0xFF;// read or write
-                        int cmd = value[2] & 0xFF;
-                        if (header == 0xED) {
-                            ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
-                            if (configKeyEnum == null) {
-                                return;
-                            }
-                            int length = value[3] & 0xFF;
-                            if (flag == 0x01) {
-                                // write
-                                int result = value[4] & 0xFF;
-                                switch (configKeyEnum) {
-                                    case KEY_EXIT_CONFIG_MODE:
-                                        if (result != 1) {
-                                            ToastUtils.showToast(this, "Setup failed！");
-                                        } else {
-                                            isSettingSuccess = true;
-                                            showConnMqttDialog();
-                                            subscribeTopic();
-                                        }
-                                        break;
+            if (orderCHAR == OrderCHAR.CHAR_PARAMS) {
+                if (value.length >= 4) {
+                    int header = value[0] & 0xFF;// 0xED
+                    int flag = value[1] & 0xFF;// read or write
+                    int cmd = value[2] & 0xFF;
+                    if (header == 0xED) {
+                        ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
+                        if (configKeyEnum == null) {
+                            return;
+                        }
+                        int length = value[3] & 0xFF;
+                        if (flag == 0x01) {
+                            // write
+                            int result = value[4] & 0xFF;
+                            if (configKeyEnum == ParamsKeyEnum.KEY_EXIT_CONFIG_MODE) {
+                                if (result != 1) {
+                                    ToastUtils.showToast(this, "Setup failed！");
+                                } else {
+                                    isSettingSuccess = true;
+                                    showConnMqttDialog();
+                                    subscribeTopic();
                                 }
                             }
                         }
                     }
-                    break;
+                }
             }
         }
     }
@@ -196,7 +185,7 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
                     mokoDevice.deviceType = mSelectedDeviceType;
                     DBTools.getInstance(DeviceConfigKgw3Activity.this).updateDevice(mokoDevice);
                 }
-                Intent modifyIntent = new Intent(DeviceConfigKgw3Activity.this, ModifyNameActivity.class);
+                Intent modifyIntent = new Intent(DeviceConfigKgw3Activity.this, ModifyNameKgw3Activity.class);
                 modifyIntent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mokoDevice);
                 startActivity(modifyIntent);
             }, 1000);
@@ -226,7 +215,7 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
 
     public void onWifiSettings(View view) {
         if (isWindowLocked()) return;
-        Intent intent = new Intent(this, WifiSettingsActivity.class);
+        Intent intent = new Intent(this, WifiSettingsKgw3Activity.class);
         startWIFISettings.launch(intent);
     }
 
@@ -238,25 +227,25 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
 
     public void onNetworkSettings(View view) {
         if (isWindowLocked()) return;
-        Intent intent = new Intent(this, NetworkSettingsActivity.class);
+        Intent intent = new Intent(this, NetworkSettingsKgw3Activity.class);
         startActivity(intent);
     }
 
     public void onNtpSettings(View view) {
         if (isWindowLocked()) return;
-        Intent intent = new Intent(this, NtpSettingsActivity.class);
+        Intent intent = new Intent(this, NtpSettingsKgw3Activity.class);
         startActivity(intent);
     }
 
     public void onScannerFilter(View view) {
         if (isWindowLocked()) return;
-        Intent intent = new Intent(this, ScannerFilterActivity.class);
+        Intent intent = new Intent(this, ScannerFilterKgw3Activity.class);
         startActivity(intent);
     }
 
     public void onDeviceInfo(View view) {
         if (isWindowLocked()) return;
-        Intent intent = new Intent(this, DeviceInformationActivity.class);
+        Intent intent = new Intent(this, DeviceInformationKgw3Activity.class);
         startActivity(intent);
     }
 

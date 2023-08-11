@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/communication_timeout"
+            android:text="@string/communicate_timeout"
             android:textColor="@color/white_ffffff"
             android:textSize="17sp" />
 
@@ -34,13 +34,11 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:clickable="true"
             android:onClick="onSave"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:src="@drawable/ic_save" />
     </RelativeLayout>
-
 
     <EditText
         android:id="@+id/et_communication_timeout"
@@ -49,7 +47,7 @@
         android:layout_marginLeft="12dp"
         android:layout_marginTop="12dp"
         android:layout_marginRight="12dp"
-        android:hint="0-60，unit: min "
+        android:hint="0-60，unit: minute "
         android:inputType="number"
         android:maxLength="2"
         android:paddingLeft="5dp"
@@ -65,6 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="12dp"
+        android:lineSpacingMultiplier="1.2"
         android:text="If the gateway doesn't get any downlink message from the cloud in the timeout, it will automatically disconnect from the Beacon.  A value of 0 means that no automatic disconnection."
         android:textColor="@color/black_333333"
         android:textSize="13sp" />

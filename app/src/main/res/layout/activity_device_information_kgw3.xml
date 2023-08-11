@@ -27,7 +27,6 @@
             android:textColor="@color/white_ffffff"
             android:textSize="17sp" />
 
-
         <View
             style="@style/divider_line"
             android:background="@color/grey_999999" />
@@ -221,6 +220,34 @@
 
         <TextView
             android:id="@+id/tv_device_sta_mac"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <View
+        style="@style/divider_line"
+        android:background="@color/grey_d9d9d9" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1.0"
+            android:text="Ethernet MAC"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tvEthernetMac"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

@@ -49,7 +49,7 @@
         android:layout_marginLeft="12dp"
         android:layout_marginTop="12dp"
         android:layout_marginRight="12dp"
-        android:hint="0-1440, unit: min"
+        android:hint="0-1440, unit: minute"
         android:inputType="number"
         android:maxLength="4"
         android:paddingLeft="5dp"
@@ -65,6 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="12dp"
+        android:lineSpacingMultiplier="1.2"
         android:text="If the device reconnects to server exceeding the configured timeout, the device will automatically reboot once. A value of 0 means that device will not reboot."
         android:textColor="@color/black_333333"
         android:textSize="13sp" />

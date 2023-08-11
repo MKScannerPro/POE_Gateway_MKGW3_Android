@@ -81,9 +81,9 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask getResetParamsType() {
+    public static OrderTask getEthernetMac() {
         ParamsTask task = new ParamsTask();
-        task.setData(ParamsKeyEnum.KEY_RESET_PARAMS_TYPE);
+        task.setData(ParamsKeyEnum.KEY_ETHERNET_MAC);
         return task;
     }
 
@@ -438,12 +438,6 @@ public class OrderTaskAssembler {
     public static OrderTask changePassword(String password) {
         ParamsTask task = new ParamsTask();
         task.changePassword(password);
-        return task;
-    }
-
-    public static OrderTask resetParamsType(@IntRange(from = 0, to = 2) int type) {
-        ParamsTask task = new ParamsTask();
-        task.resetParamsType(type);
         return task;
     }
 

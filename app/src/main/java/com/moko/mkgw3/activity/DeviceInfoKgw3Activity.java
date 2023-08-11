@@ -28,11 +28,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.lang.reflect.Type;
 
 public class DeviceInfoKgw3Activity extends BaseActivity<ActivityDeviceInformationKgw3Binding> {
-
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
     private String mAppTopic;
-
     public Handler mHandler;
 
     @Override
@@ -60,8 +58,7 @@ public class DeviceInfoKgw3Activity extends BaseActivity<ActivityDeviceInformati
         // 更新所有设备的网络状态
         final String topic = event.getTopic();
         final String message = event.getMessage();
-        if (TextUtils.isEmpty(message))
-            return;
+        if (TextUtils.isEmpty(message)) return;
         int msg_id;
         try {
             JsonObject object = new Gson().fromJson(message, JsonObject.class);
@@ -75,8 +72,7 @@ public class DeviceInfoKgw3Activity extends BaseActivity<ActivityDeviceInformati
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             mBind.tvDeviceName.setText(result.data.get("device_name").getAsString());
@@ -85,8 +81,9 @@ public class DeviceInfoKgw3Activity extends BaseActivity<ActivityDeviceInformati
             mBind.tvDeviceHardwareVersion.setText(result.data.get("hardware_version").getAsString());
             mBind.tvDeviceSoftwareVersion.setText(result.data.get("software_version").getAsString());
             mBind.tvDeviceFirmwareVersion.setText(result.data.get("firmware_version").getAsString());
-            mBind.tvDeviceStaMac.setText(result.device_info.mac);
-            mBind.tvDeviceBtMac.setText(result.data.get("ble_mac").getAsString());
+            mBind.tvDeviceStaMac.setText(result.device_info.mac.toUpperCase());
+            mBind.tvDeviceBtMac.setText(result.data.get("ble_mac").getAsString().toUpperCase());
+            mBind.tvEthernetMac.setText(result.data.get("eth_mac").getAsString().toUpperCase());
         }
     }
 
@@ -98,7 +95,6 @@ public class DeviceInfoKgw3Activity extends BaseActivity<ActivityDeviceInformati
     public void onBack(View view) {
         finish();
     }
-
 
     private void getDeviceInfo() {
         int msgId = MQTTConstants.READ_MSG_ID_DEVICE_INFO;

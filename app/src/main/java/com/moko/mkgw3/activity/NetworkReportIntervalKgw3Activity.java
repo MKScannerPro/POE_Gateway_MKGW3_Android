@@ -31,11 +31,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.lang.reflect.Type;
 
 public class NetworkReportIntervalKgw3Activity extends BaseActivity<ActivityNetworkReportIntervalKgw3Binding> {
-
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
     private String mAppTopic;
-
     public Handler mHandler;
 
     @Override

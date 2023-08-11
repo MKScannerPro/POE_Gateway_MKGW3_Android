@@ -44,7 +44,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@color/white_ffffff"
-                android:clickable="true"
                 android:drawableRight="@drawable/arrow_right"
                 android:gravity="center_vertical"
                 android:onClick="onWifiSettings"

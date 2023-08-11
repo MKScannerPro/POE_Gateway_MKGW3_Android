@@ -35,16 +35,17 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScannerUploadOptionKgw3Binding> implements SeekBar.OnSeekBarChangeListener {
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
     private String mAppTopic;
-
     public Handler mHandler;
-
     private ArrayList<String> mRelationshipValues;
     private int mRelationshipSelected;
+    private final String[] phyArr = {"1M PHY(V4.2)", "1M PHY(V5.0)", "1M PHY(V4.2) & 1M PHY(V5.0)", "Coded PHY(V5.0)"};
+    private int phySelected;
 
     @Override
     protected void onCreate() {
@@ -71,11 +72,23 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
         }, 30 * 1000);
         showLoadingProgressDialog();
         getFilterRSSI();
+        mBind.tvFilterPhy.setOnClickListener(v -> onFilterPhyClick());
     }
 
     @Override
     protected ActivityScannerUploadOptionKgw3Binding getViewBinding() {
         return ActivityScannerUploadOptionKgw3Binding.inflate(getLayoutInflater());
+    }
+
+    private void onFilterPhyClick() {
+        if (isWindowLocked()) return;
+        BottomDialog dialog = new BottomDialog();
+        dialog.setDatas(new ArrayList<>(Arrays.asList(phyArr)), phySelected);
+        dialog.setListener(value -> {
+            phySelected = value;
+            mBind.tvFilterPhy.setText(phyArr[value]);
+        });
+        dialog.show(getSupportFragmentManager());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -111,29 +124,46 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
-            dismissLoadingProgressDialog();
-            mHandler.removeMessages(0);
+            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
             final int relation = result.data.get("relation").getAsInt();
             mRelationshipSelected = relation;
             mBind.tvFilterRelationship.setText(mRelationshipValues.get(relation));
+            getFilterPhy();
+        }
+
+        if (msg_id == MQTTConstants.READ_MSG_ID_FILTER_PHY) {
+            Type type = new TypeToken<MsgReadResult<JsonObject>>() {
+            }.getType();
+            MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
+            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            dismissLoadingProgressDialog();
+            mHandler.removeMessages(0);
+            phySelected = result.data.get("phy_filter").getAsInt();
+            mBind.tvFilterPhy.setText(phyArr[phySelected]);
         }
         if (msg_id == MQTTConstants.CONFIG_MSG_ID_FILTER_RSSI) {
-            Type type = new TypeToken<MsgConfigResult>() {
+            Type type = new TypeToken<MsgConfigResult<?>>() {
             }.getType();
-            MsgConfigResult result = new Gson().fromJson(message, type);
+            MsgConfigResult<?> result = new Gson().fromJson(message, type);
             if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             if (result.result_code != 0) return;
             setFilterRelationship();
         }
         if (msg_id == MQTTConstants.CONFIG_MSG_ID_FILTER_RELATIONSHIP) {
-            Type type = new TypeToken<MsgConfigResult>() {
+            Type type = new TypeToken<MsgConfigResult<?>>() {
             }.getType();
-            MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            MsgConfigResult<?> result = new Gson().fromJson(message, type);
+            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (result.result_code != 0) return;
+            setFilterPhy();
+        }
+
+        if (msg_id == MQTTConstants.CONFIG_MSG_ID_FILTER_PHY) {
+            Type type = new TypeToken<MsgConfigResult<?>>() {
+            }.getType();
+            MsgConfigResult<?> result = new Gson().fromJson(message, type);
+            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             if (result.result_code == 0) {
@@ -189,6 +219,28 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
         int msgId = MQTTConstants.CONFIG_MSG_ID_FILTER_RELATIONSHIP;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("relation", mRelationshipSelected);
+        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        try {
+            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getFilterPhy() {
+        int msgId = MQTTConstants.READ_MSG_ID_FILTER_PHY;
+        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        try {
+            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setFilterPhy() {
+        int msgId = MQTTConstants.CONFIG_MSG_ID_FILTER_PHY;
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("phy_filter", phySelected);
         String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);

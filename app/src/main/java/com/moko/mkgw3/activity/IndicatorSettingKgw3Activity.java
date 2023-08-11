@@ -31,16 +31,12 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.lang.reflect.Type;
 
 public class IndicatorSettingKgw3Activity extends BaseActivity<ActivityIndicatorSettingKgw3Binding> {
-
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
     private String mAppTopic;
-
-    private int bleBroadcastEnable;
-    private int bleConnectedEnable;
-    private int serverConnectingEnable;
-    private int serverConnectedEnable;
-
+    private int netLedEnable;
+    private int systemLedEnable;
+    private int severLedEnable;
     public Handler mHandler;
 
     @Override
@@ -63,14 +59,12 @@ public class IndicatorSettingKgw3Activity extends BaseActivity<ActivityIndicator
         return ActivityIndicatorSettingKgw3Binding.inflate(getLayoutInflater());
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMQTTMessageArrivedEvent(MQTTMessageArrivedEvent event) {
         // 更新所有设备的网络状态
         final String topic = event.getTopic();
         final String message = event.getMessage();
-        if (TextUtils.isEmpty(message))
-            return;
+        if (TextUtils.isEmpty(message)) return;
         int msg_id;
         try {
             JsonObject object = new Gson().fromJson(message, JsonObject.class);
@@ -84,25 +78,21 @@ public class IndicatorSettingKgw3Activity extends BaseActivity<ActivityIndicator
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
-            bleBroadcastEnable = result.data.get("ble_adv_led").getAsInt();
-            bleConnectedEnable = result.data.get("ble_connected_led").getAsInt();
-            serverConnectingEnable = result.data.get("server_connecting_led").getAsInt();
-            serverConnectedEnable = result.data.get("server_connected_led").getAsInt();
-            mBind.cbBleConnected.setChecked(bleConnectedEnable == 1);
-            mBind.cbBleBroadcast.setChecked(bleBroadcastEnable == 1);
-            mBind.cbServerConnecting.setChecked(serverConnectingEnable == 1);
-            mBind.cbServerConnected.setChecked(serverConnectedEnable == 1);
+            netLedEnable = result.data.get("net_led").getAsInt();
+            systemLedEnable = result.data.get("sys_led").getAsInt();
+            severLedEnable = result.data.get("server_led").getAsInt();
+            mBind.cbNetworkIndicator.setChecked(netLedEnable == 1);
+            mBind.cbSystemIndicator.setChecked(systemLedEnable == 1);
+            mBind.cbSeverIndicator.setChecked(severLedEnable == 1);
         }
         if (msg_id == MQTTConstants.CONFIG_MSG_ID_INDICATOR_STATUS) {
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             if (result.result_code == 0) {
@@ -122,18 +112,15 @@ public class IndicatorSettingKgw3Activity extends BaseActivity<ActivityIndicator
         finish();
     }
 
-
     private void setIndicatorStatus() {
         int msgId = MQTTConstants.CONFIG_MSG_ID_INDICATOR_STATUS;
-        bleBroadcastEnable = mBind.cbBleBroadcast.isChecked() ? 1 : 0;
-        bleConnectedEnable = mBind.cbBleConnected.isChecked() ? 1 : 0;
-        serverConnectingEnable = mBind.cbServerConnecting.isChecked() ? 1 : 0;
-        serverConnectedEnable = mBind.cbServerConnected.isChecked() ? 1 : 0;
+        netLedEnable = mBind.cbNetworkIndicator.isChecked() ? 1 : 0;
+        systemLedEnable = mBind.cbSystemIndicator.isChecked() ? 1 : 0;
+        severLedEnable = mBind.cbSeverIndicator.isChecked() ? 1 : 0;
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("ble_adv_led", bleBroadcastEnable);
-        jsonObject.addProperty("ble_connected_led", bleConnectedEnable);
-        jsonObject.addProperty("server_connecting_led", serverConnectingEnable);
-        jsonObject.addProperty("server_connected_led", serverConnectedEnable);
+        jsonObject.addProperty("net_led", netLedEnable);
+        jsonObject.addProperty("sys_led", systemLedEnable);
+        jsonObject.addProperty("server_led", severLedEnable);
         String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);

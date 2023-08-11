@@ -8,7 +8,7 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_REBOOT(0x01),
     KEY_EXIT_CONFIG_MODE(0x02),
     KEY_PASSWORD(0x03),
-    KEY_RESET_PARAMS_TYPE(0x04),
+    KEY_ETHERNET_MAC(0x04),
     KEY_DEVICE_NAME(0x05),
     KEY_PRODUCT_MODEL(0x06),
     KEY_HARDWARE_VERSION(0x07),

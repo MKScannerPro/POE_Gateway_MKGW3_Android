@@ -60,13 +60,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemLongClickListener {
-
     private ArrayList<MokoDevice> devices;
     private DeviceAdapter adapter;
     public Handler mHandler;
     public String mAppMqttConfigStr;
     private MQTTConfig mAppMqttConfig;
-
     public static String PATH_LOGCAT;
 
     @Override

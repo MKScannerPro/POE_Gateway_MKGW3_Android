@@ -161,18 +161,6 @@ public class ParamsTask extends OrderTask {
         }
         response.responseValue = data;
     }
-
-    public void resetParamsType(@IntRange(from = 0, to = 2) int type) {
-        data = new byte[]{
-                (byte) 0xED,
-                (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_RESET_PARAMS_TYPE.getParamsKey(),
-                (byte) 0x01,
-                (byte) type
-        };
-        response.responseValue = data;
-    }
-
     public void setNetworkType(@IntRange(from = 0, to = 1) int type) {
         response.responseValue = data = new byte[]{
                 (byte) 0xED,

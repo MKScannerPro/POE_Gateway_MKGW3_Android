@@ -50,15 +50,11 @@ import java.lang.reflect.Type;
 public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettingKgw3Binding> {
     private final String FILTER_ASCII = "[ -~]*";
     public static String TAG = DeviceSettingKgw3Activity.class.getSimpleName();
-
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
     private String mAppTopic;
-
     private Handler mHandler;
     private InputFilter filter;
-
-    private boolean mIsAdvStateOpen;
 
     @Override
     protected void onCreate() {
@@ -73,12 +69,6 @@ public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettin
         appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfig.class);
         mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDevice.topicSubscribe : appMqttConfig.topicPublish;
         mHandler = new Handler(Looper.getMainLooper());
-        mHandler.postDelayed(() -> {
-            dismissLoadingProgressDialog();
-            finish();
-        }, 30 * 1000);
-        showLoadingProgressDialog();
-        getAdvState();
     }
 
     @Override
@@ -91,8 +81,7 @@ public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettin
         // 更新所有设备的网络状态
         final String topic = event.getTopic();
         final String message = event.getMessage();
-        if (TextUtils.isEmpty(message))
-            return;
+        if (TextUtils.isEmpty(message)) return;
         int msg_id;
         try {
             JsonObject object = new Gson().fromJson(message, JsonObject.class);
@@ -102,51 +91,15 @@ public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettin
             e.printStackTrace();
             return;
         }
-        if (msg_id == MQTTConstants.READ_MSG_ID_ADV_STATE) {
-            Type type = new TypeToken<MsgReadResult<JsonObject>>() {
-            }.getType();
-            MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
-            dismissLoadingProgressDialog();
-            mHandler.removeMessages(0);
-            int advState = result.data.get("adv_state").getAsInt();
-            mIsAdvStateOpen = advState == 1;
-            Drawable dra = ContextCompat.getDrawable(this, advState == 0 ?
-                    R.drawable.ic_cb_close : R.drawable.ic_cb_open);
-            dra.setBounds(0, 0, dra.getIntrinsicWidth(), dra.getIntrinsicHeight());;
-            mBind.tvAdvState.setCompoundDrawables(null, null, dra, null);
-        }
         if (msg_id == MQTTConstants.CONFIG_MSG_ID_REBOOT) {
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             if (result.result_code == 0) {
                 ToastUtils.showToast(this, "Set up succeed");
-            } else {
-                ToastUtils.showToast(this, "Set up failed");
-            }
-        }
-        if (msg_id == MQTTConstants.CONFIG_MSG_ID_ADV_SWITCH) {
-            Type type = new TypeToken<MsgConfigResult>() {
-            }.getType();
-            MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
-            dismissLoadingProgressDialog();
-            mHandler.removeMessages(0);
-            if (result.result_code == 0) {
-                ToastUtils.showToast(this, "Set up succeed");
-                mHandler.postDelayed(() -> {
-                    dismissLoadingProgressDialog();
-                    finish();
-                }, 30 * 1000);
-                showLoadingProgressDialog();
-                getAdvState();
             } else {
                 ToastUtils.showToast(this, "Set up failed");
             }
@@ -155,8 +108,7 @@ public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettin
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             if (result.result_code == 0) {
@@ -179,7 +131,7 @@ public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettin
                 mBind.tvName.postDelayed(() -> {
                     dismissLoadingProgressDialog();
                     // 跳转首页，刷新数据
-                    Intent intent = new Intent(this, RemoteMainActivity.class);
+                    Intent intent = new Intent(this, MKGW3MainActivity.class);
                     intent.putExtra(AppConstants.EXTRA_KEY_FROM_ACTIVITY, TAG);
                     startActivity(intent);
                 }, 500);
@@ -206,10 +158,9 @@ public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettin
         finish();
     }
 
-
     public void onEditName(View view) {
         if (isWindowLocked()) return;
-        View content = LayoutInflater.from(this).inflate(R.layout.modify_name, null);
+        View content = LayoutInflater.from(this).inflate(R.layout.modify_name, mBind.getRoot(), false);
         final EditText etDeviceName = content.findViewById(R.id.et_device_name);
         String deviceName = etDeviceName.getText().toString();
         etDeviceName.setText(deviceName);
@@ -217,26 +168,18 @@ public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettin
         etDeviceName.setFilters(new InputFilter[]{filter, new InputFilter.LengthFilter(20)});
         CustomDialog dialog = new CustomDialog.Builder(this)
                 .setContentView(content)
-                .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                .setPositiveButton(R.string.cancel, (dialog1, which) -> dialog1.dismiss())
+                .setNegativeButton(R.string.save, (dialog12, which) -> {
+                    String name = etDeviceName.getText().toString();
+                    if (TextUtils.isEmpty(name)) {
+                        ToastUtils.showToast(DeviceSettingKgw3Activity.this, R.string.more_modify_name_tips);
+                        return;
                     }
-                })
-                .setNegativeButton(R.string.save, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String name = etDeviceName.getText().toString();
-                        if (TextUtils.isEmpty(name)) {
-                            ToastUtils.showToast(DeviceSettingKgw3Activity.this, R.string.more_modify_name_tips);
-                            return;
-                        }
-                        mMokoDevice.name = name;
-                        DBTools.getInstance(DeviceSettingKgw3Activity.this).updateDevice(mMokoDevice);
-                        EventBus.getDefault().post(new DeviceModifyNameEvent(mMokoDevice.mac));
-                        etDeviceName.setText(name);
-                        dialog.dismiss();
-                    }
+                    mMokoDevice.name = name;
+                    DBTools.getInstance(DeviceSettingKgw3Activity.this).updateDevice(mMokoDevice);
+                    EventBus.getDefault().post(new DeviceModifyNameEvent(mMokoDevice.mac));
+                    etDeviceName.setText(name);
+                    dialog12.dismiss();
                 })
                 .create();
         dialog.show();
@@ -244,56 +187,51 @@ public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettin
     }
 
     public void onIndicatorSettings(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         if (!MQTTSupport.getInstance().isConnected()) {
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent i = new Intent(this, IndicatorSettingActivity.class);
+        Intent i = new Intent(this, IndicatorSettingKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startActivity(i);
     }
 
     public void onNetworkStatusReportInterval(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         if (!MQTTSupport.getInstance().isConnected()) {
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent i = new Intent(this, NetworkReportIntervalActivity.class);
+        Intent i = new Intent(this, NetworkReportIntervalKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startActivity(i);
     }
 
     public void onReconnectTimeout(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         if (!MQTTSupport.getInstance().isConnected()) {
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent i = new Intent(this, ReconnectTimeoutActivity.class);
+        Intent i = new Intent(this, ReconnectTimeoutKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startActivity(i);
     }
 
     public void onCommunicationTimeout(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         if (!MQTTSupport.getInstance().isConnected()) {
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent i = new Intent(this, CommunicationTimeoutKgw3Activity.class);
+        Intent i = new Intent(this, CommunicateTimeoutKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startActivity(i);
     }
 
     public void onDataReportTimeout(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         if (!MQTTSupport.getInstance().isConnected()) {
             ToastUtils.showToast(this, R.string.network_error);
             return;
@@ -304,107 +242,51 @@ public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettin
     }
 
     public void onSystemTime(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         if (!MQTTSupport.getInstance().isConnected()) {
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent i = new Intent(this, SystemTimeActivity.class);
+        Intent i = new Intent(this, SystemTimeKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startActivity(i);
     }
 
-    public void onButtonReset(View view) {
-        if (isWindowLocked())
-            return;
+    public void onAdvertiseIBeacon(View view) {
+        if (isWindowLocked()) return;
         if (!MQTTSupport.getInstance().isConnected()) {
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent i = new Intent(this, ButtonResetKgw3Activity.class);
+        Intent i = new Intent(this, AdvertiseIBeaconActivity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startActivity(i);
-    }
-
-    public void onAdvSettings(View view) {
-        if (isWindowLocked())
-            return;
-        if (mIsAdvStateOpen) {
-            if (!MQTTSupport.getInstance().isConnected()) {
-                ToastUtils.showToast(this, R.string.network_error);
-                return;
-            }
-            mHandler.postDelayed(() -> {
-                dismissLoadingProgressDialog();
-                ToastUtils.showToast(this, "Set up failed");
-            }, 30 * 1000);
-            showLoadingProgressDialog();
-            setAdvState(0, 1);
-            return;
-        }
-        View content = LayoutInflater.from(this).inflate(R.layout.dialog_adv_times, null);
-        final EditText etAdvTimes = content.findViewById(R.id.et_adv_times);
-        CustomDialog customDialog = new CustomDialog.Builder(this)
-                .setContentView(content)
-                .setPositiveButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
-                .setNegativeButton(R.string.confirm, (dialog, which) -> {
-                    String advTimesStr = etAdvTimes.getText().toString();
-                    if (TextUtils.isEmpty(advTimesStr)) {
-                        ToastUtils.showToast(DeviceSettingKgw3Activity.this, "Advertising time can't be blank");
-                        return;
-                    }
-                    int advTimes = Integer.parseInt(advTimesStr);
-                    if (advTimes < 1 || advTimes > 10) {
-                        ToastUtils.showToast(DeviceSettingKgw3Activity.this, "Advertising time range is 1-10");
-                        return;
-                    }
-                    if (!MQTTSupport.getInstance().isConnected()) {
-                        ToastUtils.showToast(this, R.string.network_error);
-                        return;
-                    }
-                    mHandler.postDelayed(() -> {
-                        dismissLoadingProgressDialog();
-                        ToastUtils.showToast(this, "Set up failed");
-                    }, 30 * 1000);
-                    showLoadingProgressDialog();
-                    setAdvState(1, advTimes);
-                    dialog.dismiss();
-                })
-                .create();
-        customDialog.show();
-        etAdvTimes.postDelayed(() -> showKeyboard(etAdvTimes), 300);
-
     }
 
     public void onOTA(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         if (!MQTTSupport.getInstance().isConnected()) {
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent intent = new Intent(this, OTAActivity.class);
+        Intent intent = new Intent(this, OTAKgw3Activity.class);
         intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startActivity(intent);
     }
 
-
     public void onModifyMqttSettings(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         if (!MQTTSupport.getInstance().isConnected()) {
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent i = new Intent(this, ModifySettingsActivity.class);
+        Intent i = new Intent(this, ModifySettingsKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startActivity(i);
     }
 
     public void onDeviceInfo(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         if (!MQTTSupport.getInstance().isConnected()) {
             ToastUtils.showToast(this, R.string.network_error);
             return;
@@ -414,33 +296,8 @@ public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettin
         startActivity(i);
     }
 
-    private void getAdvState() {
-        int msgId = MQTTConstants.READ_MSG_ID_ADV_STATE;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
-        try {
-            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private void setAdvState(int advSwitch, int time) {
-        int msgId = MQTTConstants.CONFIG_MSG_ID_ADV_SWITCH;
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("adv_switch", advSwitch);
-        jsonObject.addProperty("adv_time", time);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
-        try {
-            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void onRebootDevice(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         AlertMessageDialog dialog = new AlertMessageDialog();
         dialog.setTitle("Reboot Device");
         dialog.setMessage("Please confirm again whether to \n reboot the device");
@@ -473,8 +330,7 @@ public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettin
     }
 
     public void onResetDevice(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         AlertMessageDialog dialog = new AlertMessageDialog();
         dialog.setTitle("Reset Device");
         dialog.setMessage("After reset,the device will be removed  from the device list,and relevant data will be totally cleared.");

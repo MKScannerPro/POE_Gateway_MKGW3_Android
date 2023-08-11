@@ -1,6 +1,5 @@
 package com.moko.mkgw3.activity;
 
-
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputFilter;
@@ -33,11 +32,9 @@ import java.lang.reflect.Type;
 
 public class SyncTimeFromNTPKgw3Activity extends BaseActivity<ActivitySyncFromNtpKgw3Binding> {
     private final String FILTER_ASCII = "[ -~]*";
-
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
     private String mAppTopic;
-
     public Handler mHandler;
 
     @Override

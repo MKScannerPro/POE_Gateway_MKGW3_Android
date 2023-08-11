@@ -36,11 +36,11 @@ public class DeviceInformationKgw3Activity extends BaseActivity<ActivityDeviceIn
             orderTasks.add(OrderTaskAssembler.getHardwareVersion());
             orderTasks.add(OrderTaskAssembler.getSoftwareVersion());
             orderTasks.add(OrderTaskAssembler.getWifiMac());
+            orderTasks.add(OrderTaskAssembler.getEthernetMac());
             orderTasks.add(OrderTaskAssembler.getBleMac());
             MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         }, 500);
     }
-
 
     @Override
     protected ActivityDeviceInformationKgw3Binding getViewBinding() {
@@ -97,8 +97,7 @@ public class DeviceInformationKgw3Activity extends BaseActivity<ActivityDeviceIn
                             }
                             int length = value[3] & 0xFF;
                             if (flag == 0x00) {
-                                if (length == 0)
-                                    return;
+                                if (length == 0) return;
                                 // read
                                 switch (configKeyEnum) {
                                     case KEY_DEVICE_NAME:
@@ -111,6 +110,11 @@ public class DeviceInformationKgw3Activity extends BaseActivity<ActivityDeviceIn
                                     case KEY_BLE_MAC:
                                         byte[] bleMacBytes = Arrays.copyOfRange(value, 4, 4 + length);
                                         mBind.tvDeviceBtMac.setText(MokoUtils.bytesToHexString(bleMacBytes).toUpperCase());
+                                        break;
+
+                                    case KEY_ETHERNET_MAC:
+                                        byte[] ethernetMacBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                        mBind.tvEthernetMac.setText(MokoUtils.bytesToHexString(ethernetMacBytes).toUpperCase());
                                         break;
 
                                 }

@@ -38,14 +38,11 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class SystemTimeKgw3Activity extends BaseActivity<ActivitySystemTimeKgw3Binding> {
-
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
     private String mAppTopic;
-
     public Handler mHandler;
     public Handler mSyncTimeHandler;
-
     private ArrayList<String> mTimeZones;
     private int mSelectedTimeZone;
 
