@@ -6,6 +6,8 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.elvishew.xlog.XLog;
 import com.google.gson.Gson;
@@ -15,7 +17,7 @@ import com.google.gson.reflect.TypeToken;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.adapter.BleDeviceAdapter;
 import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.ActivityBleDevicesBinding;
+import com.moko.mkgw3.databinding.ActivityBleDevicesKgw3Binding;
 import com.moko.mkgw3.db.DBTools;
 import com.moko.mkgw3.dialog.PasswordRemoteBleDialog;
 import com.moko.mkgw3.dialog.ScanFilterDialog;
@@ -46,9 +48,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-
-public class BleManagerActivity extends BaseActivity<ActivityBleDevicesBinding> implements BaseQuickAdapter.OnItemChildClickListener {
+public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3Binding> implements BaseQuickAdapter.OnItemChildClickListener {
 
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
@@ -83,9 +83,7 @@ public class BleManagerActivity extends BaseActivity<ActivityBleDevicesBinding> 
     private void refreshList() {
         new Thread(() -> {
             while (refreshFlag) {
-                runOnUiThread(() -> {
-                    mAdapter.replaceData(mBleDevices);
-                });
+                runOnUiThread(() -> mAdapter.replaceData(mBleDevices));
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -97,8 +95,8 @@ public class BleManagerActivity extends BaseActivity<ActivityBleDevicesBinding> 
     }
 
     @Override
-    protected ActivityBleDevicesBinding getViewBinding() {
-        return ActivityBleDevicesBinding.inflate(getLayoutInflater());
+    protected ActivityBleDevicesKgw3Binding getViewBinding() {
+        return ActivityBleDevicesKgw3Binding.inflate(getLayoutInflater());
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 100)
@@ -156,7 +154,7 @@ public class BleManagerActivity extends BaseActivity<ActivityBleDevicesBinding> 
                     ToastUtils.showToast(this, bxpButtonInfo.result_msg);
                     return;
                 }
-                Intent intent = new Intent(this, BXPButtonInfoActivity.class);
+                Intent intent = new Intent(this, BXPButtonInfoKgw3Activity.class);
                 intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
                 intent.putExtra(AppConstants.EXTRA_KEY_BXP_BUTTON_INFO, bxpButtonInfo);
                 startActivity(intent);
@@ -176,7 +174,7 @@ public class BleManagerActivity extends BaseActivity<ActivityBleDevicesBinding> 
                     ToastUtils.showToast(this, otherDeviceInfo.result_msg);
                     return;
                 }
-                Intent intent = new Intent(this, BleOtherInfoActivity.class);
+                Intent intent = new Intent(this, BleOtherInfoKgw3Activity.class);
                 intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
                 intent.putExtra(AppConstants.EXTRA_KEY_OTHER_DEVICE_INFO, otherDeviceInfo);
                 startActivity(intent);
@@ -187,7 +185,7 @@ public class BleManagerActivity extends BaseActivity<ActivityBleDevicesBinding> 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceModifyNameEvent(DeviceModifyNameEvent event) {
         // 修改了设备名称
-        MokoDevice device = DBTools.getInstance(BleManagerActivity.this).selectDevice(mMokoDevice.mac);
+        MokoDevice device = DBTools.getInstance(BleManagerKgw3Activity.this).selectDevice(mMokoDevice.mac);
         mMokoDevice.name = device.name;
         mBind.tvDeviceName.setText(mMokoDevice.name);
     }
@@ -261,9 +259,9 @@ public class BleManagerActivity extends BaseActivity<ActivityBleDevicesBinding> 
         scanFilterDialog.setFilterMac(filterMac);
         scanFilterDialog.setFilterRssi(filterRssi);
         scanFilterDialog.setOnScanFilterListener((filterName, filterMac, filterRssi) -> {
-            BleManagerActivity.this.filterName = filterName;
-            BleManagerActivity.this.filterMac = filterMac;
-            BleManagerActivity.this.filterRssi = filterRssi;
+            BleManagerKgw3Activity.this.filterName = filterName;
+            BleManagerKgw3Activity.this.filterMac = filterMac;
+            BleManagerKgw3Activity.this.filterRssi = filterRssi;
             if (!TextUtils.isEmpty(filterName)
                     || !TextUtils.isEmpty(filterMac)
                     || filterRssi != -127) {
@@ -322,7 +320,7 @@ public class BleManagerActivity extends BaseActivity<ActivityBleDevicesBinding> 
                 XLog.i(password);
                 mHandler.postDelayed(() -> {
                     dismissLoadingProgressDialog();
-                    ToastUtils.showToast(BleManagerActivity.this, "Setup failed");
+                    ToastUtils.showToast(BleManagerKgw3Activity.this, "Setup failed");
                 }, 50 * 1000);
                 showLoadingProgressDialog();
                 getBleDeviceInfo(bleDevice, password);

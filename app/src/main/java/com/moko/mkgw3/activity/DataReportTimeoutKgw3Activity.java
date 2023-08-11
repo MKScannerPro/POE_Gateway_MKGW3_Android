@@ -12,7 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.ActivityButtonResetBinding;
+import com.moko.mkgw3.databinding.ActivityDataReportTimeoutKgw3Binding;
 import com.moko.mkgw3.entity.MQTTConfig;
 import com.moko.mkgw3.entity.MokoDevice;
 import com.moko.mkgw3.utils.SPUtiles;
@@ -30,8 +30,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Type;
 
-
-public class ButtonResetActivity extends BaseActivity<ActivityButtonResetBinding> {
+public class DataReportTimeoutKgw3Activity extends BaseActivity<ActivityDataReportTimeoutKgw3Binding> {
 
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
@@ -51,12 +50,12 @@ public class ButtonResetActivity extends BaseActivity<ActivityButtonResetBinding
             finish();
         }, 30 * 1000);
         showLoadingProgressDialog();
-        getButtonReset();
+        getDataReportTimeout();
     }
 
     @Override
-    protected ActivityButtonResetBinding getViewBinding() {
-        return ActivityButtonResetBinding.inflate(getLayoutInflater());
+    protected ActivityDataReportTimeoutKgw3Binding getViewBinding() {
+        return ActivityDataReportTimeoutKgw3Binding.inflate(getLayoutInflater());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -75,7 +74,7 @@ public class ButtonResetActivity extends BaseActivity<ActivityButtonResetBinding
             e.printStackTrace();
             return;
         }
-        if (msg_id == MQTTConstants.READ_MSG_ID_BUTTON_RESET) {
+        if (msg_id == MQTTConstants.READ_MSG_ID_DATA_REPORT_TIMEOUT) {
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
@@ -83,29 +82,10 @@ public class ButtonResetActivity extends BaseActivity<ActivityButtonResetBinding
                 return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
-            int resetType = result.data.get("key_reset_type").getAsInt();
-            if (resetType == 1) {
-                mBind.rbFixedTime.setChecked(true);
-            } else if (resetType == 2) {
-                mBind.rbAnyTime.setChecked(true);
-            }
-            mBind.rgButtonReset.setOnCheckedChangeListener((group, checkedId) -> {
-                int value = 1;
-                if (checkedId == R.id.rb_fixed_time) {
-                    value = 1;
-                } else if (checkedId == R.id.rb_any_time) {
-                    value = 2;
-                }
-                mHandler.postDelayed(() -> {
-                    dismissLoadingProgressDialog();
-                    ToastUtils.showToast(this, "Set up failed");
-                }, 30 * 1000);
-                showLoadingProgressDialog();
-                setButtonReset(value);
-            });
-
+            int timeout = result.data.get("timeout").getAsInt();
+            mBind.etDataReportTimeout.setText(String.valueOf(timeout));
         }
-        if (msg_id == MQTTConstants.CONFIG_MSG_ID_BUTTON_RESET) {
+        if (msg_id == MQTTConstants.CONFIG_MSG_ID_DATA_REPORT_TIMEOUT) {
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
@@ -130,20 +110,10 @@ public class ButtonResetActivity extends BaseActivity<ActivityButtonResetBinding
         finish();
     }
 
-    private void getButtonReset() {
-        int msgId = MQTTConstants.READ_MSG_ID_BUTTON_RESET;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
-        try {
-            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void setButtonReset(int value) {
-        int msgId = MQTTConstants.CONFIG_MSG_ID_BUTTON_RESET;
+    private void setDataReportTimeout(int timeout) {
+        int msgId = MQTTConstants.CONFIG_MSG_ID_DATA_REPORT_TIMEOUT;
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("key_reset_type", value);
+        jsonObject.addProperty("timeout", timeout);
         String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
@@ -152,4 +122,38 @@ public class ButtonResetActivity extends BaseActivity<ActivityButtonResetBinding
         }
     }
 
+
+    private void getDataReportTimeout() {
+        int msgId = MQTTConstants.READ_MSG_ID_DATA_REPORT_TIMEOUT;
+        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        try {
+            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onSave(View view) {
+        if (isWindowLocked()) return;
+        String timeoutStr = mBind.etDataReportTimeout.getText().toString();
+        if (TextUtils.isEmpty(timeoutStr)) {
+            ToastUtils.showToast(this, "Para Error");
+            return;
+        }
+        int timeout = Integer.parseInt(timeoutStr);
+        if (timeout < 100 || timeout > 3000) {
+            ToastUtils.showToast(this, "Para Error");
+            return;
+        }
+        if (!MQTTSupport.getInstance().isConnected()) {
+            ToastUtils.showToast(this, R.string.network_error);
+            return;
+        }
+        mHandler.postDelayed(() -> {
+            dismissLoadingProgressDialog();
+            ToastUtils.showToast(this, "Set up failed");
+        }, 30 * 1000);
+        showLoadingProgressDialog();
+        setDataReportTimeout(timeout);
+    }
 }

@@ -17,7 +17,7 @@ public class DeviceAdapter extends BaseQuickAdapter<MokoDevice, BaseViewHolder> 
     @Override
     protected void convert(BaseViewHolder helper, MokoDevice item) {
         helper.setText(R.id.tv_device_name, item.name);
-        helper.setText(R.id.tv_device_mac, item.mac);
+        helper.setText(R.id.tv_device_mac, item.mac.toUpperCase());
         if (!item.isOnline) {
             helper.setText(R.id.tv_device_status, mContext.getString(R.string.device_state_offline));
             helper.setTextColor(R.id.tv_device_status, ContextCompat.getColor(mContext, R.color.grey_b3b3b3));

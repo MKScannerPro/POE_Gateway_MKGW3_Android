@@ -22,7 +22,7 @@ import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.ActivityDeviceConfigBinding;
+import com.moko.mkgw3.databinding.ActivityDeviceConfigKgw3Binding;
 import com.moko.mkgw3.db.DBTools;
 import com.moko.mkgw3.dialog.CustomDialog;
 import com.moko.mkgw3.entity.MQTTConfig;
@@ -45,7 +45,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Type;
 
-public class DeviceConfigActivity extends BaseActivity<ActivityDeviceConfigBinding> {
+public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigKgw3Binding> {
 
     private MQTTConfig mAppMqttConfig;
     private MQTTConfig mDeviceMqttConfig;
@@ -71,8 +71,8 @@ public class DeviceConfigActivity extends BaseActivity<ActivityDeviceConfigBindi
     }
 
     @Override
-    protected ActivityDeviceConfigBinding getViewBinding() {
-        return ActivityDeviceConfigBinding.inflate(getLayoutInflater());
+    protected ActivityDeviceConfigKgw3Binding getViewBinding() {
+        return ActivityDeviceConfigKgw3Binding.inflate(getLayoutInflater());
     }
 
 
@@ -172,7 +172,7 @@ public class DeviceConfigActivity extends BaseActivity<ActivityDeviceConfigBindi
             // 关闭进度条弹框，保存数据，跳转修改设备名称页面
             mBind.tvName.postDelayed(() -> {
                 dismissConnMqttDialog();
-                MokoDevice mokoDevice = DBTools.getInstance(DeviceConfigActivity.this).selectDeviceByMac(mDeviceMqttConfig.staMac);
+                MokoDevice mokoDevice = DBTools.getInstance(DeviceConfigKgw3Activity.this).selectDeviceByMac(mDeviceMqttConfig.staMac);
                 String mqttConfigStr = new Gson().toJson(mDeviceMqttConfig, MQTTConfig.class);
                 if (mokoDevice == null) {
                     mokoDevice = new MokoDevice();
@@ -184,7 +184,7 @@ public class DeviceConfigActivity extends BaseActivity<ActivityDeviceConfigBindi
                     mokoDevice.lwtEnable = mDeviceMqttConfig.lwtEnable ? 1 : 0;
                     mokoDevice.lwtTopic = mDeviceMqttConfig.lwtTopic;
                     mokoDevice.deviceType = mSelectedDeviceType;
-                    DBTools.getInstance(DeviceConfigActivity.this).insertDevice(mokoDevice);
+                    DBTools.getInstance(DeviceConfigKgw3Activity.this).insertDevice(mokoDevice);
                 } else {
                     mokoDevice.name = mDeviceMqttConfig.deviceName;
                     mokoDevice.mac = mDeviceMqttConfig.staMac;
@@ -194,9 +194,9 @@ public class DeviceConfigActivity extends BaseActivity<ActivityDeviceConfigBindi
                     mokoDevice.lwtEnable = mDeviceMqttConfig.lwtEnable ? 1 : 0;
                     mokoDevice.lwtTopic = mDeviceMqttConfig.lwtTopic;
                     mokoDevice.deviceType = mSelectedDeviceType;
-                    DBTools.getInstance(DeviceConfigActivity.this).updateDevice(mokoDevice);
+                    DBTools.getInstance(DeviceConfigKgw3Activity.this).updateDevice(mokoDevice);
                 }
-                Intent modifyIntent = new Intent(DeviceConfigActivity.this, ModifyNameActivity.class);
+                Intent modifyIntent = new Intent(DeviceConfigKgw3Activity.this, ModifyNameActivity.class);
                 modifyIntent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mokoDevice);
                 startActivity(modifyIntent);
             }, 1000);
@@ -311,7 +311,7 @@ public class DeviceConfigActivity extends BaseActivity<ActivityDeviceConfigBindi
                 isDeviceConnectSuccess = true;
                 isSettingSuccess = false;
                 dismissConnMqttDialog();
-                ToastUtils.showToast(DeviceConfigActivity.this, getString(R.string.mqtt_connecting_timeout));
+                ToastUtils.showToast(DeviceConfigKgw3Activity.this, getString(R.string.mqtt_connecting_timeout));
                 finish();
             }
         }, 90 * 1000);

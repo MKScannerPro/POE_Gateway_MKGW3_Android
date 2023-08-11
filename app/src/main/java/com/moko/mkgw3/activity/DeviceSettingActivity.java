@@ -286,7 +286,7 @@ public class DeviceSettingActivity extends BaseActivity<ActivityDeviceSettingRem
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent i = new Intent(this, CommunicationTimeoutActivity.class);
+        Intent i = new Intent(this, CommunicationTimeoutKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startActivity(i);
     }
@@ -298,7 +298,7 @@ public class DeviceSettingActivity extends BaseActivity<ActivityDeviceSettingRem
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent i = new Intent(this, DataReportTimeoutActivity.class);
+        Intent i = new Intent(this, DataReportTimeoutKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startActivity(i);
     }
@@ -322,7 +322,7 @@ public class DeviceSettingActivity extends BaseActivity<ActivityDeviceSettingRem
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent i = new Intent(this, ButtonResetActivity.class);
+        Intent i = new Intent(this, ButtonResetKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startActivity(i);
     }
@@ -409,7 +409,7 @@ public class DeviceSettingActivity extends BaseActivity<ActivityDeviceSettingRem
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent i = new Intent(this, DeviceInfoActivity.class);
+        Intent i = new Intent(this, DeviceInfoKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startActivity(i);
     }

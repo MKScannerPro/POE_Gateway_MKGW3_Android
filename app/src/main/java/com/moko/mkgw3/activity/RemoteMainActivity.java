@@ -309,7 +309,7 @@ public class RemoteMainActivity extends BaseActivity<ActivityMainRemoteBinding> 
             ToastUtils.showToast(this, R.string.device_offline);
             return;
         }
-        Intent i = new Intent(RemoteMainActivity.this, DeviceDetailActivity.class);
+        Intent i = new Intent(RemoteMainActivity.this, DeviceDetailKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mokoDevice);
         startActivity(i);
     }
@@ -317,8 +317,7 @@ public class RemoteMainActivity extends BaseActivity<ActivityMainRemoteBinding> 
     @Override
     public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
         MokoDevice mokoDevice = (MokoDevice) adapter.getItem(position);
-        if (mokoDevice == null)
-            return true;
+        if (mokoDevice == null) return true;
         AlertMessageDialog dialog = new AlertMessageDialog();
         dialog.setTitle("Remove Device");
         dialog.setMessage("Please confirm again whether to \n remove the device");

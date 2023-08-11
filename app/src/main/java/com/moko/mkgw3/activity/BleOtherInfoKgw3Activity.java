@@ -6,6 +6,8 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -15,7 +17,7 @@ import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.adapter.BleCharacteristicsAdapter;
 import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.ActivityOtherInfoBinding;
+import com.moko.mkgw3.databinding.ActivityOtherInfoKgw3Binding;
 import com.moko.mkgw3.db.DBTools;
 import com.moko.mkgw3.dialog.AlertMessageDialog;
 import com.moko.mkgw3.dialog.CharWriteDialog;
@@ -42,9 +44,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-
-public class BleOtherInfoActivity extends BaseActivity<ActivityOtherInfoBinding> implements BaseQuickAdapter.OnItemChildClickListener {
+public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3Binding> implements BaseQuickAdapter.OnItemChildClickListener {
 
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
@@ -96,8 +96,8 @@ public class BleOtherInfoActivity extends BaseActivity<ActivityOtherInfoBinding>
     }
 
     @Override
-    protected ActivityOtherInfoBinding getViewBinding() {
-        return ActivityOtherInfoBinding.inflate(getLayoutInflater());
+    protected ActivityOtherInfoKgw3Binding getViewBinding() {
+        return ActivityOtherInfoKgw3Binding.inflate(getLayoutInflater());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -216,7 +216,7 @@ public class BleOtherInfoActivity extends BaseActivity<ActivityOtherInfoBinding>
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceModifyNameEvent(DeviceModifyNameEvent event) {
         // 修改了设备名称
-        MokoDevice device = DBTools.getInstance(BleOtherInfoActivity.this).selectDevice(mMokoDevice.mac);
+        MokoDevice device = DBTools.getInstance(BleOtherInfoKgw3Activity.this).selectDevice(mMokoDevice.mac);
         mMokoDevice.name = device.name;
         mBind.tvDeviceName.setText(mMokoDevice.name);
     }
@@ -245,7 +245,7 @@ public class BleOtherInfoActivity extends BaseActivity<ActivityOtherInfoBinding>
     }
 
     private void backToDetail() {
-        Intent intent = new Intent(this, DeviceDetailActivity.class);
+        Intent intent = new Intent(this, DeviceDetailKgw3Activity.class);
         startActivity(intent);
     }
 
@@ -260,7 +260,7 @@ public class BleOtherInfoActivity extends BaseActivity<ActivityOtherInfoBinding>
             }
             mHandler.postDelayed(() -> {
                 dismissLoadingProgressDialog();
-                ToastUtils.showToast(BleOtherInfoActivity.this, "Setup failed");
+                ToastUtils.showToast(BleOtherInfoKgw3Activity.this, "Setup failed");
             }, 30 * 1000);
             showLoadingProgressDialog();
             disconnectDevice();

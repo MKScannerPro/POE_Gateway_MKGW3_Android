@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:viewBindingIgnore="true">
 
     <ImageView
         android:id="@+id/iv_net_status"
@@ -19,26 +21,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
         android:gravity="center_vertical"
+        android:includeFontPadding="false"
         android:singleLine="true"
-        android:text=""
         android:textColor="@color/black_333333"
-        android:textSize="15sp"
+        android:textSize="16sp"
         app:layout_constraintLeft_toRightOf="@id/iv_net_status"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="MKGW3-1F65" />
 
     <TextView
         android:id="@+id/tv_device_mac"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text=""
+        android:layout_marginTop="10dp"
+        android:includeFontPadding="false"
         android:textColor="@color/grey_b3b3b3"
-        android:textSize="13sp"
+        android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="@id/tv_device_name"
-        app:layout_constraintTop_toBottomOf="@id/tv_device_name" />
+        app:layout_constraintTop_toBottomOf="@id/tv_device_name"
+        tools:text="AC4F128B1F65" />
 
     <TextView
         android:id="@+id/tv_device_status"
@@ -47,16 +51,16 @@
         android:layout_marginRight="12dp"
         android:drawableRight="@drawable/arrow_right"
         android:drawablePadding="20dp"
-        android:text=""
         android:textColor="@color/grey_b3b3b3"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@id/tv_device_mac"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_device_name" />
+        app:layout_constraintTop_toTopOf="@id/tv_device_name"
+        tools:text="Online" />
 
     <View
         style="@style/divider_line"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_device_mac" />

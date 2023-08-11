@@ -6,6 +6,8 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.elvishew.xlog.XLog;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -15,7 +17,7 @@ import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.adapter.ScanDeviceAdapter;
 import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.ActivityDetailRemoteBinding;
+import com.moko.mkgw3.databinding.ActivityDetailKgw3Binding;
 import com.moko.mkgw3.db.DBTools;
 import com.moko.mkgw3.entity.MQTTConfig;
 import com.moko.mkgw3.entity.MokoDevice;
@@ -41,10 +43,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-
-public class DeviceDetailActivity extends BaseActivity<ActivityDetailRemoteBinding> {
-    public static final String TAG = DeviceDetailActivity.class.getSimpleName();
+public class DeviceDetailKgw3Activity extends BaseActivity<ActivityDetailKgw3Binding> {
+    public static final String TAG = DeviceDetailKgw3Activity.class.getSimpleName();
 
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
@@ -81,8 +81,8 @@ public class DeviceDetailActivity extends BaseActivity<ActivityDetailRemoteBindi
     }
 
     @Override
-    protected ActivityDetailRemoteBinding getViewBinding() {
-        return ActivityDetailRemoteBinding.inflate(getLayoutInflater());
+    protected ActivityDetailKgw3Binding getViewBinding() {
+        return ActivityDetailKgw3Binding.inflate(getLayoutInflater());
     }
 
     private void changeView() {
@@ -172,7 +172,7 @@ public class DeviceDetailActivity extends BaseActivity<ActivityDetailRemoteBindi
                     readOtherInfo(bleDevice.mac);
                 }
             } else {
-                Intent intent = new Intent(this, BleManagerActivity.class);
+                Intent intent = new Intent(this, BleManagerKgw3Activity.class);
                 intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
                 startActivity(intent);
             }
@@ -217,7 +217,7 @@ public class DeviceDetailActivity extends BaseActivity<ActivityDetailRemoteBindi
             mConnectedBXPButtonInfo.long_alarm_num = bxpButtonInfo.long_alarm_num;
             mConnectedBXPButtonInfo.alarm_status = bxpButtonInfo.alarm_status;
             ToastUtils.showToast(this, "Setup succeed");
-            Intent intent = new Intent(this, BXPButtonInfoActivity.class);
+            Intent intent = new Intent(this, BXPButtonInfoKgw3Activity.class);
             intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
             intent.putExtra(AppConstants.EXTRA_KEY_BXP_BUTTON_INFO, mConnectedBXPButtonInfo);
             startActivity(intent);
@@ -236,7 +236,7 @@ public class DeviceDetailActivity extends BaseActivity<ActivityDetailRemoteBindi
                 return;
             }
             ToastUtils.showToast(this, "Setup succeed");
-            Intent intent = new Intent(this, BleOtherInfoActivity.class);
+            Intent intent = new Intent(this, BleOtherInfoKgw3Activity.class);
             intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
             intent.putExtra(AppConstants.EXTRA_KEY_OTHER_DEVICE_INFO, otherDeviceInfo);
             startActivity(intent);
@@ -246,7 +246,7 @@ public class DeviceDetailActivity extends BaseActivity<ActivityDetailRemoteBindi
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceModifyNameEvent(DeviceModifyNameEvent event) {
         // 修改了设备名称
-        MokoDevice device = DBTools.getInstance(DeviceDetailActivity.this).selectDevice(mMokoDevice.mac);
+        MokoDevice device = DBTools.getInstance(DeviceDetailKgw3Activity.this).selectDevice(mMokoDevice.mac);
         mMokoDevice.name = device.name;
         mBind.tvDeviceName.setText(mMokoDevice.name);
     }

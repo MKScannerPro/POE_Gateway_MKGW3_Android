@@ -6,6 +6,9 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -13,7 +16,7 @@ import com.google.gson.reflect.TypeToken;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.ActivityBxpButtonInfoBinding;
+import com.moko.mkgw3.databinding.ActivityBxpButtonInfoKgw3Binding;
 import com.moko.mkgw3.db.DBTools;
 import com.moko.mkgw3.dialog.AlertMessageDialog;
 import com.moko.mkgw3.entity.MQTTConfig;
@@ -34,10 +37,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Type;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-
-public class BXPButtonInfoActivity extends BaseActivity<ActivityBxpButtonInfoBinding> {
+public class BXPButtonInfoKgw3Activity extends BaseActivity<ActivityBxpButtonInfoKgw3Binding> {
 
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
@@ -86,8 +86,8 @@ public class BXPButtonInfoActivity extends BaseActivity<ActivityBxpButtonInfoBin
     }
 
     @Override
-    protected ActivityBxpButtonInfoBinding getViewBinding() {
-        return ActivityBxpButtonInfoBinding.inflate(getLayoutInflater());
+    protected ActivityBxpButtonInfoKgw3Binding getViewBinding() {
+        return ActivityBxpButtonInfoKgw3Binding.inflate(getLayoutInflater());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -180,7 +180,7 @@ public class BXPButtonInfoActivity extends BaseActivity<ActivityBxpButtonInfoBin
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceModifyNameEvent(DeviceModifyNameEvent event) {
         // 修改了设备名称
-        MokoDevice device = DBTools.getInstance(BXPButtonInfoActivity.this).selectDevice(mMokoDevice.mac);
+        MokoDevice device = DBTools.getInstance(BXPButtonInfoKgw3Activity.this).selectDevice(mMokoDevice.mac);
         mMokoDevice.name = device.name;
         mBind.tvDeviceName.setText(mMokoDevice.name);
     }
@@ -203,7 +203,7 @@ public class BXPButtonInfoActivity extends BaseActivity<ActivityBxpButtonInfoBin
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent intent = new Intent(this, BeaconDFUActivity.class);
+        Intent intent = new Intent(this, BeaconDFUKgw3Activity.class);
         intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         intent.putExtra(AppConstants.EXTRA_KEY_MAC, mBXPButtonInfo.mac);
         startBeaconDFU.launch(intent);
@@ -246,7 +246,7 @@ public class BXPButtonInfoActivity extends BaseActivity<ActivityBxpButtonInfoBin
             }
             mHandler.postDelayed(() -> {
                 dismissLoadingProgressDialog();
-                ToastUtils.showToast(BXPButtonInfoActivity.this, "Setup failed");
+                ToastUtils.showToast(BXPButtonInfoKgw3Activity.this, "Setup failed");
             }, 30 * 1000);
             showLoadingProgressDialog();
             disconnectDevice();
@@ -302,7 +302,7 @@ public class BXPButtonInfoActivity extends BaseActivity<ActivityBxpButtonInfoBin
     }
 
     private void backToDetail() {
-        Intent intent = new Intent(this, DeviceDetailActivity.class);
+        Intent intent = new Intent(this, DeviceDetailKgw3Activity.class);
         startActivity(intent);
     }
 }

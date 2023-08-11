@@ -10,13 +10,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.moko.mkgw3.AppConstants;
+import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.ActivityDeviceInformationBinding;
+import com.moko.mkgw3.databinding.ActivityCommunicationTimeoutKgw3Binding;
 import com.moko.mkgw3.entity.MQTTConfig;
 import com.moko.mkgw3.entity.MokoDevice;
 import com.moko.mkgw3.utils.SPUtiles;
+import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
 import com.moko.support.mkgw3.MQTTSupport;
+import com.moko.support.mkgw3.entity.MsgConfigResult;
 import com.moko.support.mkgw3.entity.MsgReadResult;
 import com.moko.support.mkgw3.event.DeviceOnlineEvent;
 import com.moko.support.mkgw3.event.MQTTMessageArrivedEvent;
@@ -27,7 +30,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Type;
 
-public class DeviceInfoActivity extends BaseActivity<ActivityDeviceInformationBinding> {
+public class CommunicationTimeoutKgw3Activity extends BaseActivity<ActivityCommunicationTimeoutKgw3Binding> {
 
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
@@ -47,12 +50,12 @@ public class DeviceInfoActivity extends BaseActivity<ActivityDeviceInformationBi
             finish();
         }, 30 * 1000);
         showLoadingProgressDialog();
-        getDeviceInfo();
+        getCommunicationTimeout();
     }
 
     @Override
-    protected ActivityDeviceInformationBinding getViewBinding() {
-        return ActivityDeviceInformationBinding.inflate(getLayoutInflater());
+    protected ActivityCommunicationTimeoutKgw3Binding getViewBinding() {
+        return ActivityCommunicationTimeoutKgw3Binding.inflate(getLayoutInflater());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -71,7 +74,7 @@ public class DeviceInfoActivity extends BaseActivity<ActivityDeviceInformationBi
             e.printStackTrace();
             return;
         }
-        if (msg_id == MQTTConstants.READ_MSG_ID_DEVICE_INFO) {
+        if (msg_id == MQTTConstants.READ_MSG_ID_COMMUNICATION_TIMEOUT) {
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
@@ -79,14 +82,21 @@ public class DeviceInfoActivity extends BaseActivity<ActivityDeviceInformationBi
                 return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
-            mBind.tvDeviceName.setText(result.data.get("device_name").getAsString());
-            mBind.tvProductModel.setText(result.data.get("product_model").getAsString());
-            mBind.tvManufacturer.setText(result.data.get("company_name").getAsString());
-            mBind.tvDeviceHardwareVersion.setText(result.data.get("hardware_version").getAsString());
-            mBind.tvDeviceSoftwareVersion.setText(result.data.get("software_version").getAsString());
-            mBind.tvDeviceFirmwareVersion.setText(result.data.get("firmware_version").getAsString());
-            mBind.tvDeviceStaMac.setText(result.device_info.mac);
-            mBind.tvDeviceBtMac.setText(result.data.get("ble_mac").getAsString());
+            mBind.etCommunicationTimeout.setText(String.valueOf(result.data.get("timeout").getAsInt()));
+        }
+        if (msg_id == MQTTConstants.CONFIG_MSG_ID_COMMUNICATION_TIMEOUT) {
+            Type type = new TypeToken<MsgConfigResult>() {
+            }.getType();
+            MsgConfigResult result = new Gson().fromJson(message, type);
+            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+                return;
+            dismissLoadingProgressDialog();
+            mHandler.removeMessages(0);
+            if (result.result_code == 0) {
+                ToastUtils.showToast(this, "Set up succeed");
+            } else {
+                ToastUtils.showToast(this, "Set up failed");
+            }
         }
     }
 
@@ -99,14 +109,50 @@ public class DeviceInfoActivity extends BaseActivity<ActivityDeviceInformationBi
         finish();
     }
 
+    private void setCommunicationTimeout(int timeout) {
+        int msgId = MQTTConstants.CONFIG_MSG_ID_COMMUNICATION_TIMEOUT;
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("timeout", timeout);
+        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        try {
+            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
 
-    private void getDeviceInfo() {
-        int msgId = MQTTConstants.READ_MSG_ID_DEVICE_INFO;
+
+    private void getCommunicationTimeout() {
+        int msgId = MQTTConstants.READ_MSG_ID_COMMUNICATION_TIMEOUT;
         String message = assembleReadCommon(msgId, mMokoDevice.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
             e.printStackTrace();
         }
+    }
+
+    public void onSave(View view) {
+        if (isWindowLocked()) return;
+        String timeoutStr = mBind.etCommunicationTimeout.getText().toString();
+        if (TextUtils.isEmpty(timeoutStr)) {
+            ToastUtils.showToast(this, "Para Error");
+            return;
+        }
+        int timeout = Integer.parseInt(timeoutStr);
+        if (timeout > 60) {
+            ToastUtils.showToast(this, "Para Error");
+            return;
+        }
+        if (!MQTTSupport.getInstance().isConnected()) {
+            ToastUtils.showToast(this, R.string.network_error);
+            return;
+        }
+        mHandler.postDelayed(() -> {
+            dismissLoadingProgressDialog();
+            ToastUtils.showToast(this, "Set up failed");
+        }, 30 * 1000);
+        showLoadingProgressDialog();
+        setCommunicationTimeout(timeout);
     }
 }

@@ -287,7 +287,7 @@ public class DeviceScannerActivity extends BaseActivity<ActivityScannerBinding> 
                                 XLog.i("Success");
 
                                 // 跳转配置页面
-                                Intent intent = new Intent(this, DeviceConfigActivity.class);
+                                Intent intent = new Intent(this, DeviceConfigKgw3Activity.class);
                                 intent.putExtra(AppConstants.EXTRA_KEY_SELECTED_DEVICE_TYPE, mSelectedDeviceType);
                                 startLauncher.launch(intent);
                             }
