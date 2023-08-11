@@ -12,7 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.ActivityNetworkSettingsBinding;
+import com.moko.mkgw3.databinding.ActivityIndicatorSettingKgw3Binding;
 import com.moko.mkgw3.entity.MQTTConfig;
 import com.moko.mkgw3.entity.MokoDevice;
 import com.moko.mkgw3.utils.SPUtiles;
@@ -29,25 +29,22 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Type;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class ModifyNetworkSettingsActivity extends BaseActivity<ActivityNetworkSettingsBinding> {
+public class IndicatorSettingKgw3Activity extends BaseActivity<ActivityIndicatorSettingKgw3Binding> {
+
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
     private String mAppTopic;
 
-    public Handler mHandler;
+    private int bleBroadcastEnable;
+    private int bleConnectedEnable;
+    private int serverConnectingEnable;
+    private int serverConnectedEnable;
 
-    private Pattern pattern;
+    public Handler mHandler;
 
     @Override
     protected void onCreate() {
-        String IP_REGEX = "((25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))*";
-        pattern = Pattern.compile(IP_REGEX);
-        mBind.cbDhcp.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            mBind.clIp.setVisibility(isChecked ? View.GONE : View.VISIBLE);
-        });
         mMokoDevice = (MokoDevice) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
         appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfig.class);
@@ -58,13 +55,14 @@ public class ModifyNetworkSettingsActivity extends BaseActivity<ActivityNetworkS
             finish();
         }, 30 * 1000);
         showLoadingProgressDialog();
-        getNetworkSettings();
+        getIndicatorStatus();
     }
 
     @Override
-    protected ActivityNetworkSettingsBinding getViewBinding() {
-        return ActivityNetworkSettingsBinding.inflate(getLayoutInflater());
+    protected ActivityIndicatorSettingKgw3Binding getViewBinding() {
+        return ActivityIndicatorSettingKgw3Binding.inflate(getLayoutInflater());
     }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMQTTMessageArrivedEvent(MQTTMessageArrivedEvent event) {
@@ -82,7 +80,7 @@ public class ModifyNetworkSettingsActivity extends BaseActivity<ActivityNetworkS
             e.printStackTrace();
             return;
         }
-        if (msg_id == MQTTConstants.READ_MSG_ID_NETWORK_SETTINGS) {
+        if (msg_id == MQTTConstants.READ_MSG_ID_INDICATOR_STATUS) {
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
@@ -90,16 +88,16 @@ public class ModifyNetworkSettingsActivity extends BaseActivity<ActivityNetworkS
                 return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
-            int enable = result.data.get("dhcp_en").getAsInt();
-            mBind.cbDhcp.setChecked(enable == 1);
-            mBind.clIp.setVisibility(enable == 1 ? View.GONE : View.VISIBLE);
-
-            mBind.etIp.setText( result.data.get("ip").getAsString());
-            mBind.etMask.setText(result.data.get("netmask").getAsString());
-            mBind.etGateway.setText(result.data.get("gw").getAsString());
-            mBind.etDns.setText(result.data.get("dns").getAsString());
+            bleBroadcastEnable = result.data.get("ble_adv_led").getAsInt();
+            bleConnectedEnable = result.data.get("ble_connected_led").getAsInt();
+            serverConnectingEnable = result.data.get("server_connecting_led").getAsInt();
+            serverConnectedEnable = result.data.get("server_connected_led").getAsInt();
+            mBind.cbBleConnected.setChecked(bleConnectedEnable == 1);
+            mBind.cbBleBroadcast.setChecked(bleBroadcastEnable == 1);
+            mBind.cbServerConnecting.setChecked(serverConnectingEnable == 1);
+            mBind.cbServerConnected.setChecked(serverConnectedEnable == 1);
         }
-        if (msg_id == MQTTConstants.CONFIG_MSG_ID_NETWORK_SETTINGS) {
+        if (msg_id == MQTTConstants.CONFIG_MSG_ID_INDICATOR_STATUS) {
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
@@ -124,14 +122,18 @@ public class ModifyNetworkSettingsActivity extends BaseActivity<ActivityNetworkS
         finish();
     }
 
-    private void setNetworkSettings() {
-        int msgId = MQTTConstants.CONFIG_MSG_ID_NETWORK_SETTINGS;
+
+    private void setIndicatorStatus() {
+        int msgId = MQTTConstants.CONFIG_MSG_ID_INDICATOR_STATUS;
+        bleBroadcastEnable = mBind.cbBleBroadcast.isChecked() ? 1 : 0;
+        bleConnectedEnable = mBind.cbBleConnected.isChecked() ? 1 : 0;
+        serverConnectingEnable = mBind.cbServerConnecting.isChecked() ? 1 : 0;
+        serverConnectedEnable = mBind.cbServerConnected.isChecked() ? 1 : 0;
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("dhcp_en", mBind.cbDhcp.isChecked() ? 1 : 0);
-        jsonObject.addProperty("ip", mBind.etIp.getText().toString());
-        jsonObject.addProperty("netmask", mBind.etMask.getText().toString());
-        jsonObject.addProperty("gw", mBind.etGateway.getText().toString());
-        jsonObject.addProperty("dns", mBind.etDns.getText().toString());
+        jsonObject.addProperty("ble_adv_led", bleBroadcastEnable);
+        jsonObject.addProperty("ble_connected_led", bleConnectedEnable);
+        jsonObject.addProperty("server_connecting_led", serverConnectingEnable);
+        jsonObject.addProperty("server_connected_led", serverConnectedEnable);
         String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
@@ -140,8 +142,8 @@ public class ModifyNetworkSettingsActivity extends BaseActivity<ActivityNetworkS
         }
     }
 
-    private void getNetworkSettings() {
-        int msgId = MQTTConstants.READ_MSG_ID_NETWORK_SETTINGS;
+    private void getIndicatorStatus() {
+        int msgId = MQTTConstants.READ_MSG_ID_INDICATOR_STATUS;
         String message = assembleReadCommon(msgId, mMokoDevice.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
@@ -152,38 +154,15 @@ public class ModifyNetworkSettingsActivity extends BaseActivity<ActivityNetworkS
 
     public void onSave(View view) {
         if (isWindowLocked()) return;
-        if (!isParaError()) {
-            if (!MQTTSupport.getInstance().isConnected()) {
-                ToastUtils.showToast(this, R.string.network_error);
-                return;
-            }
-            mHandler.postDelayed(() -> {
-                dismissLoadingProgressDialog();
-                ToastUtils.showToast(this, "Set up failed");
-            }, 30 * 1000);
-            showLoadingProgressDialog();
-            setNetworkSettings();
-        } else {
-            ToastUtils.showToast(this, "Para Error");
+        if (!MQTTSupport.getInstance().isConnected()) {
+            ToastUtils.showToast(this, R.string.network_error);
+            return;
         }
-    }
-
-    private boolean isParaError() {
-        if (!mBind.cbDhcp.isChecked()) {
-            String ip = mBind.etIp.getText().toString();
-            String mask = mBind.etMask.getText().toString();
-            String gateway = mBind.etGateway.getText().toString();
-            String dns = mBind.etDns.getText().toString();
-            Matcher matcherIp = pattern.matcher(ip);
-            Matcher matcherMask = pattern.matcher(mask);
-            Matcher matcherGateway = pattern.matcher(gateway);
-            Matcher matcherDns = pattern.matcher(dns);
-            if (!matcherIp.matches()
-                    || !matcherMask.matches()
-                    || !matcherGateway.matches()
-                    || !matcherDns.matches())
-                return true;
-        }
-        return false;
+        mHandler.postDelayed(() -> {
+            dismissLoadingProgressDialog();
+            ToastUtils.showToast(this, "Set up failed");
+        }, 30 * 1000);
+        showLoadingProgressDialog();
+        setIndicatorStatus();
     }
 }

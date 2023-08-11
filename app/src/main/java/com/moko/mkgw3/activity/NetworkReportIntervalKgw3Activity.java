@@ -12,7 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.ActivityNetworkSettingsBinding;
+import com.moko.mkgw3.databinding.ActivityNetworkReportIntervalKgw3Binding;
 import com.moko.mkgw3.entity.MQTTConfig;
 import com.moko.mkgw3.entity.MokoDevice;
 import com.moko.mkgw3.utils.SPUtiles;
@@ -29,25 +29,17 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Type;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class ModifyNetworkSettingsActivity extends BaseActivity<ActivityNetworkSettingsBinding> {
+public class NetworkReportIntervalKgw3Activity extends BaseActivity<ActivityNetworkReportIntervalKgw3Binding> {
+
     private MokoDevice mMokoDevice;
     private MQTTConfig appMqttConfig;
     private String mAppTopic;
 
     public Handler mHandler;
 
-    private Pattern pattern;
-
     @Override
     protected void onCreate() {
-        String IP_REGEX = "((25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))*";
-        pattern = Pattern.compile(IP_REGEX);
-        mBind.cbDhcp.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            mBind.clIp.setVisibility(isChecked ? View.GONE : View.VISIBLE);
-        });
         mMokoDevice = (MokoDevice) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
         appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfig.class);
@@ -58,12 +50,12 @@ public class ModifyNetworkSettingsActivity extends BaseActivity<ActivityNetworkS
             finish();
         }, 30 * 1000);
         showLoadingProgressDialog();
-        getNetworkSettings();
+        getNetworkReportInterval();
     }
 
     @Override
-    protected ActivityNetworkSettingsBinding getViewBinding() {
-        return ActivityNetworkSettingsBinding.inflate(getLayoutInflater());
+    protected ActivityNetworkReportIntervalKgw3Binding getViewBinding() {
+        return ActivityNetworkReportIntervalKgw3Binding.inflate(getLayoutInflater());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -82,7 +74,7 @@ public class ModifyNetworkSettingsActivity extends BaseActivity<ActivityNetworkS
             e.printStackTrace();
             return;
         }
-        if (msg_id == MQTTConstants.READ_MSG_ID_NETWORK_SETTINGS) {
+        if (msg_id == MQTTConstants.READ_MSG_ID_NETWORK_REPORT_INTERVAL) {
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
@@ -90,16 +82,9 @@ public class ModifyNetworkSettingsActivity extends BaseActivity<ActivityNetworkS
                 return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
-            int enable = result.data.get("dhcp_en").getAsInt();
-            mBind.cbDhcp.setChecked(enable == 1);
-            mBind.clIp.setVisibility(enable == 1 ? View.GONE : View.VISIBLE);
-
-            mBind.etIp.setText( result.data.get("ip").getAsString());
-            mBind.etMask.setText(result.data.get("netmask").getAsString());
-            mBind.etGateway.setText(result.data.get("gw").getAsString());
-            mBind.etDns.setText(result.data.get("dns").getAsString());
+            mBind.etNetworkReportInterval.setText(String.valueOf(result.data.get("report_interval").getAsInt()));
         }
-        if (msg_id == MQTTConstants.CONFIG_MSG_ID_NETWORK_SETTINGS) {
+        if (msg_id == MQTTConstants.CONFIG_MSG_ID_NETWORK_REPORT_INTERVAL) {
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
@@ -124,14 +109,10 @@ public class ModifyNetworkSettingsActivity extends BaseActivity<ActivityNetworkS
         finish();
     }
 
-    private void setNetworkSettings() {
-        int msgId = MQTTConstants.CONFIG_MSG_ID_NETWORK_SETTINGS;
+    private void setNetworkReportInterval(int interval) {
+        int msgId = MQTTConstants.CONFIG_MSG_ID_NETWORK_REPORT_INTERVAL;
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("dhcp_en", mBind.cbDhcp.isChecked() ? 1 : 0);
-        jsonObject.addProperty("ip", mBind.etIp.getText().toString());
-        jsonObject.addProperty("netmask", mBind.etMask.getText().toString());
-        jsonObject.addProperty("gw", mBind.etGateway.getText().toString());
-        jsonObject.addProperty("dns", mBind.etDns.getText().toString());
+        jsonObject.addProperty("report_interval", interval);
         String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
@@ -140,8 +121,8 @@ public class ModifyNetworkSettingsActivity extends BaseActivity<ActivityNetworkS
         }
     }
 
-    private void getNetworkSettings() {
-        int msgId = MQTTConstants.READ_MSG_ID_NETWORK_SETTINGS;
+    private void getNetworkReportInterval() {
+        int msgId = MQTTConstants.READ_MSG_ID_NETWORK_REPORT_INTERVAL;
         String message = assembleReadCommon(msgId, mMokoDevice.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
@@ -152,38 +133,25 @@ public class ModifyNetworkSettingsActivity extends BaseActivity<ActivityNetworkS
 
     public void onSave(View view) {
         if (isWindowLocked()) return;
-        if (!isParaError()) {
-            if (!MQTTSupport.getInstance().isConnected()) {
-                ToastUtils.showToast(this, R.string.network_error);
-                return;
-            }
-            mHandler.postDelayed(() -> {
-                dismissLoadingProgressDialog();
-                ToastUtils.showToast(this, "Set up failed");
-            }, 30 * 1000);
-            showLoadingProgressDialog();
-            setNetworkSettings();
-        } else {
+        String intervalStr = mBind.etNetworkReportInterval.getText().toString();
+        if (TextUtils.isEmpty(intervalStr)) {
             ToastUtils.showToast(this, "Para Error");
+            return;
         }
-    }
-
-    private boolean isParaError() {
-        if (!mBind.cbDhcp.isChecked()) {
-            String ip = mBind.etIp.getText().toString();
-            String mask = mBind.etMask.getText().toString();
-            String gateway = mBind.etGateway.getText().toString();
-            String dns = mBind.etDns.getText().toString();
-            Matcher matcherIp = pattern.matcher(ip);
-            Matcher matcherMask = pattern.matcher(mask);
-            Matcher matcherGateway = pattern.matcher(gateway);
-            Matcher matcherDns = pattern.matcher(dns);
-            if (!matcherIp.matches()
-                    || !matcherMask.matches()
-                    || !matcherGateway.matches()
-                    || !matcherDns.matches())
-                return true;
+        int interval = Integer.parseInt(intervalStr);
+        if (interval != 0 && (interval < 30 || interval > 86400)) {
+            ToastUtils.showToast(this, "Para Error");
+            return;
         }
-        return false;
+        if (!MQTTSupport.getInstance().isConnected()) {
+            ToastUtils.showToast(this, R.string.network_error);
+            return;
+        }
+        mHandler.postDelayed(() -> {
+            dismissLoadingProgressDialog();
+            ToastUtils.showToast(this, "Set up failed");
+        }, 30 * 1000);
+        showLoadingProgressDialog();
+        setNetworkReportInterval(interval);
     }
 }

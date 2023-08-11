@@ -232,7 +232,7 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
 
     public void onMqttSettings(View view) {
         if (isWindowLocked()) return;
-        Intent intent = new Intent(this, MqttSettingsActivity.class);
+        Intent intent = new Intent(this, MqttSettingsKgw3Activity.class);
         startMQTTSettings.launch(intent);
     }
 
