@@ -20,10 +20,10 @@ import com.moko.mkgw3.adapter.MQTTFragmentAdapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityMqttAppKgw3Binding;
 import com.moko.mkgw3.dialog.AlertMessageDialog;
-import com.moko.mkgw3.entity.MQTTConfig;
-import com.moko.mkgw3.fragment.GeneralFragment;
-import com.moko.mkgw3.fragment.SSLFragment;
-import com.moko.mkgw3.fragment.UserFragment;
+import com.moko.mkgw3.entity.MQTTConfigKgw3;
+import com.moko.mkgw3.fragment.GeneralKgw3Fragment;
+import com.moko.mkgw3.fragment.SSLKgw3Fragment;
+import com.moko.mkgw3.fragment.UserKgw3Fragment;
 import com.moko.mkgw3.utils.FileUtils;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.mkgw3.utils.ToastUtils;
@@ -55,12 +55,12 @@ import java.util.UUID;
 public class SetAppMQTTKgw3Activity extends BaseActivity<ActivityMqttAppKgw3Binding> implements RadioGroup.OnCheckedChangeListener {
     private final String FILTER_ASCII = "[ -~]*";
 
-    private GeneralFragment generalFragment;
-    private UserFragment userFragment;
-    private SSLFragment sslFragment;
+    private GeneralKgw3Fragment generalFragment;
+    private UserKgw3Fragment userFragment;
+    private SSLKgw3Fragment sslFragment;
     private ArrayList<Fragment> fragments;
 
-    private MQTTConfig mqttConfig;
+    private MQTTConfigKgw3 mqttConfig;
 
     private String expertFilePath;
     private boolean isFileError;
@@ -71,13 +71,13 @@ public class SetAppMQTTKgw3Activity extends BaseActivity<ActivityMqttAppKgw3Bind
         if (TextUtils.isEmpty(MQTTConfigStr)) {
             UUID uuid = UUID.randomUUID();
             String clintIdStr = String.format("MK_%s", uuid.toString().substring(0, 8).toUpperCase());
-            mqttConfig = new MQTTConfig();
+            mqttConfig = new MQTTConfigKgw3();
             mqttConfig.host = "47.104.81.55";
             mqttConfig.port = "1883";
             mqttConfig.clientId = clintIdStr;
         } else {
             Gson gson = new Gson();
-            mqttConfig = gson.fromJson(MQTTConfigStr, MQTTConfig.class);
+            mqttConfig = gson.fromJson(MQTTConfigStr, MQTTConfigKgw3.class);
         }
         InputFilter filter = (source, start, end, dest, dstart, dend) -> {
             if (!(source + "").matches(FILTER_ASCII)) {
@@ -119,9 +119,9 @@ public class SetAppMQTTKgw3Activity extends BaseActivity<ActivityMqttAppKgw3Bind
 
     private void createFragment() {
         fragments = new ArrayList<>();
-        generalFragment = GeneralFragment.newInstance();
-        userFragment = UserFragment.newInstance();
-        sslFragment = SSLFragment.newInstance();
+        generalFragment = GeneralKgw3Fragment.newInstance();
+        userFragment = UserKgw3Fragment.newInstance();
+        sslFragment = SSLKgw3Fragment.newInstance();
         fragments.add(generalFragment);
         fragments.add(userFragment);
         fragments.add(sslFragment);
@@ -130,7 +130,7 @@ public class SetAppMQTTKgw3Activity extends BaseActivity<ActivityMqttAppKgw3Bind
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 10)
     public void onMQTTConnectionCompleteEvent(MQTTConnectionCompleteEvent event) {
         EventBus.getDefault().cancelEventDelivery(event);
-        String mqttConfigStr = new Gson().toJson(mqttConfig, MQTTConfig.class);
+        String mqttConfigStr = new Gson().toJson(mqttConfig, MQTTConfigKgw3.class);
         ToastUtils.showToast(SetAppMQTTKgw3Activity.this, getString(R.string.success));
         dismissLoadingProgressDialog();
         Intent intent = new Intent();
@@ -198,7 +198,7 @@ public class SetAppMQTTKgw3Activity extends BaseActivity<ActivityMqttAppKgw3Bind
     public void onSave(View view) {
         if (isWindowLocked()) return;
         if (isParaError()) return;
-        String mqttConfigStr = new Gson().toJson(mqttConfig, MQTTConfig.class);
+        String mqttConfigStr = new Gson().toJson(mqttConfig, MQTTConfigKgw3.class);
         SPUtiles.setStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, mqttConfigStr);
         MQTTSupport.getInstance().disconnectMqtt();
         showLoadingProgressDialog();
@@ -545,7 +545,7 @@ public class SetAppMQTTKgw3Activity extends BaseActivity<ActivityMqttAppKgw3Bind
         dialog.setConfirm("YES");
         dialog.setCancel("NO");
         dialog.setOnAlertConfirmListener(() -> {
-            mqttConfig = new MQTTConfig();
+            mqttConfig = new MQTTConfigKgw3();
             mqttConfig.keepAlive = -1;
             initData();
         });

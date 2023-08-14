@@ -3,7 +3,7 @@ package com.moko.mkgw3.entity;
 
 import java.io.Serializable;
 
-public class MQTTConfig implements Serializable {
+public class MQTTConfigKgw3 implements Serializable {
     public String host = "";
     public String port = "";
     public boolean cleanSession = true;

@@ -17,9 +17,9 @@ import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityScannerUploadOptionKgw3Binding;
-import com.moko.mkgw3.dialog.BottomDialog;
-import com.moko.mkgw3.entity.MQTTConfig;
-import com.moko.mkgw3.entity.MokoDevice;
+import com.moko.mkgw3.dialog.MKgw3BottomDialog;
+import com.moko.mkgw3.entity.MQTTConfigKgw3;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
@@ -38,8 +38,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScannerUploadOptionKgw3Binding> implements SeekBar.OnSeekBarChangeListener {
-    private MokoDevice mMokoDevice;
-    private MQTTConfig appMqttConfig;
+    private MokoDeviceKgw3 mMokoDeviceKgw3;
+    private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
     public Handler mHandler;
     private ArrayList<String> mRelationshipValues;
@@ -49,13 +49,13 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
 
     @Override
     protected void onCreate() {
-        mMokoDevice = (MokoDevice) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
+        mMokoDeviceKgw3 = (MokoDeviceKgw3) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
-        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfig.class);
-        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDevice.topicSubscribe : appMqttConfig.topicPublish;
+        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
+        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
         mHandler = new Handler(Looper.getMainLooper());
 
-        mBind.tvName.setText(mMokoDevice.name);
+        mBind.tvName.setText(mMokoDeviceKgw3.name);
         mBind.sbRssiFilter.setOnSeekBarChangeListener(this);
         mRelationshipValues = new ArrayList<>();
         mRelationshipValues.add("Null");
@@ -82,7 +82,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
 
     private void onFilterPhyClick() {
         if (isWindowLocked()) return;
-        BottomDialog dialog = new BottomDialog();
+        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
         dialog.setDatas(new ArrayList<>(Arrays.asList(phyArr)), phySelected);
         dialog.setListener(value -> {
             phySelected = value;
@@ -111,7 +111,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             final int rssi = result.data.get("rssi").getAsInt();
             int progress = rssi + 127;
@@ -124,7 +124,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             final int relation = result.data.get("relation").getAsInt();
             mRelationshipSelected = relation;
             mBind.tvFilterRelationship.setText(mRelationshipValues.get(relation));
@@ -135,7 +135,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             phySelected = result.data.get("phy_filter").getAsInt();
@@ -145,7 +145,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
             Type type = new TypeToken<MsgConfigResult<?>>() {
             }.getType();
             MsgConfigResult<?> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             if (result.result_code != 0) return;
             setFilterRelationship();
@@ -154,7 +154,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
             Type type = new TypeToken<MsgConfigResult<?>>() {
             }.getType();
             MsgConfigResult<?> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             if (result.result_code != 0) return;
             setFilterPhy();
         }
@@ -163,7 +163,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
             Type type = new TypeToken<MsgConfigResult<?>>() {
             }.getType();
             MsgConfigResult<?> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             if (result.result_code == 0) {
@@ -176,7 +176,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceOnlineEvent(DeviceOnlineEvent event) {
-        super.offline(event, mMokoDevice.mac);
+        super.offline(event, mMokoDeviceKgw3.mac);
     }
 
     public void onBack(View view) {
@@ -185,7 +185,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
 
     private void getFilterRSSI() {
         int msgId = MQTTConstants.READ_MSG_ID_FILTER_RSSI;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -197,7 +197,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
         int msgId = MQTTConstants.CONFIG_MSG_ID_FILTER_RSSI;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("rssi", mBind.sbRssiFilter.getProgress() - 127);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -207,7 +207,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
 
     private void getFilterRelationship() {
         int msgId = MQTTConstants.READ_MSG_ID_FILTER_RELATIONSHIP;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -219,7 +219,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
         int msgId = MQTTConstants.CONFIG_MSG_ID_FILTER_RELATIONSHIP;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("relation", mRelationshipSelected);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -229,7 +229,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
 
     private void getFilterPhy() {
         int msgId = MQTTConstants.READ_MSG_ID_FILTER_PHY;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -241,7 +241,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
         int msgId = MQTTConstants.CONFIG_MSG_ID_FILTER_PHY;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("phy_filter", phySelected);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -252,7 +252,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
     public void onFilterRelationship(View view) {
         if (isWindowLocked())
             return;
-        BottomDialog dialog = new BottomDialog();
+        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
         dialog.setDatas(mRelationshipValues, mRelationshipSelected);
         dialog.setListener(value -> {
             mRelationshipSelected = value;
@@ -270,7 +270,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
             return;
         }
         Intent i = new Intent(this, DuplicateDataFilterKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startActivity(i);
     }
 
@@ -282,7 +282,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
             return;
         }
         Intent i = new Intent(this, UploadDataOptionKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startActivity(i);
     }
 
@@ -294,7 +294,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
             return;
         }
         Intent i = new Intent(this, FilterMacAddressKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startActivity(i);
     }
 
@@ -306,7 +306,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
             return;
         }
         Intent i = new Intent(this, FilterAdvNameKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startActivity(i);
     }
 
@@ -318,7 +318,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
             return;
         }
         Intent i = new Intent(this, FilterRawDataSwitchKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startActivity(i);
     }
 

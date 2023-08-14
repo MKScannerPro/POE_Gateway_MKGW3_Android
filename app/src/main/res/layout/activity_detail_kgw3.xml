@@ -118,6 +118,6 @@
         android:layout_weight="1.0"
         android:overScrollMode="never"
         android:visibility="gone"
-        tools:listitem="@layout/item_scan_device" />
+        tools:listitem="@layout/item_scan_device_kgw3" />
 
 </LinearLayout>

@@ -4,9 +4,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.moko.mkgw3.R;
 
-public class ScanDeviceAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
-    public ScanDeviceAdapter() {
-        super(R.layout.item_scan_device);
+public class ScanDeviceKgw3Adapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    public ScanDeviceKgw3Adapter() {
+        super(R.layout.item_scan_device_kgw3);
     }
 
     @Override

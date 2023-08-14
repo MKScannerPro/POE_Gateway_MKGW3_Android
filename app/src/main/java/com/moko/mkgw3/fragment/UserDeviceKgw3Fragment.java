@@ -7,26 +7,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.FragmentUserDeviceRemoteBinding;
-
 import androidx.fragment.app.Fragment;
 
-public class UserDeviceFragment extends Fragment {
+import com.moko.mkgw3.base.BaseActivity;
+import com.moko.mkgw3.databinding.FragmentUserDeviceKgw3Binding;
+
+public class UserDeviceKgw3Fragment extends Fragment {
     private final String FILTER_ASCII = "[ -~]*";
-    private static final String TAG = UserDeviceFragment.class.getSimpleName();
-    private FragmentUserDeviceRemoteBinding mBind;
+    private static final String TAG = UserDeviceKgw3Fragment.class.getSimpleName();
+    private FragmentUserDeviceKgw3Binding mBind;
 
 
     private BaseActivity activity;
     private String username;
     private String password;
 
-    public UserDeviceFragment() {
+    public UserDeviceKgw3Fragment() {
     }
 
-    public static UserDeviceFragment newInstance() {
-        UserDeviceFragment fragment = new UserDeviceFragment();
+    public static UserDeviceKgw3Fragment newInstance() {
+        UserDeviceKgw3Fragment fragment = new UserDeviceKgw3Fragment();
         return fragment;
     }
 
@@ -40,7 +40,7 @@ public class UserDeviceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
-        mBind = FragmentUserDeviceRemoteBinding.inflate(inflater, container, false);
+        mBind = FragmentUserDeviceKgw3Binding.inflate(inflater, container, false);
         activity = (BaseActivity) getActivity();
         InputFilter filter = (source, start, end, dest, dstart, dend) -> {
             if (!(source + "").matches(FILTER_ASCII)) {

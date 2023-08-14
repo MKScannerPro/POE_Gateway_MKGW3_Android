@@ -7,16 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.FragmentGeneralAppBinding;
-import com.moko.mkgw3.utils.ToastUtils;
-
 import androidx.fragment.app.Fragment;
 
-public class GeneralFragment extends Fragment {
+import com.moko.mkgw3.base.BaseActivity;
+import com.moko.mkgw3.databinding.FragmentGeneralAppKgw3Binding;
+import com.moko.mkgw3.utils.ToastUtils;
 
-    private static final String TAG = GeneralFragment.class.getSimpleName();
-    private FragmentGeneralAppBinding mBind;
+public class GeneralKgw3Fragment extends Fragment {
+
+    private static final String TAG = GeneralKgw3Fragment.class.getSimpleName();
+    private FragmentGeneralAppKgw3Binding mBind;
 
     private BaseActivity activity;
 
@@ -24,11 +24,11 @@ public class GeneralFragment extends Fragment {
     private int qos;
     private int keepAlive;
 
-    public GeneralFragment() {
+    public GeneralKgw3Fragment() {
     }
 
-    public static GeneralFragment newInstance() {
-        GeneralFragment fragment = new GeneralFragment();
+    public static GeneralKgw3Fragment newInstance() {
+        GeneralKgw3Fragment fragment = new GeneralKgw3Fragment();
         return fragment;
     }
 
@@ -42,7 +42,7 @@ public class GeneralFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
-        mBind = FragmentGeneralAppBinding.inflate(inflater, container, false);
+        mBind = FragmentGeneralAppKgw3Binding.inflate(inflater, container, false);
         activity = (BaseActivity) getActivity();
         mBind.cbCleanSession.setChecked(cleanSession);
         if (qos == 0) {

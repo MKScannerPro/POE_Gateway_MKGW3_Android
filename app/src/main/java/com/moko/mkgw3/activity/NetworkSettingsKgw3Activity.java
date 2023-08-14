@@ -9,7 +9,6 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.elvishew.xlog.XLog;
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
@@ -20,7 +19,7 @@ import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityNetworkSettingsKgw3Binding;
-import com.moko.mkgw3.dialog.BottomDialog;
+import com.moko.mkgw3.dialog.MKgw3BottomDialog;
 import com.moko.mkgw3.utils.FileUtils;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.MokoSupport;
@@ -130,7 +129,7 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
 
     private void onNetworkTypeClick() {
         if (isWindowLocked()) return;
-        BottomDialog dialog = new BottomDialog();
+        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
         dialog.setDatas(new ArrayList<>(Arrays.asList(networkTypeValues)), selectedNetworkType);
         dialog.setListener(value -> {
             selectedNetworkType = value;
@@ -352,7 +351,7 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
 
     public void onSelectSecurity(View view) {
         if (isWindowLocked()) return;
-        BottomDialog dialog = new BottomDialog();
+        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
         dialog.setDatas(mSecurityValues, mSecuritySelected);
         dialog.setListener(value -> {
             mSecuritySelected = value;
@@ -385,7 +384,7 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
 
     public void onSelectEAPType(View view) {
         if (isWindowLocked()) return;
-        BottomDialog dialog = new BottomDialog();
+        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
         dialog.setDatas(mEAPTypeValues, mEAPTypeSelected);
         dialog.setListener(value -> {
             mEAPTypeSelected = value;

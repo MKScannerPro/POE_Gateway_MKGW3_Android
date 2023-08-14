@@ -6,20 +6,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 
 import androidx.fragment.app.Fragment;
 
 import com.moko.mkgw3.activity.ModifyMQTTSettingsKgw3Activity;
-import com.moko.mkgw3.databinding.FragmentSslDeviceUrlBinding;
-import com.moko.mkgw3.dialog.BottomDialog;
+import com.moko.mkgw3.databinding.FragmentSslDeviceUrlKgw3Binding;
+import com.moko.mkgw3.dialog.MKgw3BottomDialog;
 
 import java.util.ArrayList;
 
-public class SSLDeviceUrlFragment extends Fragment {
+public class SSLDeviceUrlKgw3Fragment extends Fragment {
 
-    private static final String TAG = SSLDeviceUrlFragment.class.getSimpleName();
-    private FragmentSslDeviceUrlBinding mBind;
+    private static final String TAG = SSLDeviceUrlKgw3Fragment.class.getSimpleName();
+    private FragmentSslDeviceUrlKgw3Binding mBind;
 
 
     private ModifyMQTTSettingsKgw3Activity activity;
@@ -33,11 +32,11 @@ public class SSLDeviceUrlFragment extends Fragment {
     private ArrayList<String> values;
     private int selected;
 
-    public SSLDeviceUrlFragment() {
+    public SSLDeviceUrlKgw3Fragment() {
     }
 
-    public static SSLDeviceUrlFragment newInstance() {
-        SSLDeviceUrlFragment fragment = new SSLDeviceUrlFragment();
+    public static SSLDeviceUrlKgw3Fragment newInstance() {
+        SSLDeviceUrlKgw3Fragment fragment = new SSLDeviceUrlKgw3Fragment();
         return fragment;
     }
 
@@ -51,7 +50,7 @@ public class SSLDeviceUrlFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
-        mBind = FragmentSslDeviceUrlBinding.inflate(inflater, container, false);
+        mBind = FragmentSslDeviceUrlKgw3Binding.inflate(inflater, container, false);
         activity = (ModifyMQTTSettingsKgw3Activity) getActivity();
         mBind.clCertificate.setVisibility(mConnectMode > 0 ? View.VISIBLE : View.GONE);
         mBind.cbSsl.setChecked(mConnectMode > 0);
@@ -161,7 +160,7 @@ public class SSLDeviceUrlFragment extends Fragment {
     }
 
     public void selectCertificate() {
-        BottomDialog dialog = new BottomDialog();
+        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
         dialog.setDatas(values, selected);
         dialog.setListener(value -> {
             selected = value;

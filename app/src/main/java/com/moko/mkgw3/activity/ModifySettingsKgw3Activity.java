@@ -21,8 +21,8 @@ import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityModifySettingsKgw3Binding;
 import com.moko.mkgw3.db.MKgw3DBTools;
 import com.moko.mkgw3.dialog.AlertMessageDialog;
-import com.moko.mkgw3.entity.MQTTConfig;
-import com.moko.mkgw3.entity.MokoDevice;
+import com.moko.mkgw3.entity.MQTTConfigKgw3;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
@@ -40,19 +40,19 @@ import java.lang.reflect.Type;
 
 public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySettingsKgw3Binding> {
     public static String TAG = ModifySettingsKgw3Activity.class.getSimpleName();
-    private MokoDevice mMokoDevice;
-    private MQTTConfig appMqttConfig;
+    private MokoDeviceKgw3 mMokoDeviceKgw3;
+    private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
     public Handler mHandler;
-    private MQTTConfig mqttDeviceConfig;
+    private MQTTConfigKgw3 mqttDeviceConfig;
 
     @Override
     protected void onCreate() {
-        mMokoDevice = (MokoDevice) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
+        mMokoDeviceKgw3 = (MokoDeviceKgw3) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
-        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfig.class);
-        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDevice.topicSubscribe : appMqttConfig.topicPublish;
-        mqttDeviceConfig = new MQTTConfig();
+        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
+        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
+        mqttDeviceConfig = new MQTTConfigKgw3();
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.postDelayed(() -> {
             dismissLoadingProgressDialog();
@@ -87,7 +87,7 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
@@ -112,14 +112,14 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             if (result.result_code == 0) {
-                mMokoDevice.lwtEnable = mqttDeviceConfig.lwtEnable ? 1 : 0;
-                mMokoDevice.lwtTopic = mqttDeviceConfig.lwtTopic;
-                mMokoDevice.topicPublish = mqttDeviceConfig.topicPublish;
-                mMokoDevice.topicSubscribe = mqttDeviceConfig.topicSubscribe;
-                MQTTConfig mqttConfig = new Gson().fromJson(mMokoDevice.mqttInfo, MQTTConfig.class);
+                mMokoDeviceKgw3.lwtEnable = mqttDeviceConfig.lwtEnable ? 1 : 0;
+                mMokoDeviceKgw3.lwtTopic = mqttDeviceConfig.lwtTopic;
+                mMokoDeviceKgw3.topicPublish = mqttDeviceConfig.topicPublish;
+                mMokoDeviceKgw3.topicSubscribe = mqttDeviceConfig.topicSubscribe;
+                MQTTConfigKgw3 mqttConfig = new Gson().fromJson(mMokoDeviceKgw3.mqttInfo, MQTTConfigKgw3.class);
                 mqttConfig.host = mqttDeviceConfig.host;
                 mqttConfig.port = mqttDeviceConfig.port;
                 mqttConfig.clientId = mqttDeviceConfig.clientId;
@@ -136,8 +136,8 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
                 mqttConfig.lwtRetain = mqttDeviceConfig.lwtRetain;
                 mqttConfig.lwtTopic = mqttDeviceConfig.lwtTopic;
                 mqttConfig.lwtPayload = mqttDeviceConfig.lwtPayload;
-                mMokoDevice.mqttInfo = new Gson().toJson(mqttConfig, MQTTConfig.class);
-                MKgw3DBTools.getInstance(this).updateDevice(mMokoDevice);
+                mMokoDeviceKgw3.mqttInfo = new Gson().toJson(mqttConfig, MQTTConfigKgw3.class);
+                MKgw3DBTools.getInstance(this).updateDevice(mMokoDeviceKgw3);
                 mBind.tvName.postDelayed(() -> {
                     dismissLoadingProgressDialog();
                     mHandler.removeMessages(0);
@@ -145,7 +145,7 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
                     // 跳转首页，刷新数据
                     Intent intent = new Intent(this, MKGW3MainActivity.class);
                     intent.putExtra(AppConstants.EXTRA_KEY_FROM_ACTIVITY, TAG);
-                    intent.putExtra(AppConstants.EXTRA_KEY_MAC, mMokoDevice.mac);
+                    intent.putExtra(AppConstants.EXTRA_KEY_MAC, mMokoDeviceKgw3.mac);
                     startActivity(intent);
                 }, 1000);
             } else {
@@ -158,7 +158,7 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceOnlineEvent(DeviceOnlineEvent event) {
-        super.offline(event, mMokoDevice.mac);
+        super.offline(event, mMokoDeviceKgw3.mac);
     }
 
     public void onBack(View view) {
@@ -172,7 +172,7 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
             return;
         }
         Intent i = new Intent(this, ModifyNetworkSettingsKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startActivity(i);
     }
 
@@ -183,7 +183,7 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
             return;
         }
         Intent i = new Intent(this, ModifyMQTTSettingsKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         launcher.launch(i);
     }
 
@@ -191,13 +191,13 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
 
     private void onMQTTSettingsResult(ActivityResult result) {
         if (result.getResultCode() == RESULT_OK) {
-            mqttDeviceConfig = (MQTTConfig) result.getData().getSerializableExtra(AppConstants.EXTRA_KEY_MQTT_CONFIG_DEVICE);
+            mqttDeviceConfig = (MQTTConfigKgw3) result.getData().getSerializableExtra(AppConstants.EXTRA_KEY_MQTT_CONFIG_DEVICE);
         }
     }
 
     private void getMqttSettings() {
         int msgId = MQTTConstants.READ_MSG_ID_MQTT_SETTINGS;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -229,7 +229,7 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
         int msgId = MQTTConstants.CONFIG_MSG_ID_REBOOT;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("reset", 0);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {

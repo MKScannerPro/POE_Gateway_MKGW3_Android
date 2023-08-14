@@ -9,16 +9,16 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import com.moko.mkgw3.R;
-import com.moko.mkgw3.databinding.DialogPasswordRemoteBleBinding;
+import com.moko.mkgw3.databinding.DialogPasswordKgw3BleBinding;
 
-public class PasswordRemoteBleDialog extends MokoBaseDialog<DialogPasswordRemoteBleBinding> {
-    public static final String TAG = PasswordRemoteBleDialog.class.getSimpleName();
+public class PasswordBleDialogKgw3 extends MokoBaseDialog<DialogPasswordKgw3BleBinding> {
+    public static final String TAG = PasswordBleDialogKgw3.class.getSimpleName();
 
     private final String FILTER_ASCII = "[ -~]*";
 
     @Override
-    protected DialogPasswordRemoteBleBinding getViewBind(LayoutInflater inflater, ViewGroup container) {
-        return DialogPasswordRemoteBleBinding.inflate(inflater, container, false);
+    protected DialogPasswordKgw3BleBinding getViewBind(LayoutInflater inflater, ViewGroup container) {
+        return DialogPasswordKgw3BleBinding.inflate(inflater, container, false);
     }
 
     @Override

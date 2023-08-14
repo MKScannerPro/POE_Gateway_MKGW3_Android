@@ -7,26 +7,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.FragmentUserAppBinding;
-
 import androidx.fragment.app.Fragment;
 
-public class UserFragment extends Fragment {
+import com.moko.mkgw3.base.BaseActivity;
+import com.moko.mkgw3.databinding.FragmentUserAppKgw3Binding;
+
+public class UserKgw3Fragment extends Fragment {
     private final String FILTER_ASCII = "[ -~]*";
-    private static final String TAG = UserFragment.class.getSimpleName();
-    private FragmentUserAppBinding mBind;
+    private static final String TAG = UserKgw3Fragment.class.getSimpleName();
+    private FragmentUserAppKgw3Binding mBind;
 
 
     private BaseActivity activity;
     private String username;
     private String password;
 
-    public UserFragment() {
+    public UserKgw3Fragment() {
     }
 
-    public static UserFragment newInstance() {
-        UserFragment fragment = new UserFragment();
+    public static UserKgw3Fragment newInstance() {
+        UserKgw3Fragment fragment = new UserKgw3Fragment();
         return fragment;
     }
 
@@ -40,7 +40,7 @@ public class UserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
-        mBind = FragmentUserAppBinding.inflate(inflater, container, false);
+        mBind = FragmentUserAppKgw3Binding.inflate(inflater, container, false);
         activity = (BaseActivity) getActivity();
         InputFilter filter = (source, start, end, dest, dstart, dend) -> {
             if (!(source + "").matches(FILTER_ASCII)) {

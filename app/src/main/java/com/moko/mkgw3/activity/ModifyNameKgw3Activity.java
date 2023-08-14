@@ -13,7 +13,7 @@ import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityModifyDeviceNameKgw3Binding;
 import com.moko.mkgw3.db.MKgw3DBTools;
-import com.moko.mkgw3.entity.MokoDevice;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.event.MQTTConnectionCompleteEvent;
 
@@ -25,11 +25,11 @@ public class ModifyNameKgw3Activity extends BaseActivity<ActivityModifyDeviceNam
     private final String FILTER_ASCII = "[ -~]*";
     public static String TAG = ModifyNameKgw3Activity.class.getSimpleName();
 
-    private MokoDevice device;
+    private MokoDeviceKgw3 device;
 
     @Override
     protected void onCreate() {
-        device = (MokoDevice) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
+        device = (MokoDeviceKgw3) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
         InputFilter filter = (source, start, end, dest, dstart, dend) -> {
             if (!(source + "").matches(FILTER_ASCII)) {
                 return "";

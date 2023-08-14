@@ -9,9 +9,9 @@ import com.moko.support.mkgw3.entity.BleDevice;
 
 import java.util.Locale;
 
-public class BleDeviceAdapter extends BaseQuickAdapter<BleDevice, BaseViewHolder> {
-    public BleDeviceAdapter() {
-        super(R.layout.item_ble_device);
+public class BleDeviceKgw3Adapter extends BaseQuickAdapter<BleDevice, BaseViewHolder> {
+    public BleDeviceKgw3Adapter() {
+        super(R.layout.item_ble_device_kgw3);
     }
 
     @Override

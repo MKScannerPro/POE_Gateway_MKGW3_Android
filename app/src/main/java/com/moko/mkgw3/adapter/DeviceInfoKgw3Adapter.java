@@ -5,9 +5,9 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.moko.mkgw3.R;
 import com.moko.support.mkgw3.entity.DeviceInfo;
 
-public class DeviceInfoAdapter extends BaseQuickAdapter<DeviceInfo, BaseViewHolder> {
-    public DeviceInfoAdapter() {
-        super(R.layout.item_devices);
+public class DeviceInfoKgw3Adapter extends BaseQuickAdapter<DeviceInfo, BaseViewHolder> {
+    public DeviceInfoKgw3Adapter() {
+        super(R.layout.item_devices_kgw3);
     }
 
     @Override

@@ -9,11 +9,11 @@ import com.moko.mkgw3.entity.BleOtherChar;
 
 import java.util.List;
 
-public class BleCharacteristicsAdapter extends BaseMultiItemQuickAdapter<BleOtherChar, BaseViewHolder> {
-    public BleCharacteristicsAdapter(List<BleOtherChar> data) {
+public class BleCharacteristicsAdapterKgw3 extends BaseMultiItemQuickAdapter<BleOtherChar, BaseViewHolder> {
+    public BleCharacteristicsAdapterKgw3(List<BleOtherChar> data) {
         super(data);
-        addItemType(0, R.layout.item_service);
-        addItemType(1, R.layout.item_characteristics);
+        addItemType(0, R.layout.item_service_kgw3);
+        addItemType(1, R.layout.item_characteristics_kgw3);
     }
 
     @Override

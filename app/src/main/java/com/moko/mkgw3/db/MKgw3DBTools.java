@@ -6,7 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.moko.mkgw3.entity.MokoDevice;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
 
 import java.util.ArrayList;
 
@@ -28,126 +28,126 @@ public class MKgw3DBTools {
         db = myMKgw3DBOpenHelper.getWritableDatabase();
     }
 
-    public long insertDevice(MokoDevice mokoDevice) {
+    public long insertDevice(MokoDeviceKgw3 mokoDeviceKgw3) {
         ContentValues cv = new ContentValues();
-        cv.put(MKgw3DBConstants.DEVICE_FIELD_NAME, mokoDevice.name);
-        cv.put(MKgw3DBConstants.DEVICE_FIELD_MAC, mokoDevice.mac);
-        cv.put(MKgw3DBConstants.DEVICE_FIELD_MQTT_INFO, mokoDevice.mqttInfo);
-        cv.put(MKgw3DBConstants.DEVICE_FIELD_DEVICE_TYPE, mokoDevice.deviceType);
-        cv.put(MKgw3DBConstants.DEVICE_FIELD_LWT_ENABLE, mokoDevice.lwtEnable);
-        cv.put(MKgw3DBConstants.DEVICE_FIELD_LWT_TOPIC, mokoDevice.lwtTopic);
-        cv.put(MKgw3DBConstants.DEVICE_FIELD_TOPIC_PUBLISH, mokoDevice.topicPublish);
-        cv.put(MKgw3DBConstants.DEVICE_FIELD_TOPIC_SUBSCRIBE, mokoDevice.topicSubscribe);
-        cv.put(MKgw3DBConstants.DEVICE_NETWORK_TYPE, mokoDevice.networkType);
+        cv.put(MKgw3DBConstants.DEVICE_FIELD_NAME, mokoDeviceKgw3.name);
+        cv.put(MKgw3DBConstants.DEVICE_FIELD_MAC, mokoDeviceKgw3.mac);
+        cv.put(MKgw3DBConstants.DEVICE_FIELD_MQTT_INFO, mokoDeviceKgw3.mqttInfo);
+        cv.put(MKgw3DBConstants.DEVICE_FIELD_DEVICE_TYPE, mokoDeviceKgw3.deviceType);
+        cv.put(MKgw3DBConstants.DEVICE_FIELD_LWT_ENABLE, mokoDeviceKgw3.lwtEnable);
+        cv.put(MKgw3DBConstants.DEVICE_FIELD_LWT_TOPIC, mokoDeviceKgw3.lwtTopic);
+        cv.put(MKgw3DBConstants.DEVICE_FIELD_TOPIC_PUBLISH, mokoDeviceKgw3.topicPublish);
+        cv.put(MKgw3DBConstants.DEVICE_FIELD_TOPIC_SUBSCRIBE, mokoDeviceKgw3.topicSubscribe);
+        cv.put(MKgw3DBConstants.DEVICE_NETWORK_TYPE, mokoDeviceKgw3.networkType);
         long row = db.insert(MKgw3DBConstants.TABLE_NAME_DEVICE, null, cv);
         return row;
     }
 
     @SuppressLint("Range")
-    public ArrayList<MokoDevice> selectAllDevice() {
+    public ArrayList<MokoDeviceKgw3> selectAllDevice() {
         Cursor cursor = db.query(MKgw3DBConstants.TABLE_NAME_DEVICE, null, null, null,
                 null, null, MKgw3DBConstants.DEVICE_FIELD_ID + " DESC");
-        ArrayList<MokoDevice> mokoDevices = new ArrayList<>();
+        ArrayList<MokoDeviceKgw3> mokoDeviceKgw3s = new ArrayList<>();
         while (cursor.moveToNext()) {
-            MokoDevice mokoDevice = new MokoDevice();
-            mokoDevice.id = cursor.getInt(cursor
+            MokoDeviceKgw3 mokoDeviceKgw3 = new MokoDeviceKgw3();
+            mokoDeviceKgw3.id = cursor.getInt(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_ID));
-            mokoDevice.name = cursor.getString(cursor
+            mokoDeviceKgw3.name = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_NAME));
-            mokoDevice.mac = cursor.getString(cursor
+            mokoDeviceKgw3.mac = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_MAC));
-            mokoDevice.mqttInfo = cursor.getString(cursor
+            mokoDeviceKgw3.mqttInfo = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_MQTT_INFO));
-            mokoDevice.deviceType = cursor.getInt(cursor
+            mokoDeviceKgw3.deviceType = cursor.getInt(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_DEVICE_TYPE));
-            mokoDevice.lwtEnable = cursor.getInt(cursor
+            mokoDeviceKgw3.lwtEnable = cursor.getInt(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_LWT_ENABLE));
-            mokoDevice.lwtTopic = cursor.getString(cursor
+            mokoDeviceKgw3.lwtTopic = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_LWT_TOPIC));
-            mokoDevice.topicPublish = cursor.getString(cursor
+            mokoDeviceKgw3.topicPublish = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_TOPIC_PUBLISH));
-            mokoDevice.topicSubscribe = cursor.getString(cursor
+            mokoDeviceKgw3.topicSubscribe = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_TOPIC_SUBSCRIBE));
-            mokoDevice.networkType = cursor.getInt(cursor.getColumnIndex(MKgw3DBConstants.DEVICE_NETWORK_TYPE));
-            mokoDevices.add(mokoDevice);
+            mokoDeviceKgw3.networkType = cursor.getInt(cursor.getColumnIndex(MKgw3DBConstants.DEVICE_NETWORK_TYPE));
+            mokoDeviceKgw3s.add(mokoDeviceKgw3);
         }
-        return mokoDevices;
+        return mokoDeviceKgw3s;
     }
 
     @SuppressLint("Range")
-    public MokoDevice selectDevice(String mac) {
+    public MokoDeviceKgw3 selectDevice(String mac) {
         Cursor cursor = db.query(MKgw3DBConstants.TABLE_NAME_DEVICE, null, MKgw3DBConstants.DEVICE_FIELD_MAC + " = ?", new String[]{mac}, null, null, null);
-        MokoDevice mokoDevice = null;
+        MokoDeviceKgw3 mokoDeviceKgw3 = null;
         while (cursor.moveToFirst()) {
-            mokoDevice = new MokoDevice();
-            mokoDevice.id = cursor.getInt(cursor
+            mokoDeviceKgw3 = new MokoDeviceKgw3();
+            mokoDeviceKgw3.id = cursor.getInt(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_ID));
-            mokoDevice.name = cursor.getString(cursor
+            mokoDeviceKgw3.name = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_NAME));
-            mokoDevice.mac = cursor.getString(cursor
+            mokoDeviceKgw3.mac = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_MAC));
-            mokoDevice.mqttInfo = cursor.getString(cursor
+            mokoDeviceKgw3.mqttInfo = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_MQTT_INFO));
-            mokoDevice.deviceType = cursor.getInt(cursor
+            mokoDeviceKgw3.deviceType = cursor.getInt(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_DEVICE_TYPE));
-            mokoDevice.lwtEnable = cursor.getInt(cursor
+            mokoDeviceKgw3.lwtEnable = cursor.getInt(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_LWT_ENABLE));
-            mokoDevice.lwtTopic = cursor.getString(cursor
+            mokoDeviceKgw3.lwtTopic = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_LWT_TOPIC));
-            mokoDevice.topicPublish = cursor.getString(cursor
+            mokoDeviceKgw3.topicPublish = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_TOPIC_PUBLISH));
-            mokoDevice.topicSubscribe = cursor.getString(cursor
+            mokoDeviceKgw3.topicSubscribe = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_TOPIC_SUBSCRIBE));
-            mokoDevice.networkType = cursor.getInt(cursor.getColumnIndex(MKgw3DBConstants.DEVICE_NETWORK_TYPE));
+            mokoDeviceKgw3.networkType = cursor.getInt(cursor.getColumnIndex(MKgw3DBConstants.DEVICE_NETWORK_TYPE));
             break;
         }
-        return mokoDevice;
+        return mokoDeviceKgw3;
     }
 
     @SuppressLint("Range")
-    public MokoDevice selectDeviceByMac(String mac) {
+    public MokoDeviceKgw3 selectDeviceByMac(String mac) {
         Cursor cursor = db.query(MKgw3DBConstants.TABLE_NAME_DEVICE, null, MKgw3DBConstants.DEVICE_FIELD_MAC + " = ?", new String[]{mac}, null, null, null);
-        MokoDevice mokoDevice = null;
+        MokoDeviceKgw3 mokoDeviceKgw3 = null;
         while (cursor.moveToFirst()) {
-            mokoDevice = new MokoDevice();
-            mokoDevice.id = cursor.getInt(cursor
+            mokoDeviceKgw3 = new MokoDeviceKgw3();
+            mokoDeviceKgw3.id = cursor.getInt(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_ID));
-            mokoDevice.name = cursor.getString(cursor
+            mokoDeviceKgw3.name = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_NAME));
-            mokoDevice.mac = cursor.getString(cursor
+            mokoDeviceKgw3.mac = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_MAC));
-            mokoDevice.mqttInfo = cursor.getString(cursor
+            mokoDeviceKgw3.mqttInfo = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_MQTT_INFO));
-            mokoDevice.deviceType = cursor.getInt(cursor
+            mokoDeviceKgw3.deviceType = cursor.getInt(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_DEVICE_TYPE));
-            mokoDevice.lwtEnable = cursor.getInt(cursor
+            mokoDeviceKgw3.lwtEnable = cursor.getInt(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_LWT_ENABLE));
-            mokoDevice.lwtTopic = cursor.getString(cursor
+            mokoDeviceKgw3.lwtTopic = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_LWT_TOPIC));
-            mokoDevice.topicPublish = cursor.getString(cursor
+            mokoDeviceKgw3.topicPublish = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_TOPIC_PUBLISH));
-            mokoDevice.topicSubscribe = cursor.getString(cursor
+            mokoDeviceKgw3.topicSubscribe = cursor.getString(cursor
                     .getColumnIndex(MKgw3DBConstants.DEVICE_FIELD_TOPIC_SUBSCRIBE));
-            mokoDevice.networkType = cursor.getInt(cursor.getColumnIndex(MKgw3DBConstants.DEVICE_NETWORK_TYPE));
+            mokoDeviceKgw3.networkType = cursor.getInt(cursor.getColumnIndex(MKgw3DBConstants.DEVICE_NETWORK_TYPE));
             break;
         }
-        return mokoDevice;
+        return mokoDeviceKgw3;
     }
 
 
-    public void updateDevice(MokoDevice mokoDevice) {
+    public void updateDevice(MokoDeviceKgw3 mokoDeviceKgw3) {
         String where = MKgw3DBConstants.DEVICE_FIELD_MAC + " = ?";
-        String[] whereValue = {mokoDevice.mac};
+        String[] whereValue = {mokoDeviceKgw3.mac};
         ContentValues cv = new ContentValues();
-        cv.put(MKgw3DBConstants.DEVICE_FIELD_NAME, mokoDevice.name);
-        cv.put(MKgw3DBConstants.DEVICE_FIELD_MAC, mokoDevice.mac);
-        cv.put(MKgw3DBConstants.DEVICE_FIELD_MQTT_INFO, mokoDevice.mqttInfo);
-        cv.put(MKgw3DBConstants.DEVICE_FIELD_LWT_ENABLE, mokoDevice.lwtEnable);
-        cv.put(MKgw3DBConstants.DEVICE_FIELD_LWT_TOPIC, mokoDevice.lwtTopic);
-        cv.put(MKgw3DBConstants.DEVICE_FIELD_TOPIC_PUBLISH, mokoDevice.topicPublish);
-        cv.put(MKgw3DBConstants.DEVICE_FIELD_TOPIC_SUBSCRIBE, mokoDevice.topicSubscribe);
-        cv.put(MKgw3DBConstants.DEVICE_FIELD_DEVICE_TYPE, mokoDevice.deviceType);
-        cv.put(MKgw3DBConstants.DEVICE_NETWORK_TYPE, mokoDevice.networkType);
+        cv.put(MKgw3DBConstants.DEVICE_FIELD_NAME, mokoDeviceKgw3.name);
+        cv.put(MKgw3DBConstants.DEVICE_FIELD_MAC, mokoDeviceKgw3.mac);
+        cv.put(MKgw3DBConstants.DEVICE_FIELD_MQTT_INFO, mokoDeviceKgw3.mqttInfo);
+        cv.put(MKgw3DBConstants.DEVICE_FIELD_LWT_ENABLE, mokoDeviceKgw3.lwtEnable);
+        cv.put(MKgw3DBConstants.DEVICE_FIELD_LWT_TOPIC, mokoDeviceKgw3.lwtTopic);
+        cv.put(MKgw3DBConstants.DEVICE_FIELD_TOPIC_PUBLISH, mokoDeviceKgw3.topicPublish);
+        cv.put(MKgw3DBConstants.DEVICE_FIELD_TOPIC_SUBSCRIBE, mokoDeviceKgw3.topicSubscribe);
+        cv.put(MKgw3DBConstants.DEVICE_FIELD_DEVICE_TYPE, mokoDeviceKgw3.deviceType);
+        cv.put(MKgw3DBConstants.DEVICE_NETWORK_TYPE, mokoDeviceKgw3.networkType);
         db.update(MKgw3DBConstants.TABLE_NAME_DEVICE, cv, where, whereValue);
     }
 
@@ -155,7 +155,7 @@ public class MKgw3DBTools {
         db.delete(MKgw3DBConstants.TABLE_NAME_DEVICE, null, null);
     }
 
-    public void deleteDevice(MokoDevice device) {
+    public void deleteDevice(MokoDeviceKgw3 device) {
         String where = MKgw3DBConstants.DEVICE_FIELD_MAC + " = ?";
         String[] whereValue = {device.mac + ""};
         db.delete(MKgw3DBConstants.TABLE_NAME_DEVICE, where, whereValue);

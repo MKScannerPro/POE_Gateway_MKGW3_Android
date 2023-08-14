@@ -9,34 +9,32 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.FragmentSslDeviceRemoteBinding;
-import com.moko.mkgw3.dialog.BottomDialog;
+import com.moko.mkgw3.databinding.FragmentSslAppKgw3Binding;
+import com.moko.mkgw3.dialog.MKgw3BottomDialog;
 import com.moko.mkgw3.utils.FileUtils;
 import com.moko.mkgw3.utils.ToastUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-public class SSLDeviceFragment extends Fragment {
+public class SSLKgw3Fragment extends Fragment {
     public static final int REQUEST_CODE_SELECT_CA = 0x10;
     public static final int REQUEST_CODE_SELECT_CLIENT_KEY = 0x11;
     public static final int REQUEST_CODE_SELECT_CLIENT_CERT = 0x12;
 
-    private static final String TAG = SSLDeviceFragment.class.getSimpleName();
-
-    private FragmentSslDeviceRemoteBinding mBind;
+    private static final String TAG = SSLKgw3Fragment.class.getSimpleName();
+    private FragmentSslAppKgw3Binding mBind;
 
 
     private BaseActivity activity;
 
-    private int mConnectMode;
+    private int connectMode;
 
     private String caPath;
     private String clientKeyPath;
@@ -45,11 +43,11 @@ public class SSLDeviceFragment extends Fragment {
     private ArrayList<String> values;
     private int selected;
 
-    public SSLDeviceFragment() {
+    public SSLKgw3Fragment() {
     }
 
-    public static SSLDeviceFragment newInstance() {
-        SSLDeviceFragment fragment = new SSLDeviceFragment();
+    public static SSLKgw3Fragment newInstance() {
+        SSLKgw3Fragment fragment = new SSLKgw3Fragment();
         return fragment;
     }
 
@@ -63,27 +61,24 @@ public class SSLDeviceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
-        mBind = FragmentSslDeviceRemoteBinding.inflate(inflater, container, false);
+        mBind = FragmentSslAppKgw3Binding.inflate(inflater, container, false);
         activity = (BaseActivity) getActivity();
-        mBind.clCertificate.setVisibility(mConnectMode > 0 ? View.VISIBLE : View.GONE);
-        mBind.cbSsl.setChecked(mConnectMode > 0);
-        mBind.cbSsl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked) {
-                    mConnectMode = 0;
-                } else {
-                    mConnectMode = selected + 1;
-                }
-                mBind.clCertificate.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        mBind.clCertificate.setVisibility(connectMode > 0 ? View.VISIBLE : View.GONE);
+        mBind.cbSsl.setChecked(connectMode > 0);
+        mBind.cbSsl.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isChecked) {
+                connectMode = 0;
+            } else {
+                connectMode = selected + 1;
             }
+            mBind.clCertificate.setVisibility(isChecked ? View.VISIBLE : View.GONE);
         });
         values = new ArrayList<>();
         values.add("CA signed server certificate");
-        values.add("CA certificate file");
+        values.add("CA certificate");
         values.add("Self signed certificates");
-        if (mConnectMode > 0) {
-            selected = mConnectMode - 1;
+        if (connectMode > 0) {
+            selected = connectMode - 1;
             mBind.tvCaFile.setText(caPath);
             mBind.tvClientKeyFile.setText(clientKeyPath);
             mBind.tvClientCertFile.setText(clientCertPath);
@@ -124,31 +119,28 @@ public class SSLDeviceFragment extends Fragment {
     }
 
     public void setConnectMode(int connectMode) {
-        this.mConnectMode = connectMode;
+        this.connectMode = connectMode;
         if (mBind == null)
             return;
-        mBind.clCertificate.setVisibility(mConnectMode > 0 ? View.VISIBLE : View.GONE);
-        if (mConnectMode > 0) {
-            selected = mConnectMode - 1;
-            mBind.tvCaFile.setText(caPath);
-            mBind.tvClientKeyFile.setText(clientKeyPath);
-            mBind.tvClientCertFile.setText(clientCertPath);
+        mBind.clCertificate.setVisibility(connectMode > 0 ? View.VISIBLE : View.GONE);
+        if (connectMode > 0) {
+            selected = connectMode - 1;
             mBind.tvCertification.setText(values.get(selected));
+            if (selected == 0) {
+                mBind.llCa.setVisibility(View.GONE);
+                mBind.llClientKey.setVisibility(View.GONE);
+                mBind.llClientCert.setVisibility(View.GONE);
+            } else if (selected == 1) {
+                mBind.llCa.setVisibility(View.VISIBLE);
+                mBind.llClientKey.setVisibility(View.GONE);
+                mBind.llClientCert.setVisibility(View.GONE);
+            } else if (selected == 2) {
+                mBind.llCa.setVisibility(View.VISIBLE);
+                mBind.llClientKey.setVisibility(View.VISIBLE);
+                mBind.llClientCert.setVisibility(View.VISIBLE);
+            }
         }
-        mBind.cbSsl.setChecked(mConnectMode > 0);
-        if (selected == 0) {
-            mBind.llCa.setVisibility(View.GONE);
-            mBind.llClientKey.setVisibility(View.GONE);
-            mBind.llClientCert.setVisibility(View.GONE);
-        } else if (selected == 1) {
-            mBind.llCa.setVisibility(View.VISIBLE);
-            mBind.llClientKey.setVisibility(View.GONE);
-            mBind.llClientCert.setVisibility(View.GONE);
-        } else if (selected == 2) {
-            mBind.llCa.setVisibility(View.VISIBLE);
-            mBind.llClientKey.setVisibility(View.VISIBLE);
-            mBind.llClientCert.setVisibility(View.VISIBLE);
-        }
+        mBind.cbSsl.setChecked(connectMode > 0);
     }
 
     public void setCAPath(String caPath) {
@@ -173,23 +165,23 @@ public class SSLDeviceFragment extends Fragment {
     }
 
     public void selectCertificate() {
-        BottomDialog dialog = new BottomDialog();
+        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
         dialog.setDatas(values, selected);
         dialog.setListener(value -> {
             selected = value;
             mBind.tvCertification.setText(values.get(selected));
             if (selected == 0) {
-                mConnectMode = 1;
+                connectMode = 1;
                 mBind.llCa.setVisibility(View.GONE);
                 mBind.llClientKey.setVisibility(View.GONE);
                 mBind.llClientCert.setVisibility(View.GONE);
             } else if (selected == 1) {
-                mConnectMode = 2;
+                connectMode = 2;
                 mBind.llCa.setVisibility(View.VISIBLE);
                 mBind.llClientKey.setVisibility(View.GONE);
                 mBind.llClientCert.setVisibility(View.GONE);
             } else if (selected == 2) {
-                mConnectMode = 3;
+                connectMode = 3;
                 mBind.llCa.setVisibility(View.VISIBLE);
                 mBind.llClientKey.setVisibility(View.VISIBLE);
                 mBind.llClientCert.setVisibility(View.VISIBLE);
@@ -266,12 +258,12 @@ public class SSLDeviceFragment extends Fragment {
         final String caFile = mBind.tvCaFile.getText().toString();
         final String clientKeyFile = mBind.tvClientKeyFile.getText().toString();
         final String clientCertFile = mBind.tvClientCertFile.getText().toString();
-        if (mConnectMode == 2) {
+        if (connectMode == 2) {
             if (TextUtils.isEmpty(caFile)) {
                 ToastUtils.showToast(activity, getString(R.string.mqtt_verify_ca));
                 return false;
             }
-        } else if (mConnectMode == 3) {
+        } else if (connectMode == 3) {
             if (TextUtils.isEmpty(caFile)) {
                 ToastUtils.showToast(activity, getString(R.string.mqtt_verify_ca));
                 return false;
@@ -289,7 +281,7 @@ public class SSLDeviceFragment extends Fragment {
     }
 
     public int getConnectMode() {
-        return mConnectMode;
+        return connectMode;
     }
 
     public String getCaPath() {

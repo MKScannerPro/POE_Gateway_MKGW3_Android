@@ -15,9 +15,9 @@ import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityModifyNetworkSettingsKgw3Binding;
-import com.moko.mkgw3.dialog.BottomDialog;
-import com.moko.mkgw3.entity.MQTTConfig;
-import com.moko.mkgw3.entity.MokoDevice;
+import com.moko.mkgw3.dialog.MKgw3BottomDialog;
+import com.moko.mkgw3.entity.MQTTConfigKgw3;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
@@ -44,8 +44,8 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
     private int mSecuritySelected;
     private ArrayList<String> mEAPTypeValues;
     private int mEAPTypeSelected;
-    private MokoDevice mMokoDevice;
-    private MQTTConfig appMqttConfig;
+    private MokoDeviceKgw3 mMokoDeviceKgw3;
+    private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
     public Handler mHandler;
     private final String[] networkTypeValues = {"Ethernet", "WiFi"};
@@ -92,10 +92,10 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
         mBind.etCertFileUrl.setFilters(new InputFilter[]{new InputFilter.LengthFilter(256), filter});
         mBind.etKeyFileUrl.setFilters(new InputFilter[]{new InputFilter.LengthFilter(256), filter});
 
-        mMokoDevice = (MokoDevice) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
+        mMokoDeviceKgw3 = (MokoDeviceKgw3) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
-        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfig.class);
-        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDevice.topicSubscribe : appMqttConfig.topicPublish;
+        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
+        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.postDelayed(() -> {
             dismissLoadingProgressDialog();
@@ -122,7 +122,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
 
     private void onNetworkTypeClick() {
         if (isWindowLocked()) return;
-        BottomDialog dialog = new BottomDialog();
+        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
         dialog.setDatas(new ArrayList<>(Arrays.asList(networkTypeValues)), selectedNetworkType);
         dialog.setListener(value -> {
             selectedNetworkType = value;
@@ -154,7 +154,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             selectedNetworkType = result.data.get("net_interface").getAsInt();
             mBind.tvNetworkType.setText(networkTypeValues[selectedNetworkType]);
             if (selectedNetworkType == 0) {
@@ -168,7 +168,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             mSecuritySelected = result.data.get("security_type").getAsInt();
             mBind.etSsid.setText(result.data.get("ssid").getAsString());
             mBind.etPassword.setText(result.data.get("passwd").getAsString());
@@ -201,7 +201,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             wifiDhcpEnable = result.data.get("dhcp_en").getAsInt() == 1;
             wifiIp = result.data.get("ip").getAsString();
             wifiMask = result.data.get("netmask").getAsString();
@@ -217,7 +217,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             ethernetDhcpEnable = result.data.get("dhcp_en").getAsInt() == 1;
@@ -234,7 +234,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
             }.getType();
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             int status = result.data.get("status").getAsInt();
@@ -253,7 +253,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             if (result.result_code != 0) return;
             setNetworkSettings();
         }
@@ -261,7 +261,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             if (result.result_code != 0) return;
             setWifiSettings();
         }
@@ -269,7 +269,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             if (result.result_code == 0) {
@@ -282,7 +282,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             if (result.result_code == 0) {
@@ -316,7 +316,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
             }.getType();
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
@@ -343,7 +343,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceOnlineEvent(DeviceOnlineEvent event) {
-        super.offline(event, mMokoDevice.mac);
+        super.offline(event, mMokoDeviceKgw3.mac);
     }
 
     public void onBack(View view) {
@@ -354,7 +354,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
         int msgId = MQTTConstants.CONFIG_MSG_ID_NETWORK_TYPE;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("net_interface", selectedNetworkType);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -377,7 +377,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
         jsonObject.addProperty("netmask", mBind.layoutIp.etMask.getText().toString());
         jsonObject.addProperty("gw", mBind.layoutIp.etGateway.getText().toString());
         jsonObject.addProperty("dns", mBind.layoutIp.etDns.getText().toString());
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -401,7 +401,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
         jsonObject.addProperty("eap_username", mSecuritySelected != 0 ? username : "");
         jsonObject.addProperty("eap_passwd", mSecuritySelected != 0 ? eapPassword : "");
         jsonObject.addProperty("eap_verify_server", mBind.cbVerifyServer.isChecked() ? 1 : 0);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -418,7 +418,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
         jsonObject.addProperty("ca_url", caFileUrl);
         jsonObject.addProperty("client_cert_url", certFileUrl);
         jsonObject.addProperty("client_key_url", keyFileUrl);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -428,7 +428,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
 
     private void getWifiSettings() {
         int msgId = MQTTConstants.READ_MSG_ID_WIFI_SETTINGS;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -438,7 +438,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
 
     private void getWifiIpInfo() {
         int msgId = MQTTConstants.READ_MSG_ID_WIFI_PARAMS;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -448,7 +448,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
 
     private void getEthernetIpInfo() {
         int msgId = MQTTConstants.READ_MSG_ID_ETHERNET_PARAMS;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -458,7 +458,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
 
     private void getNetworkType() {
         int msgId = MQTTConstants.READ_MSG_ID_NETWORK_TYPE;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -468,7 +468,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
 
     public void onSelectSecurity(View view) {
         if (isWindowLocked()) return;
-        BottomDialog dialog = new BottomDialog();
+        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
         dialog.setDatas(mSecurityValues, mSecuritySelected);
         dialog.setListener(value -> {
             mSecuritySelected = value;
@@ -502,7 +502,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
 
     public void onSelectEAPType(View view) {
         if (isWindowLocked()) return;
-        BottomDialog dialog = new BottomDialog();
+        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
         dialog.setDatas(mEAPTypeValues, mEAPTypeSelected);
         dialog.setListener(value -> {
             mEAPTypeSelected = value;
@@ -582,7 +582,7 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
 
     private void getDeviceStatus() {
         int msgId = MQTTConstants.READ_MSG_ID_DEVICE_STATUS;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {

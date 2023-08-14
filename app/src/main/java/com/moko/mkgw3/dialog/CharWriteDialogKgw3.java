@@ -7,14 +7,14 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import com.moko.mkgw3.R;
-import com.moko.mkgw3.databinding.DialogCharWriteBinding;
+import com.moko.mkgw3.databinding.DialogCharWriteKgw3Binding;
 
-public class CharWriteDialog extends MokoBaseDialog<DialogCharWriteBinding> {
-    public static final String TAG = CharWriteDialog.class.getSimpleName();
+public class CharWriteDialogKgw3 extends MokoBaseDialog<DialogCharWriteKgw3Binding> {
+    public static final String TAG = CharWriteDialogKgw3.class.getSimpleName();
 
     @Override
-    protected DialogCharWriteBinding getViewBind(LayoutInflater inflater, ViewGroup container) {
-        return DialogCharWriteBinding.inflate(inflater, container, false);
+    protected DialogCharWriteKgw3Binding getViewBind(LayoutInflater inflater, ViewGroup container) {
+        return DialogCharWriteKgw3Binding.inflate(inflater, container, false);
     }
 
     @Override

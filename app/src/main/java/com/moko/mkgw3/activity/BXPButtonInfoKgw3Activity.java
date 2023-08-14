@@ -19,8 +19,8 @@ import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityBxpButtonInfoKgw3Binding;
 import com.moko.mkgw3.db.MKgw3DBTools;
 import com.moko.mkgw3.dialog.AlertMessageDialog;
-import com.moko.mkgw3.entity.MQTTConfig;
-import com.moko.mkgw3.entity.MokoDevice;
+import com.moko.mkgw3.entity.MQTTConfigKgw3;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
@@ -39,8 +39,8 @@ import java.lang.reflect.Type;
 
 public class BXPButtonInfoKgw3Activity extends BaseActivity<ActivityBxpButtonInfoKgw3Binding> {
 
-    private MokoDevice mMokoDevice;
-    private MQTTConfig appMqttConfig;
+    private MokoDeviceKgw3 mMokoDeviceKgw3;
+    private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
 
     private BXPButtonInfo mBXPButtonInfo;
@@ -48,14 +48,14 @@ public class BXPButtonInfoKgw3Activity extends BaseActivity<ActivityBxpButtonInf
 
     @Override
     protected void onCreate() {
-        mMokoDevice = (MokoDevice) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
+        mMokoDeviceKgw3 = (MokoDeviceKgw3) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
-        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfig.class);
-        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDevice.topicSubscribe : appMqttConfig.topicPublish;
+        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
+        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
         mHandler = new Handler(Looper.getMainLooper());
 
         mBXPButtonInfo = (BXPButtonInfo) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_BXP_BUTTON_INFO);
-        mBind.tvDeviceName.setText(mMokoDevice.name);
+        mBind.tvDeviceName.setText(mMokoDeviceKgw3.name);
         mBind.tvProductModel.setText(mBXPButtonInfo.product_model);
         mBind.tvManufacturer.setText(mBXPButtonInfo.company_name);
         mBind.tvDeviceFirmwareVersion.setText(mBXPButtonInfo.firmware_version);
@@ -112,7 +112,7 @@ public class BXPButtonInfoKgw3Activity extends BaseActivity<ActivityBxpButtonInf
             Type type = new TypeToken<MsgNotify<BXPButtonInfo>>() {
             }.getType();
             MsgNotify<BXPButtonInfo> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             BXPButtonInfo bxpButtonInfo = result.data;
             if (bxpButtonInfo.result_code != 0) {
@@ -148,7 +148,7 @@ public class BXPButtonInfoKgw3Activity extends BaseActivity<ActivityBxpButtonInf
             Type type = new TypeToken<MsgNotify<BXPButtonInfo>>() {
             }.getType();
             MsgNotify<BXPButtonInfo> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             BXPButtonInfo bxpButtonInfo = result.data;
             if (bxpButtonInfo.result_code != 0) {
@@ -170,7 +170,7 @@ public class BXPButtonInfoKgw3Activity extends BaseActivity<ActivityBxpButtonInf
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
             }.getType();
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             ToastUtils.showToast(this, "Bluetooth disconnect");
             finish();
@@ -180,15 +180,15 @@ public class BXPButtonInfoKgw3Activity extends BaseActivity<ActivityBxpButtonInf
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceModifyNameEvent(DeviceModifyNameEvent event) {
         // 修改了设备名称
-        MokoDevice device = MKgw3DBTools.getInstance(BXPButtonInfoKgw3Activity.this).selectDevice(mMokoDevice.mac);
-        mMokoDevice.name = device.name;
-        mBind.tvDeviceName.setText(mMokoDevice.name);
+        MokoDeviceKgw3 device = MKgw3DBTools.getInstance(BXPButtonInfoKgw3Activity.this).selectDevice(mMokoDeviceKgw3.mac);
+        mMokoDeviceKgw3.name = device.name;
+        mBind.tvDeviceName.setText(mMokoDeviceKgw3.name);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceOnlineEvent(DeviceOnlineEvent event) {
         String mac = event.getMac();
-        if (!mMokoDevice.mac.equals(mac))
+        if (!mMokoDeviceKgw3.mac.equals(mac))
             return;
         boolean online = event.isOnline();
         if (!online) {
@@ -204,7 +204,7 @@ public class BXPButtonInfoKgw3Activity extends BaseActivity<ActivityBxpButtonInf
             return;
         }
         Intent intent = new Intent(this, BeaconDFUKgw3Activity.class);
-        intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
+        intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         intent.putExtra(AppConstants.EXTRA_KEY_MAC, mBXPButtonInfo.mac);
         startBeaconDFU.launch(intent);
     }
@@ -258,7 +258,7 @@ public class BXPButtonInfoKgw3Activity extends BaseActivity<ActivityBxpButtonInf
         int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_DISCONNECT;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", mBXPButtonInfo.mac);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -270,7 +270,7 @@ public class BXPButtonInfoKgw3Activity extends BaseActivity<ActivityBxpButtonInf
         int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_BUTTON_STATUS;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", mBXPButtonInfo.mac);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -282,7 +282,7 @@ public class BXPButtonInfoKgw3Activity extends BaseActivity<ActivityBxpButtonInf
         int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_BUTTON_DISMISS_ALARM;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", mBXPButtonInfo.mac);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {

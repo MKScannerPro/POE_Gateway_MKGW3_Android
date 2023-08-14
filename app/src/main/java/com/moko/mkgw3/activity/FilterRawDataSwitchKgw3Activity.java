@@ -18,8 +18,8 @@ import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityFilterRawDataSwitchKgw3Binding;
-import com.moko.mkgw3.entity.MQTTConfig;
-import com.moko.mkgw3.entity.MokoDevice;
+import com.moko.mkgw3.entity.MQTTConfigKgw3;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
@@ -37,8 +37,8 @@ import java.lang.reflect.Type;
 
 public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilterRawDataSwitchKgw3Binding> {
 
-    private MokoDevice mMokoDevice;
-    private MQTTConfig appMqttConfig;
+    private MokoDeviceKgw3 mMokoDeviceKgw3;
+    private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
 
     public Handler mHandler;
@@ -49,10 +49,10 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
 
     @Override
     protected void onCreate() {
-        mMokoDevice = (MokoDevice) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
+        mMokoDeviceKgw3 = (MokoDeviceKgw3) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
-        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfig.class);
-        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDevice.topicSubscribe : appMqttConfig.topicPublish;
+        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
+        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.postDelayed(() -> {
             dismissLoadingProgressDialog();
@@ -87,7 +87,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
@@ -112,7 +112,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             if (result.result_code == 0) {
                 getFilterRawDataSwitch();
@@ -127,12 +127,12 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceOnlineEvent(DeviceOnlineEvent event) {
-        super.offline(event, mMokoDevice.mac);
+        super.offline(event, mMokoDeviceKgw3.mac);
     }
 
     private void getFilterRawDataSwitch() {
         int msgId = MQTTConstants.READ_MSG_ID_FILTER_RAW_DATA_SWITCH;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -182,7 +182,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
         int msgId = MQTTConstants.CONFIG_MSG_ID_FILTER_BXP_DEVICE_INFO;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("switch_value", isBXPDeviceInfoOpen ? 1 : 0);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -195,7 +195,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
         int msgId = MQTTConstants.CONFIG_MSG_ID_FILTER_BXP_ACC;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("switch_value", isBXPAccOpen ? 1 : 0);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -208,7 +208,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
         int msgId = MQTTConstants.CONFIG_MSG_ID_FILTER_BXP_TH;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("switch_value", isBXPTHOpen ? 1 : 0);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -224,7 +224,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
             return;
         }
         Intent i = new Intent(this, FilterIBeaconKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startFilterDetail.launch(i);
     }
 
@@ -236,7 +236,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
             return;
         }
         Intent i = new Intent(this, FilterUIDKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startFilterDetail.launch(i);
     }
 
@@ -248,7 +248,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
             return;
         }
         Intent i = new Intent(this, FilterUrlKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startFilterDetail.launch(i);
     }
 
@@ -260,7 +260,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
             return;
         }
         Intent i = new Intent(this, FilterTLMKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startFilterDetail.launch(i);
     }
 
@@ -272,7 +272,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
             return;
         }
         Intent i = new Intent(this, FilterBXPButtonKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startFilterDetail.launch(i);
     }
 
@@ -284,7 +284,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
             return;
         }
         Intent i = new Intent(this, FilterBXPTagKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startFilterDetail.launch(i);
     }
 
@@ -296,7 +296,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
             return;
         }
         Intent i = new Intent(this, FilterPIRKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startFilterDetail.launch(i);
     }
 
@@ -309,7 +309,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
             return;
         }
         Intent i = new Intent(this, FilterOtherKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startFilterDetail.launch(i);
     }
 

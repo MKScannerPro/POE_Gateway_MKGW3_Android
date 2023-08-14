@@ -3,7 +3,7 @@ package com.moko.mkgw3.entity;
 
 import java.io.Serializable;
 
-public class MokoDevice implements Serializable {
+public class MokoDeviceKgw3 implements Serializable {
 
     public int id;
     public String name;

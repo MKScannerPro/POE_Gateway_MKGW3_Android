@@ -13,8 +13,8 @@ import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityFilterBxpButtonKgw3Binding;
-import com.moko.mkgw3.entity.MQTTConfig;
-import com.moko.mkgw3.entity.MokoDevice;
+import com.moko.mkgw3.entity.MQTTConfigKgw3;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
@@ -32,18 +32,18 @@ import java.lang.reflect.Type;
 
 public class FilterBXPButtonKgw3Activity extends BaseActivity<ActivityFilterBxpButtonKgw3Binding> {
 
-    private MokoDevice mMokoDevice;
-    private MQTTConfig appMqttConfig;
+    private MokoDeviceKgw3 mMokoDeviceKgw3;
+    private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
 
     public Handler mHandler;
 
     @Override
     protected void onCreate() {
-        mMokoDevice = (MokoDevice) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
+        mMokoDeviceKgw3 = (MokoDeviceKgw3) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
-        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfig.class);
-        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDevice.topicSubscribe : appMqttConfig.topicPublish;
+        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
+        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.postDelayed(() -> {
             dismissLoadingProgressDialog();
@@ -79,7 +79,7 @@ public class FilterBXPButtonKgw3Activity extends BaseActivity<ActivityFilterBxpB
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
@@ -94,7 +94,7 @@ public class FilterBXPButtonKgw3Activity extends BaseActivity<ActivityFilterBxpB
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
@@ -108,7 +108,7 @@ public class FilterBXPButtonKgw3Activity extends BaseActivity<ActivityFilterBxpB
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceOnlineEvent(DeviceOnlineEvent event) {
-        super.offline(event, mMokoDevice.mac);
+        super.offline(event, mMokoDeviceKgw3.mac);
     }
 
     public void onBack(View view) {
@@ -124,7 +124,7 @@ public class FilterBXPButtonKgw3Activity extends BaseActivity<ActivityFilterBxpB
         jsonObject.addProperty("double_press", mBind.cbDoublePressMode.isChecked() ? 1 : 0);
         jsonObject.addProperty("long_press",  mBind.cbLongPressMode.isChecked() ? 1 : 0);
         jsonObject.addProperty("abnormal_inactivity", mBind.cbAbnormalInactivityMode.isChecked() ? 1 : 0);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -134,7 +134,7 @@ public class FilterBXPButtonKgw3Activity extends BaseActivity<ActivityFilterBxpB
 
     private void getFilterBXPButton() {
         int msgId = MQTTConstants.READ_MSG_ID_FILTER_BXP_BUTTON;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {

@@ -8,16 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.FragmentLwtBinding;
-import com.moko.mkgw3.utils.ToastUtils;
-
 import androidx.fragment.app.Fragment;
 
-public class LWTFragment extends Fragment {
-    private static final String TAG = LWTFragment.class.getSimpleName();
+import com.moko.mkgw3.base.BaseActivity;
+import com.moko.mkgw3.databinding.FragmentLwtKgw3Binding;
+import com.moko.mkgw3.utils.ToastUtils;
+
+public class LWTKgw3Fragment extends Fragment {
+    private static final String TAG = LWTKgw3Fragment.class.getSimpleName();
     private final String FILTER_ASCII = "[ -~]*";
-    private FragmentLwtBinding mBind;
+    private FragmentLwtKgw3Binding mBind;
 
     private BaseActivity activity;
 
@@ -27,11 +27,11 @@ public class LWTFragment extends Fragment {
     private String topic;
     private String payload;
 
-    public LWTFragment() {
+    public LWTKgw3Fragment() {
     }
 
-    public static LWTFragment newInstance() {
-        LWTFragment fragment = new LWTFragment();
+    public static LWTKgw3Fragment newInstance() {
+        LWTKgw3Fragment fragment = new LWTKgw3Fragment();
         return fragment;
     }
 
@@ -45,7 +45,7 @@ public class LWTFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
-        mBind = FragmentLwtBinding.inflate(inflater, container, false);
+        mBind = FragmentLwtKgw3Binding.inflate(inflater, container, false);
         activity = (BaseActivity) getActivity();
         InputFilter filter = (source, start, end, dest, dstart, dend) -> {
             if (!(source + "").matches(FILTER_ASCII)) {

@@ -14,9 +14,9 @@ import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivitySystemTimeKgw3Binding;
-import com.moko.mkgw3.dialog.BottomDialog;
-import com.moko.mkgw3.entity.MQTTConfig;
-import com.moko.mkgw3.entity.MokoDevice;
+import com.moko.mkgw3.dialog.MKgw3BottomDialog;
+import com.moko.mkgw3.entity.MQTTConfigKgw3;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
@@ -38,8 +38,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class SystemTimeKgw3Activity extends BaseActivity<ActivitySystemTimeKgw3Binding> {
-    private MokoDevice mMokoDevice;
-    private MQTTConfig appMqttConfig;
+    private MokoDeviceKgw3 mMokoDeviceKgw3;
+    private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
     public Handler mHandler;
     public Handler mSyncTimeHandler;
@@ -68,10 +68,10 @@ public class SystemTimeKgw3Activity extends BaseActivity<ActivitySystemTimeKgw3B
                 }
             }
         }
-        mMokoDevice = (MokoDevice) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
+        mMokoDeviceKgw3 = (MokoDeviceKgw3) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
-        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfig.class);
-        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDevice.topicSubscribe : appMqttConfig.topicPublish;
+        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
+        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
         mHandler = new Handler(Looper.getMainLooper());
         mSyncTimeHandler = new Handler(Looper.getMainLooper());
         mHandler.postDelayed(() -> {
@@ -107,7 +107,7 @@ public class SystemTimeKgw3Activity extends BaseActivity<ActivitySystemTimeKgw3B
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
@@ -136,7 +136,7 @@ public class SystemTimeKgw3Activity extends BaseActivity<ActivitySystemTimeKgw3B
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
@@ -156,7 +156,7 @@ public class SystemTimeKgw3Activity extends BaseActivity<ActivitySystemTimeKgw3B
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceOnlineEvent(DeviceOnlineEvent event) {
-        super.offline(event, mMokoDevice.mac);
+        super.offline(event, mMokoDeviceKgw3.mac);
     }
 
     public void back(View view) {
@@ -168,7 +168,7 @@ public class SystemTimeKgw3Activity extends BaseActivity<ActivitySystemTimeKgw3B
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("timestamp", Calendar.getInstance().getTimeInMillis() / 1000);
         jsonObject.addProperty("timezone", mSelectedTimeZone - 24);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -179,7 +179,7 @@ public class SystemTimeKgw3Activity extends BaseActivity<ActivitySystemTimeKgw3B
 
     private void getSystemTime() {
         int msgId = MQTTConstants.READ_MSG_ID_SYSTEM_TIME;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -195,7 +195,7 @@ public class SystemTimeKgw3Activity extends BaseActivity<ActivitySystemTimeKgw3B
             return;
         }
         Intent i = new Intent(this, SyncTimeFromNTPKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startActivity(i);
     }
 
@@ -213,7 +213,7 @@ public class SystemTimeKgw3Activity extends BaseActivity<ActivitySystemTimeKgw3B
     public void onSelectTimeZone(View view) {
         if (isWindowLocked())
             return;
-        BottomDialog dialog = new BottomDialog();
+        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
         dialog.setDatas(mTimeZones, mSelectedTimeZone);
         dialog.setListener(value -> {
             if (!MQTTSupport.getInstance().isConnected()) {

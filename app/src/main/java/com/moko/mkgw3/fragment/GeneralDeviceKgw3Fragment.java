@@ -13,9 +13,9 @@ import com.moko.mkgw3.utils.ToastUtils;
 
 import androidx.fragment.app.Fragment;
 
-public class GeneralDeviceFragment extends Fragment {
+public class GeneralDeviceKgw3Fragment extends Fragment {
 
-    private static final String TAG = GeneralDeviceFragment.class.getSimpleName();
+    private static final String TAG = GeneralDeviceKgw3Fragment.class.getSimpleName();
     private FragmentGeneralDeviceRemoteBinding mBind;
     private BaseActivity activity;
 
@@ -23,11 +23,11 @@ public class GeneralDeviceFragment extends Fragment {
     private int qos;
     private int keepAlive;
 
-    public GeneralDeviceFragment() {
+    public GeneralDeviceKgw3Fragment() {
     }
 
-    public static GeneralDeviceFragment newInstance() {
-        GeneralDeviceFragment fragment = new GeneralDeviceFragment();
+    public static GeneralDeviceKgw3Fragment newInstance() {
+        GeneralDeviceKgw3Fragment fragment = new GeneralDeviceKgw3Fragment();
         return fragment;
     }
 

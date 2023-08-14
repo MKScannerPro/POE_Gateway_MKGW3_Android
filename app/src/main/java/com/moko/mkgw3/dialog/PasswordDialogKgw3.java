@@ -12,11 +12,11 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import com.moko.mkgw3.R;
-import com.moko.mkgw3.databinding.DialogPasswordRemoteBinding;
+import com.moko.mkgw3.databinding.DialogPasswordKgw3Binding;
 import com.moko.mkgw3.utils.ToastUtils;
 
-public class PasswordDialog extends MokoBaseDialog<DialogPasswordRemoteBinding> {
-    public static final String TAG = PasswordDialog.class.getSimpleName();
+public class PasswordDialogKgw3 extends MokoBaseDialog<DialogPasswordKgw3Binding> {
+    public static final String TAG = PasswordDialogKgw3.class.getSimpleName();
 
     private final String FILTER_ASCII = "[ -~]*";
 
@@ -24,8 +24,8 @@ public class PasswordDialog extends MokoBaseDialog<DialogPasswordRemoteBinding> 
 
 
     @Override
-    protected DialogPasswordRemoteBinding getViewBind(LayoutInflater inflater, ViewGroup container) {
-        return DialogPasswordRemoteBinding.inflate(inflater, container, false);
+    protected DialogPasswordKgw3Binding getViewBind(LayoutInflater inflater, ViewGroup container) {
+        return DialogPasswordKgw3Binding.inflate(inflater, container, false);
     }
 
     @Override

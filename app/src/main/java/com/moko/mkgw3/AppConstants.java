@@ -14,7 +14,7 @@ public class AppConstants {
     public static final String ACTION_DELETE_DEVICE = "com.moko.mkremotegw.action.ACTION_DELETE_DEVICE";
     public static final String ACTION_DEVICE_STATE = "com.moko.mkremotegw.action.ACTION_DEVICE_STATE";
     // sp
-    public static final String SP_NAME = "sp_name_remote_gw";
+    public static final String SP_NAME = "sp_name_mkgw3";
     //    public static final String SP_KEY_MQTT_CONFIG = "SP_KEY_MQTT_CONFIG";
     public static final String SP_KEY_MQTT_CONFIG_APP = "SP_KEY_MQTT_CONFIG_APP";
 

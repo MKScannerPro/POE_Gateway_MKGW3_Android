@@ -21,10 +21,10 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
-import com.moko.mkgw3.adapter.DeviceInfoAdapter;
+import com.moko.mkgw3.adapter.DeviceInfoKgw3Adapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityScannerKgw3Binding;
-import com.moko.mkgw3.dialog.PasswordDialog;
+import com.moko.mkgw3.dialog.PasswordDialogKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.MokoBleScanner;
@@ -52,7 +52,7 @@ import no.nordicsemi.android.support.v18.scanner.ScanResult;
 public class DeviceScannerKgw3Activity extends BaseActivity<ActivityScannerKgw3Binding> implements MokoScanDeviceCallback, BaseQuickAdapter.OnItemClickListener {
 
     private Animation animation = null;
-    private DeviceInfoAdapter mAdapter;
+    private DeviceInfoKgw3Adapter mAdapter;
     private ConcurrentHashMap<String, DeviceInfo> mDeviceMap;
     private ArrayList<DeviceInfo> mDevices;
     private Handler mHandler;
@@ -66,7 +66,7 @@ public class DeviceScannerKgw3Activity extends BaseActivity<ActivityScannerKgw3B
     protected void onCreate() {
         mDeviceMap = new ConcurrentHashMap<>();
         mDevices = new ArrayList<>();
-        mAdapter = new DeviceInfoAdapter();
+        mAdapter = new DeviceInfoKgw3Adapter();
         mAdapter.openLoadAnimation();
         mAdapter.replaceData(mDevices);
         mAdapter.setOnItemClickListener(this);
@@ -190,9 +190,9 @@ public class DeviceScannerKgw3Activity extends BaseActivity<ActivityScannerKgw3B
                 mokoBleScanner.stopScanDevice();
             }
             // show password
-            final PasswordDialog dialog = new PasswordDialog();
+            final PasswordDialogKgw3 dialog = new PasswordDialogKgw3();
             dialog.setPassword(mSavedPassword);
-            dialog.setOnPasswordClicked(new PasswordDialog.PasswordClickListener() {
+            dialog.setOnPasswordClicked(new PasswordDialogKgw3.PasswordClickListener() {
                 @Override
                 public void onEnsureClicked(String password) {
                     if (!MokoSupport.getInstance().isBluetoothOpen()) {

@@ -22,13 +22,13 @@ import com.google.gson.reflect.TypeToken;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.BuildConfig;
 import com.moko.mkgw3.R;
-import com.moko.mkgw3.adapter.DeviceAdapter;
+import com.moko.mkgw3.adapter.DeviceKgw3Adapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityMainMkgw3Binding;
 import com.moko.mkgw3.db.MKgw3DBTools;
 import com.moko.mkgw3.dialog.AlertMessageDialog;
-import com.moko.mkgw3.entity.MQTTConfig;
-import com.moko.mkgw3.entity.MokoDevice;
+import com.moko.mkgw3.entity.MQTTConfigKgw3;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.mkgw3.utils.Utils;
@@ -60,11 +60,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemLongClickListener {
-    private ArrayList<MokoDevice> devices;
-    private DeviceAdapter adapter;
+    private ArrayList<MokoDeviceKgw3> devices;
+    private DeviceKgw3Adapter adapter;
     public Handler mHandler;
     public String mAppMqttConfigStr;
-    private MQTTConfig mAppMqttConfig;
+    private MQTTConfigKgw3 mAppMqttConfig;
     public static String PATH_LOGCAT;
 
     @Override
@@ -83,7 +83,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
         MokoSupport.getInstance().init(getApplicationContext());
         MQTTSupport.getInstance().init(getApplicationContext());
         devices = MKgw3DBTools.getInstance(this).selectAllDevice();
-        adapter = new DeviceAdapter();
+        adapter = new DeviceKgw3Adapter();
         adapter.openLoadAnimation();
         adapter.replaceData(devices);
         adapter.setOnItemClickListener(this);
@@ -100,7 +100,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
         mHandler = new Handler(Looper.getMainLooper());
         mAppMqttConfigStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
         if (!TextUtils.isEmpty(mAppMqttConfigStr)) {
-            mAppMqttConfig = new Gson().fromJson(mAppMqttConfigStr, MQTTConfig.class);
+            mAppMqttConfig = new Gson().fromJson(mAppMqttConfigStr, MQTTConfigKgw3.class);
             mBind.tvTitle.setText(getString(R.string.mqtt_connecting));
         }
         try {
@@ -171,7 +171,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
     public void onDeviceModifyNameEvent(DeviceModifyNameEvent event) {
         // 修改了设备名称
         if (!devices.isEmpty()) {
-            for (MokoDevice device : devices) {
+            for (MokoDeviceKgw3 device : devices) {
                 if (device.mac.equals(event.getMac())) {
                     device.name = MKgw3DBTools.getInstance(this).selectDevice(device.mac).name;
                     break;
@@ -203,7 +203,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
                 devices.clear();
                 devices.addAll(MKgw3DBTools.getInstance(this).selectAllDevice());
                 if (!TextUtils.isEmpty(mac)) {
-                    for (final MokoDevice device : devices) {
+                    for (final MokoDeviceKgw3 device : devices) {
                         if (mac.equals(device.mac)) {
                             device.isOnline = true;
                             if (mHandler.hasMessages(device.id)) {
@@ -231,35 +231,35 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
             }
             if (ModifySettingsKgw3Activity.TAG.equals(from)) {
                 if (!TextUtils.isEmpty(mac)) {
-                    MokoDevice mokoDevice = MKgw3DBTools.getInstance(this).selectDevice(mac);
-                    for (final MokoDevice device : devices) {
+                    MokoDeviceKgw3 mokoDeviceKgw3 = MKgw3DBTools.getInstance(this).selectDevice(mac);
+                    for (final MokoDeviceKgw3 device : devices) {
                         if (mac.equals(device.mac)) {
                             if (TextUtils.isEmpty(mAppMqttConfig.topicSubscribe)) {
                                 try {
-                                    if (!device.topicPublish.equals(mokoDevice.topicPublish)) {
+                                    if (!device.topicPublish.equals(mokoDeviceKgw3.topicPublish)) {
                                         // 取消订阅旧主题
                                         MQTTSupport.getInstance().unSubscribe(device.topicPublish);
                                         // 订阅新主题
-                                        MQTTSupport.getInstance().subscribe(mokoDevice.topicPublish, mAppMqttConfig.qos);
+                                        MQTTSupport.getInstance().subscribe(mokoDeviceKgw3.topicPublish, mAppMqttConfig.qos);
                                     }
                                     if (device.lwtEnable == 1
                                             && !TextUtils.isEmpty(device.lwtTopic)
-                                            && !device.lwtTopic.equals(mokoDevice.topicPublish)) {
+                                            && !device.lwtTopic.equals(mokoDeviceKgw3.topicPublish)) {
                                         // 取消订阅旧遗愿主题
                                         MQTTSupport.getInstance().unSubscribe(device.lwtTopic);
                                         // 订阅新遗愿主题
-                                        MQTTSupport.getInstance().subscribe(mokoDevice.lwtTopic, mAppMqttConfig.qos);
+                                        MQTTSupport.getInstance().subscribe(mokoDeviceKgw3.lwtTopic, mAppMqttConfig.qos);
 
                                     }
                                 } catch (MqttException e) {
                                     e.printStackTrace();
                                 }
                             }
-                            device.mqttInfo = mokoDevice.mqttInfo;
-                            device.topicPublish = mokoDevice.topicPublish;
-                            device.topicSubscribe = mokoDevice.topicSubscribe;
-                            device.lwtEnable = mokoDevice.lwtEnable;
-                            device.lwtTopic = mokoDevice.lwtTopic;
+                            device.mqttInfo = mokoDeviceKgw3.mqttInfo;
+                            device.topicPublish = mokoDeviceKgw3.topicPublish;
+                            device.topicSubscribe = mokoDeviceKgw3.topicSubscribe;
+                            device.lwtEnable = mokoDeviceKgw3.lwtEnable;
+                            device.lwtTopic = mokoDeviceKgw3.lwtTopic;
                             break;
                         }
                     }
@@ -281,7 +281,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
             return;
         }
         if (Utils.isNetworkAvailable(this)) {
-            MQTTConfig MQTTAppConfig = new Gson().fromJson(mAppMqttConfigStr, MQTTConfig.class);
+            MQTTConfigKgw3 MQTTAppConfig = new Gson().fromJson(mAppMqttConfigStr, MQTTConfigKgw3.class);
             if (TextUtils.isEmpty(MQTTAppConfig.host)) {
                 startActivityForResult(new Intent(this, SetAppMQTTKgw3Activity.class), AppConstants.REQUEST_CODE_MQTT_CONFIG_APP);
                 return;
@@ -296,26 +296,26 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        MokoDevice mokoDevice = (MokoDevice) adapter.getItem(position);
-        if (mokoDevice == null)
+        MokoDeviceKgw3 mokoDeviceKgw3 = (MokoDeviceKgw3) adapter.getItem(position);
+        if (mokoDeviceKgw3 == null)
             return;
         if (!MQTTSupport.getInstance().isConnected()) {
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        if (!mokoDevice.isOnline) {
+        if (!mokoDeviceKgw3.isOnline) {
             ToastUtils.showToast(this, R.string.device_offline);
             return;
         }
         Intent i = new Intent(MKGW3MainActivity.this, DeviceDetailKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mokoDevice);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mokoDeviceKgw3);
         startActivity(i);
     }
 
     @Override
     public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
-        MokoDevice mokoDevice = (MokoDevice) adapter.getItem(position);
-        if (mokoDevice == null) return true;
+        MokoDeviceKgw3 mokoDeviceKgw3 = (MokoDeviceKgw3) adapter.getItem(position);
+        if (mokoDeviceKgw3 == null) return true;
         AlertMessageDialog dialog = new AlertMessageDialog();
         dialog.setTitle("Remove Device");
         dialog.setMessage("Please confirm again whether to \n remove the device");
@@ -328,19 +328,19 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
             // 取消订阅
             if (TextUtils.isEmpty(mAppMqttConfig.topicSubscribe)) {
                 try {
-                    MQTTSupport.getInstance().unSubscribe(mokoDevice.topicPublish);
-                    if (mokoDevice.lwtEnable == 1
-                            && !TextUtils.isEmpty(mokoDevice.lwtTopic)
-                            && !mokoDevice.lwtTopic.equals(mokoDevice.topicPublish))
-                        MQTTSupport.getInstance().unSubscribe(mokoDevice.lwtTopic);
+                    MQTTSupport.getInstance().unSubscribe(mokoDeviceKgw3.topicPublish);
+                    if (mokoDeviceKgw3.lwtEnable == 1
+                            && !TextUtils.isEmpty(mokoDeviceKgw3.lwtTopic)
+                            && !mokoDeviceKgw3.lwtTopic.equals(mokoDeviceKgw3.topicPublish))
+                        MQTTSupport.getInstance().unSubscribe(mokoDeviceKgw3.lwtTopic);
                 } catch (MqttException e) {
                     e.printStackTrace();
                 }
             }
-            XLog.i(String.format("删除设备:%s", mokoDevice.name));
-            MKgw3DBTools.getInstance(MKGW3MainActivity.this).deleteDevice(mokoDevice);
-            EventBus.getDefault().post(new DeviceDeletedEvent(mokoDevice.id));
-            devices.remove(mokoDevice);
+            XLog.i(String.format("删除设备:%s", mokoDeviceKgw3.name));
+            MKgw3DBTools.getInstance(MKGW3MainActivity.this).deleteDevice(mokoDeviceKgw3);
+            EventBus.getDefault().post(new DeviceDeletedEvent(mokoDeviceKgw3.id));
+            devices.remove(mokoDeviceKgw3);
             adapter.replaceData(devices);
             if (devices.isEmpty()) {
                 mBind.rlEmpty.setVisibility(View.VISIBLE);
@@ -361,7 +361,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
         } else {
             if (devices.isEmpty())
                 return;
-            for (MokoDevice device : devices) {
+            for (MokoDeviceKgw3 device : devices) {
                 try {
                     // 订阅设备发布主题
                     if (TextUtils.isEmpty(mAppMqttConfig.topicSubscribe))
@@ -398,7 +398,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
         }.getType();
         MsgNotify<Object> msgNotify = new Gson().fromJson(message, type);
         final String mac = msgNotify.device_info.mac;
-        for (final MokoDevice device : devices) {
+        for (final MokoDeviceKgw3 device : devices) {
             if (device.mac.equals(mac)) {
                 if ((msg_id == MQTTConstants.NOTIFY_MSG_ID_OFFLINE
                         || msg_id == MQTTConstants.NOTIFY_MSG_ID_BUTTON_RESET) && device.isOnline) {
@@ -444,7 +444,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
             return;
         if (requestCode == AppConstants.REQUEST_CODE_MQTT_CONFIG_APP) {
             mAppMqttConfigStr = data.getStringExtra(AppConstants.EXTRA_KEY_MQTT_CONFIG_APP);
-            mAppMqttConfig = new Gson().fromJson(mAppMqttConfigStr, MQTTConfig.class);
+            mAppMqttConfig = new Gson().fromJson(mAppMqttConfigStr, MQTTConfigKgw3.class);
             mBind.tvTitle.setText("MKScannerPro");
             // 订阅所有设备的Topic
             subscribeAllDevices();
@@ -456,7 +456,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
         super.onDestroy();
         MQTTSupport.getInstance().disconnectMqtt();
         if (!devices.isEmpty()) {
-            for (final MokoDevice device : devices) {
+            for (final MokoDeviceKgw3 device : devices) {
                 if (mHandler.hasMessages(device.id)) {
                     mHandler.removeMessages(device.id);
                 }

@@ -25,8 +25,8 @@ import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityDeviceConfigKgw3Binding;
 import com.moko.mkgw3.db.MKgw3DBTools;
 import com.moko.mkgw3.dialog.CustomDialog;
-import com.moko.mkgw3.entity.MQTTConfig;
-import com.moko.mkgw3.entity.MokoDevice;
+import com.moko.mkgw3.entity.MQTTConfigKgw3;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
@@ -46,8 +46,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.lang.reflect.Type;
 
 public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigKgw3Binding> {
-    private MQTTConfig mAppMqttConfig;
-    private MQTTConfig mDeviceMqttConfig;
+    private MQTTConfigKgw3 mAppMqttConfig;
+    private MQTTConfigKgw3 mDeviceMqttConfig;
     private Handler mHandler;
     private int mSelectedDeviceType;
     private boolean mIsMQTTConfigFinished;
@@ -62,7 +62,7 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
     protected void onCreate() {
         mSelectedDeviceType = getIntent().getIntExtra(AppConstants.EXTRA_KEY_SELECTED_DEVICE_TYPE, -1);
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
-        mAppMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfig.class);
+        mAppMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
         mHandler = new Handler(Looper.getMainLooper());
     }
 
@@ -162,34 +162,34 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
             // 关闭进度条弹框，保存数据，跳转修改设备名称页面
             mBind.tvName.postDelayed(() -> {
                 dismissConnMqttDialog();
-                MokoDevice mokoDevice = MKgw3DBTools.getInstance(DeviceConfigKgw3Activity.this).selectDeviceByMac(mDeviceMqttConfig.staMac);
-                String mqttConfigStr = new Gson().toJson(mDeviceMqttConfig, MQTTConfig.class);
-                if (mokoDevice == null) {
-                    mokoDevice = new MokoDevice();
-                    mokoDevice.name = mDeviceMqttConfig.deviceName;
-                    mokoDevice.mac = mDeviceMqttConfig.staMac;
-                    mokoDevice.mqttInfo = mqttConfigStr;
-                    mokoDevice.topicSubscribe = mDeviceMqttConfig.topicSubscribe;
-                    mokoDevice.topicPublish = mDeviceMqttConfig.topicPublish;
-                    mokoDevice.lwtEnable = mDeviceMqttConfig.lwtEnable ? 1 : 0;
-                    mokoDevice.lwtTopic = mDeviceMqttConfig.lwtTopic;
-                    mokoDevice.deviceType = mSelectedDeviceType;
-                    mokoDevice.networkType = networkType;
-                    MKgw3DBTools.getInstance(DeviceConfigKgw3Activity.this).insertDevice(mokoDevice);
+                MokoDeviceKgw3 mokoDeviceKgw3 = MKgw3DBTools.getInstance(DeviceConfigKgw3Activity.this).selectDeviceByMac(mDeviceMqttConfig.staMac);
+                String mqttConfigStr = new Gson().toJson(mDeviceMqttConfig, MQTTConfigKgw3.class);
+                if (mokoDeviceKgw3 == null) {
+                    mokoDeviceKgw3 = new MokoDeviceKgw3();
+                    mokoDeviceKgw3.name = mDeviceMqttConfig.deviceName;
+                    mokoDeviceKgw3.mac = mDeviceMqttConfig.staMac;
+                    mokoDeviceKgw3.mqttInfo = mqttConfigStr;
+                    mokoDeviceKgw3.topicSubscribe = mDeviceMqttConfig.topicSubscribe;
+                    mokoDeviceKgw3.topicPublish = mDeviceMqttConfig.topicPublish;
+                    mokoDeviceKgw3.lwtEnable = mDeviceMqttConfig.lwtEnable ? 1 : 0;
+                    mokoDeviceKgw3.lwtTopic = mDeviceMqttConfig.lwtTopic;
+                    mokoDeviceKgw3.deviceType = mSelectedDeviceType;
+                    mokoDeviceKgw3.networkType = networkType;
+                    MKgw3DBTools.getInstance(DeviceConfigKgw3Activity.this).insertDevice(mokoDeviceKgw3);
                 } else {
-                    mokoDevice.name = mDeviceMqttConfig.deviceName;
-                    mokoDevice.mac = mDeviceMqttConfig.staMac;
-                    mokoDevice.mqttInfo = mqttConfigStr;
-                    mokoDevice.topicSubscribe = mDeviceMqttConfig.topicSubscribe;
-                    mokoDevice.topicPublish = mDeviceMqttConfig.topicPublish;
-                    mokoDevice.lwtEnable = mDeviceMqttConfig.lwtEnable ? 1 : 0;
-                    mokoDevice.lwtTopic = mDeviceMqttConfig.lwtTopic;
-                    mokoDevice.deviceType = mSelectedDeviceType;
-                    mokoDevice.networkType = networkType;
-                    MKgw3DBTools.getInstance(DeviceConfigKgw3Activity.this).updateDevice(mokoDevice);
+                    mokoDeviceKgw3.name = mDeviceMqttConfig.deviceName;
+                    mokoDeviceKgw3.mac = mDeviceMqttConfig.staMac;
+                    mokoDeviceKgw3.mqttInfo = mqttConfigStr;
+                    mokoDeviceKgw3.topicSubscribe = mDeviceMqttConfig.topicSubscribe;
+                    mokoDeviceKgw3.topicPublish = mDeviceMqttConfig.topicPublish;
+                    mokoDeviceKgw3.lwtEnable = mDeviceMqttConfig.lwtEnable ? 1 : 0;
+                    mokoDeviceKgw3.lwtTopic = mDeviceMqttConfig.lwtTopic;
+                    mokoDeviceKgw3.deviceType = mSelectedDeviceType;
+                    mokoDeviceKgw3.networkType = networkType;
+                    MKgw3DBTools.getInstance(DeviceConfigKgw3Activity.this).updateDevice(mokoDeviceKgw3);
                 }
                 Intent modifyIntent = new Intent(DeviceConfigKgw3Activity.this, ModifyNameKgw3Activity.class);
-                modifyIntent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mokoDevice);
+                modifyIntent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mokoDeviceKgw3);
                 startActivity(modifyIntent);
             }, 1000);
         }
@@ -212,7 +212,7 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
 
     public void onAdvertiseIBeacon(View view) {
         if (isWindowLocked()) return;
-        Intent intent = new Intent(this, AdvertiseIBeaconActivity.class);
+        Intent intent = new Intent(this, AdvertiseIBeaconMkgw3Activity.class);
         startActivity(intent);
     }
 
@@ -271,7 +271,7 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
     private final ActivityResultLauncher<Intent> startMQTTSettings = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == RESULT_OK && null != result.getData()) {
             mIsMQTTConfigFinished = true;
-            mDeviceMqttConfig = (MQTTConfig) result.getData().getSerializableExtra(AppConstants.EXTRA_KEY_MQTT_CONFIG_DEVICE);
+            mDeviceMqttConfig = (MQTTConfigKgw3) result.getData().getSerializableExtra(AppConstants.EXTRA_KEY_MQTT_CONFIG_DEVICE);
         }
     });
     private int progress;

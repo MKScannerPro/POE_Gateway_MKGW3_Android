@@ -25,12 +25,12 @@ import com.moko.mkgw3.adapter.MQTTFragmentAdapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityMqttDeviceModifyKgw3Binding;
 import com.moko.mkgw3.dialog.AlertMessageDialog;
-import com.moko.mkgw3.entity.MQTTConfig;
-import com.moko.mkgw3.entity.MokoDevice;
-import com.moko.mkgw3.fragment.GeneralDeviceFragment;
-import com.moko.mkgw3.fragment.LWTFragment;
-import com.moko.mkgw3.fragment.SSLDeviceUrlFragment;
-import com.moko.mkgw3.fragment.UserDeviceFragment;
+import com.moko.mkgw3.entity.MQTTConfigKgw3;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
+import com.moko.mkgw3.fragment.GeneralDeviceKgw3Fragment;
+import com.moko.mkgw3.fragment.LWTKgw3Fragment;
+import com.moko.mkgw3.fragment.SSLDeviceUrlKgw3Fragment;
+import com.moko.mkgw3.fragment.UserDeviceKgw3Fragment;
 import com.moko.mkgw3.utils.FileUtils;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.mkgw3.utils.ToastUtils;
@@ -64,16 +64,16 @@ public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDev
     private final String FILTER_ASCII = "[ -~]*";
 
 
-    private GeneralDeviceFragment generalFragment;
-    private UserDeviceFragment userFragment;
-    private SSLDeviceUrlFragment sslFragment;
-    private LWTFragment lwtFragment;
+    private GeneralDeviceKgw3Fragment generalFragment;
+    private UserDeviceKgw3Fragment userFragment;
+    private SSLDeviceUrlKgw3Fragment sslFragment;
+    private LWTKgw3Fragment lwtFragment;
     private ArrayList<Fragment> fragments;
 
-    private MQTTConfig mqttDeviceConfig;
+    private MQTTConfigKgw3 mqttDeviceConfig;
 
-    private MokoDevice mMokoDevice;
-    private MQTTConfig appMqttConfig;
+    private MokoDeviceKgw3 mMokoDeviceKgw3;
+    private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
 
     public Handler mHandler;
@@ -86,7 +86,7 @@ public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDev
 
     @Override
     protected void onCreate() {
-        mqttDeviceConfig = new MQTTConfig();
+        mqttDeviceConfig = new MQTTConfigKgw3();
         filter = (source, start, end, dest, dstart, dend) -> {
             if (!(source + "").matches(FILTER_ASCII)) {
                 return "";
@@ -120,10 +120,10 @@ public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDev
         mBind.vpMqtt.setOffscreenPageLimit(4);
         mBind.rgMqtt.setOnCheckedChangeListener(this);
         expertFilePath = MKGW3MainActivity.PATH_LOGCAT + File.separator + "export" + File.separator + "Settings for Device.xlsx";
-        mMokoDevice = (MokoDevice) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
+        mMokoDeviceKgw3 = (MokoDeviceKgw3) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
-        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfig.class);
-        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDevice.topicSubscribe : appMqttConfig.topicPublish;
+        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
+        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.postDelayed(() -> {
             dismissLoadingProgressDialog();
@@ -141,10 +141,10 @@ public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDev
 
     private void createFragment() {
         fragments = new ArrayList<>();
-        generalFragment = GeneralDeviceFragment.newInstance();
-        userFragment = UserDeviceFragment.newInstance();
-        sslFragment = SSLDeviceUrlFragment.newInstance();
-        lwtFragment = LWTFragment.newInstance();
+        generalFragment = GeneralDeviceKgw3Fragment.newInstance();
+        userFragment = UserDeviceKgw3Fragment.newInstance();
+        sslFragment = SSLDeviceUrlKgw3Fragment.newInstance();
+        lwtFragment = LWTKgw3Fragment.newInstance();
         fragments.add(generalFragment);
         fragments.add(userFragment);
         fragments.add(sslFragment);
@@ -193,7 +193,7 @@ public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDev
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
             }.getType();
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
@@ -213,7 +213,7 @@ public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDev
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
@@ -238,7 +238,7 @@ public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDev
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
@@ -291,7 +291,7 @@ public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDev
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
             }.getType();
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
@@ -306,7 +306,7 @@ public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDev
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceOnlineEvent(DeviceOnlineEvent event) {
-        super.offline(event, mMokoDevice.mac);
+        super.offline(event, mMokoDeviceKgw3.mac);
     }
 
     public void onBack(View view) {
@@ -357,7 +357,7 @@ public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDev
 
     private void getDeviceStatus() {
         int msgId = MQTTConstants.READ_MSG_ID_DEVICE_STATUS;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -384,7 +384,7 @@ public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDev
         jsonObject.addProperty("lwt_retain", lwtFragment.getLwtRetain() ? 1 : 0);
         jsonObject.addProperty("lwt_topic", lwtFragment.getTopic());
         jsonObject.addProperty("lwt_payload", lwtFragment.getPayload());
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -401,7 +401,7 @@ public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDev
         jsonObject.addProperty("ca_url", caFileUrl);
         jsonObject.addProperty("client_cert_url", certFileUrl);
         jsonObject.addProperty("client_key_url", keyFileUrl);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -464,7 +464,7 @@ public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDev
 
     private void getMqttSettings() {
         int msgId = MQTTConstants.READ_MSG_ID_MQTT_SETTINGS;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -783,7 +783,7 @@ public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDev
         dialog.setConfirm("YES");
         dialog.setCancel("NO");
         dialog.setOnAlertConfirmListener(() -> {
-            mqttDeviceConfig = new MQTTConfig();
+            mqttDeviceConfig = new MQTTConfigKgw3();
             mqttDeviceConfig.keepAlive = -1;
             sslFragment.setCAUrl("");
             sslFragment.setClientCertUrl("");

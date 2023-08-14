@@ -13,9 +13,9 @@ import com.google.gson.reflect.TypeToken;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityFilterPirKgw3Binding;
-import com.moko.mkgw3.dialog.BottomDialog;
-import com.moko.mkgw3.entity.MQTTConfig;
-import com.moko.mkgw3.entity.MokoDevice;
+import com.moko.mkgw3.dialog.MKgw3BottomDialog;
+import com.moko.mkgw3.entity.MQTTConfigKgw3;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
@@ -34,8 +34,8 @@ import java.util.ArrayList;
 
 public class FilterPIRKgw3Activity extends BaseActivity<ActivityFilterPirKgw3Binding> {
 
-    private MokoDevice mMokoDevice;
-    private MQTTConfig appMqttConfig;
+    private MokoDeviceKgw3 mMokoDeviceKgw3;
+    private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
 
     public Handler mHandler;
@@ -69,10 +69,10 @@ public class FilterPIRKgw3Activity extends BaseActivity<ActivityFilterPirKgw3Bin
         mDetectionStatusValues.add("no motion detected");
         mDetectionStatusValues.add("motion detected");
         mDetectionStatusValues.add("all");
-        mMokoDevice = (MokoDevice) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
+        mMokoDeviceKgw3 = (MokoDeviceKgw3) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
-        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfig.class);
-        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDevice.topicSubscribe : appMqttConfig.topicPublish;
+        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
+        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.postDelayed(() -> {
             dismissLoadingProgressDialog();
@@ -107,7 +107,7 @@ public class FilterPIRKgw3Activity extends BaseActivity<ActivityFilterPirKgw3Bin
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
@@ -129,7 +129,7 @@ public class FilterPIRKgw3Activity extends BaseActivity<ActivityFilterPirKgw3Bin
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
@@ -143,12 +143,12 @@ public class FilterPIRKgw3Activity extends BaseActivity<ActivityFilterPirKgw3Bin
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceOnlineEvent(DeviceOnlineEvent event) {
-        super.offline(event, mMokoDevice.mac);
+        super.offline(event, mMokoDeviceKgw3.mac);
     }
 
     private void getFilterPIR() {
         int msgId = MQTTConstants.READ_MSG_ID_FILTER_PIR;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -200,7 +200,7 @@ public class FilterPIRKgw3Activity extends BaseActivity<ActivityFilterPirKgw3Bin
         jsonObject.addProperty("max_major", majorMax);
         jsonObject.addProperty("min_minor", minorMin);
         jsonObject.addProperty("max_minor", minorMax);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -258,7 +258,7 @@ public class FilterPIRKgw3Activity extends BaseActivity<ActivityFilterPirKgw3Bin
 
     public void onDelayRespStatus(View view) {
         if (isWindowLocked()) return;
-        BottomDialog dialog = new BottomDialog();
+        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
         dialog.setDatas(mDelayRespStatusValues, mDelayRespStatusSelected);
         dialog.setListener(value -> {
             mDelayRespStatusSelected = value;
@@ -269,7 +269,7 @@ public class FilterPIRKgw3Activity extends BaseActivity<ActivityFilterPirKgw3Bin
 
     public void onDoorStatus(View view) {
         if (isWindowLocked()) return;
-        BottomDialog dialog = new BottomDialog();
+        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
         dialog.setDatas(mDoorStatusValues, mDoorStatusSelected);
         dialog.setListener(value -> {
             mDoorStatusSelected = value;
@@ -280,7 +280,7 @@ public class FilterPIRKgw3Activity extends BaseActivity<ActivityFilterPirKgw3Bin
 
     public void onSensorSensitivity(View view) {
         if (isWindowLocked()) return;
-        BottomDialog dialog = new BottomDialog();
+        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
         dialog.setDatas(mSensorSensitivityValues, mSensorSensitivitySelected);
         dialog.setListener(value -> {
             mSensorSensitivitySelected = value;
@@ -291,7 +291,7 @@ public class FilterPIRKgw3Activity extends BaseActivity<ActivityFilterPirKgw3Bin
 
     public void onDetectionStatus(View view) {
         if (isWindowLocked()) return;
-        BottomDialog dialog = new BottomDialog();
+        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
         dialog.setDatas(mDetectionStatusValues, mDetectionStatusSelected);
         dialog.setListener(value -> {
             mDetectionStatusSelected = value;

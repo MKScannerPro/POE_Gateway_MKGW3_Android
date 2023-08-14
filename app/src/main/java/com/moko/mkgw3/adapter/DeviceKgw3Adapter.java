@@ -5,16 +5,16 @@ import androidx.core.content.ContextCompat;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.moko.mkgw3.R;
-import com.moko.mkgw3.entity.MokoDevice;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
 
-public class DeviceAdapter extends BaseQuickAdapter<MokoDevice, BaseViewHolder> {
+public class DeviceKgw3Adapter extends BaseQuickAdapter<MokoDeviceKgw3, BaseViewHolder> {
 
-    public DeviceAdapter() {
+    public DeviceKgw3Adapter() {
         super(R.layout.device_item_kgw3);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, MokoDevice item) {
+    protected void convert(BaseViewHolder helper, MokoDeviceKgw3 item) {
         helper.setText(R.id.tv_device_name, item.name);
         helper.setText(R.id.tv_device_mac, item.mac.toUpperCase());
         if (!item.isOnline) {

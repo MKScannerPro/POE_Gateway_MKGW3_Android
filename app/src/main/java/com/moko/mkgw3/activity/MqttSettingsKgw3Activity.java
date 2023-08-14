@@ -24,11 +24,11 @@ import com.moko.mkgw3.adapter.MQTTFragmentAdapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityMqttDeviceKgw3Binding;
 import com.moko.mkgw3.dialog.AlertMessageDialog;
-import com.moko.mkgw3.entity.MQTTConfig;
-import com.moko.mkgw3.fragment.GeneralDeviceFragment;
-import com.moko.mkgw3.fragment.LWTFragment;
-import com.moko.mkgw3.fragment.SSLDeviceFragment;
-import com.moko.mkgw3.fragment.UserDeviceFragment;
+import com.moko.mkgw3.entity.MQTTConfigKgw3;
+import com.moko.mkgw3.fragment.GeneralDeviceKgw3Fragment;
+import com.moko.mkgw3.fragment.LWTKgw3Fragment;
+import com.moko.mkgw3.fragment.SSLDeviceKgw3Fragment;
+import com.moko.mkgw3.fragment.UserDeviceKgw3Fragment;
 import com.moko.mkgw3.utils.FileUtils;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.mkgw3.utils.Utils;
@@ -56,13 +56,13 @@ import java.util.Arrays;
 public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw3Binding> implements RadioGroup.OnCheckedChangeListener {
     private final String FILTER_ASCII = "[ -~]*";
 
-    private GeneralDeviceFragment generalFragment;
-    private UserDeviceFragment userFragment;
-    private SSLDeviceFragment sslFragment;
-    private LWTFragment lwtFragment;
+    private GeneralDeviceKgw3Fragment generalFragment;
+    private UserDeviceKgw3Fragment userFragment;
+    private SSLDeviceKgw3Fragment sslFragment;
+    private LWTKgw3Fragment lwtFragment;
     private ArrayList<Fragment> fragments;
 
-    private MQTTConfig mqttDeviceConfig;
+    private MQTTConfigKgw3 mqttDeviceConfig;
 
     private boolean mSavedParamsError;
     private boolean mIsSaved;
@@ -75,7 +75,7 @@ public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw
 
     @Override
     protected void onCreate() {
-        mqttDeviceConfig = new MQTTConfig();
+        mqttDeviceConfig = new MQTTConfigKgw3();
         InputFilter filter = (source, start, end, dest, dstart, dend) -> {
             if (!(source + "").matches(FILTER_ASCII)) {
                 return "";
@@ -332,10 +332,10 @@ public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw
 
     private void createFragment() {
         fragments = new ArrayList<>();
-        generalFragment = GeneralDeviceFragment.newInstance();
-        userFragment = UserDeviceFragment.newInstance();
-        sslFragment = SSLDeviceFragment.newInstance();
-        lwtFragment = LWTFragment.newInstance();
+        generalFragment = GeneralDeviceKgw3Fragment.newInstance();
+        userFragment = UserDeviceKgw3Fragment.newInstance();
+        sslFragment = SSLDeviceKgw3Fragment.newInstance();
+        lwtFragment = LWTKgw3Fragment.newInstance();
         fragments.add(generalFragment);
         fragments.add(userFragment);
         fragments.add(sslFragment);
@@ -837,7 +837,7 @@ public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw
         dialog.setConfirm("YES");
         dialog.setCancel("NO");
         dialog.setOnAlertConfirmListener(() -> {
-            mqttDeviceConfig = new MQTTConfig();
+            mqttDeviceConfig = new MQTTConfigKgw3();
             mqttDeviceConfig.keepAlive = -1;
             mqttDeviceConfig.deviceName = mDeviceName;
             mqttDeviceConfig.staMac = mStaMac;

@@ -15,15 +15,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
-import com.moko.mkgw3.adapter.BleCharacteristicsAdapter;
+import com.moko.mkgw3.adapter.BleCharacteristicsAdapterKgw3;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityOtherInfoKgw3Binding;
 import com.moko.mkgw3.db.MKgw3DBTools;
 import com.moko.mkgw3.dialog.AlertMessageDialog;
-import com.moko.mkgw3.dialog.CharWriteDialog;
+import com.moko.mkgw3.dialog.CharWriteDialogKgw3;
 import com.moko.mkgw3.entity.BleOtherChar;
-import com.moko.mkgw3.entity.MQTTConfig;
-import com.moko.mkgw3.entity.MokoDevice;
+import com.moko.mkgw3.entity.MQTTConfigKgw3;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
@@ -46,25 +46,25 @@ import java.util.ArrayList;
 
 public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3Binding> implements BaseQuickAdapter.OnItemChildClickListener {
 
-    private MokoDevice mMokoDevice;
-    private MQTTConfig appMqttConfig;
+    private MokoDeviceKgw3 mMokoDeviceKgw3;
+    private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
 
     private OtherDeviceInfo mOtherDeviceInfo;
     private Handler mHandler;
     private ArrayList<BleOtherChar> mBleOtherChars;
-    private BleCharacteristicsAdapter mAdapter;
+    private BleCharacteristicsAdapterKgw3 mAdapter;
 
     @Override
     protected void onCreate() {
-        mMokoDevice = (MokoDevice) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
+        mMokoDeviceKgw3 = (MokoDeviceKgw3) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
-        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfig.class);
-        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDevice.topicSubscribe : appMqttConfig.topicPublish;
+        appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
+        mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
         mHandler = new Handler(Looper.getMainLooper());
 
         mOtherDeviceInfo = (OtherDeviceInfo) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_OTHER_DEVICE_INFO);
-        mBind.tvDeviceName.setText(mMokoDevice.name);
+        mBind.tvDeviceName.setText(mMokoDeviceKgw3.name);
         mBleOtherChars = new ArrayList<>();
         String mac = mOtherDeviceInfo.mac;
         for (int i = 0; i < mOtherDeviceInfo.service_array.size(); i++) {
@@ -88,7 +88,7 @@ public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3
                 mBleOtherChars.add(bleOtherChar);
             }
         }
-        mAdapter = new BleCharacteristicsAdapter(mBleOtherChars);
+        mAdapter = new BleCharacteristicsAdapterKgw3(mBleOtherChars);
         mAdapter.openLoadAnimation();
         mAdapter.setOnItemChildClickListener(this);
         mBind.rvCharacteristics.setLayoutManager(new LinearLayoutManager(this));
@@ -122,7 +122,7 @@ public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3
             Type type = new TypeToken<MsgNotify<BleCharResponse>>() {
             }.getType();
             MsgNotify<BleCharResponse> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             BleCharResponse charResponse = result.data;
             if (charResponse.result_code != 0) {
@@ -147,7 +147,7 @@ public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3
             Type type = new TypeToken<MsgNotify<BleCharResponse>>() {
             }.getType();
             MsgNotify<BleCharResponse> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             BleCharResponse charResponse = result.data;
             if (charResponse.result_code != 0) {
@@ -170,7 +170,7 @@ public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3
             Type type = new TypeToken<MsgNotify<BleCharResponse>>() {
             }.getType();
             MsgNotify<BleCharResponse> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             BleCharResponse charResponse = result.data;
             // 更新item
@@ -190,7 +190,7 @@ public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3
             Type type = new TypeToken<MsgNotify<BleCharResponse>>() {
             }.getType();
             MsgNotify<BleCharResponse> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             BleCharResponse charResponse = result.data;
             if (charResponse.result_code != 0) {
@@ -206,7 +206,7 @@ public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
             }.getType();
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
                 return;
             ToastUtils.showToast(this, "Bluetooth disconnect");
             finish();
@@ -216,15 +216,15 @@ public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceModifyNameEvent(DeviceModifyNameEvent event) {
         // 修改了设备名称
-        MokoDevice device = MKgw3DBTools.getInstance(BleOtherInfoKgw3Activity.this).selectDevice(mMokoDevice.mac);
-        mMokoDevice.name = device.name;
-        mBind.tvDeviceName.setText(mMokoDevice.name);
+        MokoDeviceKgw3 device = MKgw3DBTools.getInstance(BleOtherInfoKgw3Activity.this).selectDevice(mMokoDeviceKgw3.mac);
+        mMokoDeviceKgw3.name = device.name;
+        mBind.tvDeviceName.setText(mMokoDeviceKgw3.name);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceOnlineEvent(DeviceOnlineEvent event) {
         String mac = event.getMac();
-        if (!mMokoDevice.mac.equals(mac))
+        if (!mMokoDeviceKgw3.mac.equals(mac))
             return;
         boolean online = event.isOnline();
         if (!online) {
@@ -272,7 +272,7 @@ public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3
         int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_DISCONNECT;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", mOtherDeviceInfo.mac);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -307,7 +307,7 @@ public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3
     }
 
     private void openWriteCharValueDialog(BleOtherChar bleOtherChar) {
-        CharWriteDialog dialog = new CharWriteDialog();
+        CharWriteDialogKgw3 dialog = new CharWriteDialogKgw3();
         dialog.setOnCharWriteClicked(payload -> {
             mHandler.postDelayed(() -> {
                 dismissLoadingProgressDialog();
@@ -326,7 +326,7 @@ public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3
         jsonObject.addProperty("service_uuid", bleOtherChar.serviceUUID);
         jsonObject.addProperty("char_uuid", bleOtherChar.characteristicUUID);
         jsonObject.addProperty("payload", payload);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -340,7 +340,7 @@ public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3
         jsonObject.addProperty("mac", bleOtherChar.mac);
         jsonObject.addProperty("service_uuid", bleOtherChar.serviceUUID);
         jsonObject.addProperty("char_uuid", bleOtherChar.characteristicUUID);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -355,7 +355,7 @@ public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3
         jsonObject.addProperty("service_uuid", bleOtherChar.serviceUUID);
         jsonObject.addProperty("char_uuid", bleOtherChar.characteristicUUID);
         jsonObject.addProperty("switch_value", bleOtherChar.characteristicNotifyStatus == 1 ? 0 : 1);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {

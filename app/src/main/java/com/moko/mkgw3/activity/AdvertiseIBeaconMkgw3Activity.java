@@ -17,10 +17,10 @@ import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.ActivityAdvertiseIbeaconBinding;
-import com.moko.mkgw3.dialog.BottomDialog;
-import com.moko.mkgw3.entity.MQTTConfig;
-import com.moko.mkgw3.entity.MokoDevice;
+import com.moko.mkgw3.databinding.ActivityAdvertiseIbeaconKgw3Binding;
+import com.moko.mkgw3.dialog.MKgw3BottomDialog;
+import com.moko.mkgw3.entity.MQTTConfigKgw3;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
@@ -47,7 +47,7 @@ import java.util.List;
  * @date: 2023/7/3 11:24
  * @des:
  */
-public class AdvertiseIBeaconActivity extends BaseActivity<ActivityAdvertiseIbeaconBinding> {
+public class AdvertiseIBeaconMkgw3Activity extends BaseActivity<ActivityAdvertiseIbeaconKgw3Binding> {
     private final String[] txPowerArr = {"-24dBm", "-21dBm", "-18dBm", "-15dBm", "-12dBm", "-9dBm", "-6dBm", "-3dBm", "0dBm", "3dBm", "6dBm",
             "9dBm", "12dBm", "15dBm", "18dBm", "21dBm"};
     private int mSelected;
@@ -57,8 +57,8 @@ public class AdvertiseIBeaconActivity extends BaseActivity<ActivityAdvertiseIbea
     private boolean isIBeaconUuidSuc;
     private boolean isIBeaconIntervalSuc;
 
-    private MokoDevice mMokoDevice;
-    private MQTTConfig appMqttConfig;
+    private MokoDeviceKgw3 mMokoDeviceKgw3;
+    private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
     private Handler mHandler;
     private int major;
@@ -67,17 +67,17 @@ public class AdvertiseIBeaconActivity extends BaseActivity<ActivityAdvertiseIbea
     private int advInterval;
 
     @Override
-    protected ActivityAdvertiseIbeaconBinding getViewBinding() {
-        return ActivityAdvertiseIbeaconBinding.inflate(getLayoutInflater());
+    protected ActivityAdvertiseIbeaconKgw3Binding getViewBinding() {
+        return ActivityAdvertiseIbeaconKgw3Binding.inflate(getLayoutInflater());
     }
 
     @Override
     protected void onCreate() {
-        mMokoDevice = (MokoDevice) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
-        if (null != mMokoDevice) {
+        mMokoDeviceKgw3 = (MokoDeviceKgw3) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
+        if (null != mMokoDeviceKgw3) {
             String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
-            appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfig.class);
-            mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDevice.topicSubscribe : appMqttConfig.topicPublish;
+            appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
+            mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
             mHandler = new Handler(Looper.getMainLooper());
             getBeaconParams();
         } else {
@@ -95,7 +95,7 @@ public class AdvertiseIBeaconActivity extends BaseActivity<ActivityAdvertiseIbea
         }
         mBind.tvTxPowerVal.setOnClickListener(v -> {
             if (isWindowLocked()) return;
-            BottomDialog dialog = new BottomDialog();
+            MKgw3BottomDialog dialog = new MKgw3BottomDialog();
             dialog.setDatas(new ArrayList<>(Arrays.asList(txPowerArr)), mSelected);
             dialog.setListener(value -> {
                 mSelected = value;
@@ -113,7 +113,7 @@ public class AdvertiseIBeaconActivity extends BaseActivity<ActivityAdvertiseIbea
             finish();
         }, 30 * 1000);
         int msgId = MQTTConstants.READ_MSG_ID_BEACON_PARAMS;
-        String message = assembleReadCommon(msgId, mMokoDevice.mac);
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
@@ -140,7 +140,7 @@ public class AdvertiseIBeaconActivity extends BaseActivity<ActivityAdvertiseIbea
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             int enable = result.data.get("switch_value").getAsInt();
@@ -165,7 +165,7 @@ public class AdvertiseIBeaconActivity extends BaseActivity<ActivityAdvertiseIbea
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             if (result.result_code == 0) {
@@ -307,7 +307,7 @@ public class AdvertiseIBeaconActivity extends BaseActivity<ActivityAdvertiseIbea
 
     public void onSave(View view) {
         if (isWindowLocked()) return;
-        if (null == mMokoDevice) {
+        if (null == mMokoDeviceKgw3) {
             if (!mBind.cbIBeacon.isChecked()) {
                 showLoadingProgressDialog();
                 MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setIBeaconEnable(0));
@@ -368,7 +368,7 @@ public class AdvertiseIBeaconActivity extends BaseActivity<ActivityAdvertiseIbea
         jsonObject.addProperty("uuid", uuid);
         jsonObject.addProperty("adv_interval", advInterval);
         jsonObject.addProperty("tx_power", mSelected);
-        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
