@@ -12,7 +12,7 @@ import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityModifyDeviceNameKgw3Binding;
-import com.moko.mkgw3.db.DBTools;
+import com.moko.mkgw3.db.MKgw3DBTools;
 import com.moko.mkgw3.entity.MokoDevice;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.event.MQTTConnectionCompleteEvent;
@@ -59,9 +59,9 @@ public class ModifyNameKgw3Activity extends BaseActivity<ActivityModifyDeviceNam
             return;
         }
         device.name = name;
-        DBTools.getInstance(this).updateDevice(device);
+        MKgw3DBTools.getInstance(this).updateDevice(device);
         // 跳转首页，刷新数据
-        Intent intent = new Intent(this, RemoteMainActivity.class);
+        Intent intent = new Intent(this, MKGW3MainActivity.class);
         intent.putExtra(AppConstants.EXTRA_KEY_FROM_ACTIVITY, TAG);
         intent.putExtra(AppConstants.EXTRA_KEY_MAC, device.mac);
         startActivity(intent);

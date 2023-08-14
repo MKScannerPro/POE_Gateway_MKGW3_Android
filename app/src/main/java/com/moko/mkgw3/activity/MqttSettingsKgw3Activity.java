@@ -108,7 +108,7 @@ public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw
         });
         mBind.vpMqtt.setOffscreenPageLimit(4);
         mBind.rgMqtt.setOnCheckedChangeListener(this);
-        expertFilePath = RemoteMainActivity.PATH_LOGCAT + File.separator + "export" + File.separator + "Settings for Device.xlsx";
+        expertFilePath = MKGW3MainActivity.PATH_LOGCAT + File.separator + "export" + File.separator + "Settings for Device.xlsx";
         showLoadingProgressDialog();
         mBind.title.postDelayed(() -> {
             ArrayList<OrderTask> orderTasks = new ArrayList<>();

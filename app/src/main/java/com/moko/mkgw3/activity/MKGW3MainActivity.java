@@ -25,7 +25,7 @@ import com.moko.mkgw3.R;
 import com.moko.mkgw3.adapter.DeviceAdapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityMainMkgw3Binding;
-import com.moko.mkgw3.db.DBTools;
+import com.moko.mkgw3.db.MKgw3DBTools;
 import com.moko.mkgw3.dialog.AlertMessageDialog;
 import com.moko.mkgw3.entity.MQTTConfig;
 import com.moko.mkgw3.entity.MokoDevice;
@@ -82,7 +82,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
         }
         MokoSupport.getInstance().init(getApplicationContext());
         MQTTSupport.getInstance().init(getApplicationContext());
-        devices = DBTools.getInstance(this).selectAllDevice();
+        devices = MKgw3DBTools.getInstance(this).selectAllDevice();
         adapter = new DeviceAdapter();
         adapter.openLoadAnimation();
         adapter.replaceData(devices);
@@ -134,7 +134,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMQTTConnectionCompleteEvent(MQTTConnectionCompleteEvent event) {
-        mBind.tvTitle.setText(getString(R.string.app_name));
+        mBind.tvTitle.setText("MKScannerPro");
         // 订阅所有设备的Topic
         subscribeAllDevices();
     }
@@ -173,7 +173,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
         if (!devices.isEmpty()) {
             for (MokoDevice device : devices) {
                 if (device.mac.equals(event.getMac())) {
-                    device.name = DBTools.getInstance(this).selectDevice(device.mac).name;
+                    device.name = MKgw3DBTools.getInstance(this).selectDevice(device.mac).name;
                     break;
                 }
             }
@@ -201,7 +201,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
             if (ModifyNameKgw3Activity.TAG.equals(from)
                     || DeviceSettingKgw3Activity.TAG.equals(from)) {
                 devices.clear();
-                devices.addAll(DBTools.getInstance(this).selectAllDevice());
+                devices.addAll(MKgw3DBTools.getInstance(this).selectAllDevice());
                 if (!TextUtils.isEmpty(mac)) {
                     for (final MokoDevice device : devices) {
                         if (mac.equals(device.mac)) {
@@ -231,7 +231,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
             }
             if (ModifySettingsKgw3Activity.TAG.equals(from)) {
                 if (!TextUtils.isEmpty(mac)) {
-                    MokoDevice mokoDevice = DBTools.getInstance(this).selectDevice(mac);
+                    MokoDevice mokoDevice = MKgw3DBTools.getInstance(this).selectDevice(mac);
                     for (final MokoDevice device : devices) {
                         if (mac.equals(device.mac)) {
                             if (TextUtils.isEmpty(mAppMqttConfig.topicSubscribe)) {
@@ -338,7 +338,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
                 }
             }
             XLog.i(String.format("删除设备:%s", mokoDevice.name));
-            DBTools.getInstance(MKGW3MainActivity.this).deleteDevice(mokoDevice);
+            MKgw3DBTools.getInstance(MKGW3MainActivity.this).deleteDevice(mokoDevice);
             EventBus.getDefault().post(new DeviceDeletedEvent(mokoDevice.id));
             devices.remove(mokoDevice);
             adapter.replaceData(devices);
@@ -416,7 +416,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
                     Type netType = new TypeToken<MsgNotify<JsonObject>>() {
                     }.getType();
                     MsgNotify<JsonObject> netMsgNotify = new Gson().fromJson(message, netType);
-                    device.netStatus = netMsgNotify.data.get("wifi_rssi").getAsInt();
+                    device.wifiRssi = netMsgNotify.data.get("wifi_rssi").getAsInt();
                     device.networkType = netMsgNotify.data.get("net_interface").getAsInt();
                 }
                 device.isOnline = true;
@@ -445,7 +445,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
         if (requestCode == AppConstants.REQUEST_CODE_MQTT_CONFIG_APP) {
             mAppMqttConfigStr = data.getStringExtra(AppConstants.EXTRA_KEY_MQTT_CONFIG_APP);
             mAppMqttConfig = new Gson().fromJson(mAppMqttConfigStr, MQTTConfig.class);
-            mBind.tvTitle.setText(getString(R.string.app_name));
+            mBind.tvTitle.setText("MKScannerPro");
             // 订阅所有设备的Topic
             subscribeAllDevices();
         }

@@ -1,6 +1,6 @@
 package com.moko.mkgw3.db;
 
-public class DBConstants {
+public class MKgw3DBConstants {
     // 设备
     public static final String TABLE_NAME_DEVICE = "device";
     public static final String DEVICE_FIELD_ID = "id";
@@ -12,4 +12,6 @@ public class DBConstants {
     public static final String DEVICE_FIELD_TOPIC_SUBSCRIBE = "subscribe_topic";
     public static final String DEVICE_FIELD_LWT_TOPIC = "lwt_topic";
     public static final String DEVICE_FIELD_LWT_ENABLE = "lwt_enable";
+    public static final String DEVICE_NETWORK_TYPE = "network_type";
+
 }

@@ -10,6 +10,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.ContextCompat;
+
 import com.elvishew.xlog.XLog;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
@@ -21,10 +25,6 @@ import com.permissionx.guolindev.PermissionX;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.content.ContextCompat;
 
 public class GuideActivity extends BaseActivity<ActivityGuideBinding> {
     @Override
@@ -83,7 +83,7 @@ public class GuideActivity extends BaseActivity<ActivityGuideBinding> {
 
     private void gotoMain() {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            startActivity(new Intent(this, RemoteMainActivity.class));
+            startActivity(new Intent(this, MKGW3MainActivity.class));
             finish();
         }, 1000);
     }

@@ -48,9 +48,9 @@ public class AboutActivity extends BaseActivity<ActivityAboutBinding> {
     public void onFeedbackLog(View view) {
         if (isWindowLocked())
             return;
-        File trackerLog = new File(RemoteMainActivity.PATH_LOGCAT + File.separator + "MKRemoteGW.txt");
-        File trackerLogBak = new File(RemoteMainActivity.PATH_LOGCAT + File.separator + "MKRemoteGW.txt.bak");
-        File trackerCrashLog = new File(RemoteMainActivity.PATH_LOGCAT + File.separator + "crash_log.txt");
+        File trackerLog = new File(MKGW3MainActivity.PATH_LOGCAT + File.separator + "MKGW3.txt");
+        File trackerLogBak = new File(MKGW3MainActivity.PATH_LOGCAT + File.separator + "MKGW3.txt.bak");
+        File trackerCrashLog = new File(MKGW3MainActivity.PATH_LOGCAT + File.separator + "crash_log.txt");
         if (!trackerLog.exists() || !trackerLog.canRead()) {
             ToastUtils.showToast(this, "File is not exists!");
             return;

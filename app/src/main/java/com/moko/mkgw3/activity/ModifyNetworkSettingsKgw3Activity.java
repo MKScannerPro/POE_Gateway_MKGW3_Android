@@ -14,7 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.ActivityModifyWifiSettingsKgw3Binding;
+import com.moko.mkgw3.databinding.ActivityModifyNetworkSettingsKgw3Binding;
 import com.moko.mkgw3.dialog.BottomDialog;
 import com.moko.mkgw3.entity.MQTTConfig;
 import com.moko.mkgw3.entity.MokoDevice;
@@ -38,7 +38,7 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ModifyWifiSettingsKgw3Activity extends BaseActivity<ActivityModifyWifiSettingsKgw3Binding> {
+public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModifyNetworkSettingsKgw3Binding> {
     private final String FILTER_ASCII = "[ -~]*";
     private ArrayList<String> mSecurityValues;
     private int mSecuritySelected;
@@ -53,8 +53,14 @@ public class ModifyWifiSettingsKgw3Activity extends BaseActivity<ActivityModifyW
     private Pattern pattern;
     private boolean wifiDhcpEnable;
     private boolean ethernetDhcpEnable;
-    private MsgReadResult<JsonObject> resultWifi;
-    private MsgReadResult<JsonObject> resultEthernet;
+    private String wifiIp;
+    private String wifiMask;
+    private String wifiGateway;
+    private String wifiDns;
+    private String ethernetIp;
+    private String ethernetMask;
+    private String ethernetGateway;
+    private String ethernetDns;
 
     @Override
     protected void onCreate() {
@@ -102,18 +108,16 @@ public class ModifyWifiSettingsKgw3Activity extends BaseActivity<ActivityModifyW
             if (selectedNetworkType == 0) {
                 ethernetDhcpEnable = !ethernetDhcpEnable;
                 setDhcpEnable(ethernetDhcpEnable);
-                setIpInfo(resultEthernet);
             } else {
                 wifiDhcpEnable = !wifiDhcpEnable;
                 setDhcpEnable(wifiDhcpEnable);
-                setIpInfo(resultWifi);
             }
         });
     }
 
     @Override
-    protected ActivityModifyWifiSettingsKgw3Binding getViewBinding() {
-        return ActivityModifyWifiSettingsKgw3Binding.inflate(getLayoutInflater());
+    protected ActivityModifyNetworkSettingsKgw3Binding getViewBinding() {
+        return ActivityModifyNetworkSettingsKgw3Binding.inflate(getLayoutInflater());
     }
 
     private void onNetworkTypeClick() {
@@ -126,7 +130,7 @@ public class ModifyWifiSettingsKgw3Activity extends BaseActivity<ActivityModifyW
             mBind.layoutWifi.setVisibility(value == 1 ? View.VISIBLE : View.GONE);
             //更新开关状态
             setDhcpEnable(value == 0 ? ethernetDhcpEnable : wifiDhcpEnable);
-            setIpInfo(value == 0 ? resultEthernet : resultWifi);
+            setIpInfo();
         });
         dialog.show(getSupportFragmentManager());
     }
@@ -193,16 +197,19 @@ public class ModifyWifiSettingsKgw3Activity extends BaseActivity<ActivityModifyW
             }
             getWifiIpInfo();
         }
-        if (msg_id == MQTTConstants.READ_MSG_ID_NETWORK_SETTINGS) {
+        if (msg_id == MQTTConstants.READ_MSG_ID_WIFI_PARAMS) {
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
             if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
             wifiDhcpEnable = result.data.get("dhcp_en").getAsInt() == 1;
-            resultWifi = result;
+            wifiIp = result.data.get("ip").getAsString();
+            wifiMask = result.data.get("netmask").getAsString();
+            wifiGateway = result.data.get("gw").getAsString();
+            wifiDns = result.data.get("dns").getAsString();
             if (selectedNetworkType == 1) {
                 setDhcpEnable(wifiDhcpEnable);
-                setIpInfo(result);
+                setIpInfo();
             }
             getEthernetIpInfo();
         }
@@ -214,10 +221,13 @@ public class ModifyWifiSettingsKgw3Activity extends BaseActivity<ActivityModifyW
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             ethernetDhcpEnable = result.data.get("dhcp_en").getAsInt() == 1;
-            resultEthernet = result;
+            ethernetIp = result.data.get("ip").getAsString();
+            ethernetMask = result.data.get("netmask").getAsString();
+            ethernetGateway = result.data.get("gw").getAsString();
+            ethernetDns = result.data.get("dns").getAsString();
             if (selectedNetworkType == 0) {
                 setDhcpEnable(ethernetDhcpEnable);
-                setIpInfo(result);
+                setIpInfo();
             }
         }
         if (msg_id == MQTTConstants.READ_MSG_ID_DEVICE_STATUS) {
@@ -237,20 +247,47 @@ public class ModifyWifiSettingsKgw3Activity extends BaseActivity<ActivityModifyW
                 ToastUtils.showToast(this, "Set up failed");
             }, 30 * 1000);
             showLoadingProgressDialog();
+            setNetworkType();
+        }
+        if (msg_id == MQTTConstants.CONFIG_MSG_ID_NETWORK_TYPE) {
+            Type type = new TypeToken<MsgConfigResult>() {
+            }.getType();
+            MsgConfigResult result = new Gson().fromJson(message, type);
+            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (result.result_code != 0) return;
+            setNetworkSettings();
+        }
+        if (msg_id == MQTTConstants.CONFIG_MSG_ID_WIFI_PARAMS) {
+            Type type = new TypeToken<MsgConfigResult>() {
+            }.getType();
+            MsgConfigResult result = new Gson().fromJson(message, type);
+            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (result.result_code != 0) return;
             setWifiSettings();
+        }
+        if (msg_id == MQTTConstants.CONFIG_MSG_ID_ETHERNET_PARAMS) {
+            Type type = new TypeToken<MsgConfigResult>() {
+            }.getType();
+            MsgConfigResult result = new Gson().fromJson(message, type);
+            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            dismissLoadingProgressDialog();
+            mHandler.removeMessages(0);
+            if (result.result_code == 0) {
+                ToastUtils.showToast(this, "Set up succeed");
+            } else {
+                ToastUtils.showToast(this, "Set up failed");
+            }
         }
         if (msg_id == MQTTConstants.CONFIG_MSG_ID_WIFI_SETTINGS) {
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDevice.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             if (result.result_code == 0) {
                 ToastUtils.showToast(this, "Set up succeed");
-                if (mSecuritySelected == 0)
-                    return;
+                if (mSecuritySelected == 0) return;
                 String caFileUrl = mBind.etCaFileUrl.getText().toString();
                 String certFileUrl = mBind.etCertFileUrl.getText().toString();
                 String keyFileUrl = mBind.etKeyFileUrl.getText().toString();
@@ -297,11 +334,11 @@ public class ModifyWifiSettingsKgw3Activity extends BaseActivity<ActivityModifyW
         mBind.layoutIp.clIp.setVisibility(enable ? View.GONE : View.VISIBLE);
     }
 
-    private void setIpInfo(MsgReadResult<JsonObject> result) {
-        mBind.layoutIp.etIp.setText(result.data.get("ip").getAsString());
-        mBind.layoutIp.etMask.setText(result.data.get("netmask").getAsString());
-        mBind.layoutIp.etGateway.setText(result.data.get("gw").getAsString());
-        mBind.layoutIp.etDns.setText(result.data.get("dns").getAsString());
+    private void setIpInfo() {
+        mBind.layoutIp.etIp.setText(selectedNetworkType == 1 ? wifiIp : ethernetIp);
+        mBind.layoutIp.etMask.setText(selectedNetworkType == 1 ? wifiMask : ethernetMask);
+        mBind.layoutIp.etGateway.setText(selectedNetworkType == 1 ? wifiGateway : ethernetGateway);
+        mBind.layoutIp.etDns.setText(selectedNetworkType == 1 ? wifiDns : ethernetDns);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -311,6 +348,41 @@ public class ModifyWifiSettingsKgw3Activity extends BaseActivity<ActivityModifyW
 
     public void onBack(View view) {
         finish();
+    }
+
+    private void setNetworkType() {
+        int msgId = MQTTConstants.CONFIG_MSG_ID_NETWORK_TYPE;
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("net_interface", selectedNetworkType);
+        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        try {
+            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setNetworkSettings() {
+        int msgId = selectedNetworkType == 1 ? MQTTConstants.CONFIG_MSG_ID_WIFI_PARAMS : MQTTConstants.CONFIG_MSG_ID_ETHERNET_PARAMS;
+        JsonObject jsonObject = new JsonObject();
+        int enable;
+        if (selectedNetworkType == 1) {
+            //wifi
+            enable = wifiDhcpEnable ? 1 : 0;
+        } else {
+            enable = ethernetDhcpEnable ? 1 : 0;
+        }
+        jsonObject.addProperty("dhcp_en", enable);
+        jsonObject.addProperty("ip", mBind.layoutIp.etIp.getText().toString());
+        jsonObject.addProperty("netmask", mBind.layoutIp.etMask.getText().toString());
+        jsonObject.addProperty("gw", mBind.layoutIp.etGateway.getText().toString());
+        jsonObject.addProperty("dns", mBind.layoutIp.etDns.getText().toString());
+        String message = assembleWriteCommonData(msgId, mMokoDevice.mac, jsonObject);
+        try {
+            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setWifiSettings() {
@@ -365,7 +437,7 @@ public class ModifyWifiSettingsKgw3Activity extends BaseActivity<ActivityModifyW
     }
 
     private void getWifiIpInfo() {
-        int msgId = MQTTConstants.READ_MSG_ID_NETWORK_SETTINGS;
+        int msgId = MQTTConstants.READ_MSG_ID_WIFI_PARAMS;
         String message = assembleReadCommon(msgId, mMokoDevice.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
@@ -460,8 +532,10 @@ public class ModifyWifiSettingsKgw3Activity extends BaseActivity<ActivityModifyW
     }
 
     private boolean isParaError() {
-        String ssid = mBind.etSsid.getText().toString();
-        if (TextUtils.isEmpty(ssid)) return true;
+        if (selectedNetworkType == 1) {
+            String ssid = mBind.etSsid.getText().toString();
+            if (TextUtils.isEmpty(ssid)) return true;
+        }
         if (!ethernetDhcpEnable || !wifiDhcpEnable) {
             //检查ip地址是否合法
             String ip = mBind.layoutIp.etIp.getText().toString();
@@ -472,10 +546,22 @@ public class ModifyWifiSettingsKgw3Activity extends BaseActivity<ActivityModifyW
             Matcher matcherMask = pattern.matcher(mask);
             Matcher matcherGateway = pattern.matcher(gateway);
             Matcher matcherDns = pattern.matcher(dns);
-            return !matcherIp.matches()
+            if (!matcherIp.matches()
                     || !matcherMask.matches()
                     || !matcherGateway.matches()
-                    || !matcherDns.matches();
+                    || !matcherDns.matches())
+                return true;
+            if (selectedNetworkType == 1) {
+                wifiIp = ip;
+                wifiMask = mask;
+                wifiGateway = gateway;
+                wifiDns = dns;
+            } else {
+                ethernetIp = ip;
+                ethernetMask = mask;
+                ethernetGateway = gateway;
+                ethernetDns = dns;
+            }
         }
         return false;
     }

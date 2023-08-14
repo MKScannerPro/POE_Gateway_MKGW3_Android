@@ -18,7 +18,7 @@ import com.moko.mkgw3.R;
 import com.moko.mkgw3.adapter.ScanDeviceAdapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityDetailKgw3Binding;
-import com.moko.mkgw3.db.DBTools;
+import com.moko.mkgw3.db.MKgw3DBTools;
 import com.moko.mkgw3.entity.MQTTConfig;
 import com.moko.mkgw3.entity.MokoDevice;
 import com.moko.mkgw3.utils.SPUtiles;
@@ -246,7 +246,7 @@ public class DeviceDetailKgw3Activity extends BaseActivity<ActivityDetailKgw3Bin
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceModifyNameEvent(DeviceModifyNameEvent event) {
         // 修改了设备名称
-        MokoDevice device = DBTools.getInstance(DeviceDetailKgw3Activity.this).selectDevice(mMokoDevice.mac);
+        MokoDevice device = MKgw3DBTools.getInstance(DeviceDetailKgw3Activity.this).selectDevice(mMokoDevice.mac);
         mMokoDevice.name = device.name;
         mBind.tvDeviceName.setText(mMokoDevice.name);
     }
@@ -274,7 +274,7 @@ public class DeviceDetailKgw3Activity extends BaseActivity<ActivityDetailKgw3Bin
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent intent = new Intent(this, DeviceSettingActivity.class);
+        Intent intent = new Intent(this, DeviceSettingKgw3Activity.class);
         intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startActivity(intent);
     }
@@ -287,7 +287,7 @@ public class DeviceDetailKgw3Activity extends BaseActivity<ActivityDetailKgw3Bin
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent i = new Intent(this, ScannerUploadOptionActivity.class);
+        Intent i = new Intent(this, ScannerUploadOptionKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startActivity(i);
     }

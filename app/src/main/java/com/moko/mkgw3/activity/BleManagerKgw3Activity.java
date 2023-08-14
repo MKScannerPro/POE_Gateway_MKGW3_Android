@@ -18,7 +18,7 @@ import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.adapter.BleDeviceAdapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityBleDevicesKgw3Binding;
-import com.moko.mkgw3.db.DBTools;
+import com.moko.mkgw3.db.MKgw3DBTools;
 import com.moko.mkgw3.dialog.PasswordRemoteBleDialog;
 import com.moko.mkgw3.dialog.ScanFilterDialog;
 import com.moko.mkgw3.entity.MQTTConfig;
@@ -185,7 +185,7 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceModifyNameEvent(DeviceModifyNameEvent event) {
         // 修改了设备名称
-        MokoDevice device = DBTools.getInstance(BleManagerKgw3Activity.this).selectDevice(mMokoDevice.mac);
+        MokoDevice device = MKgw3DBTools.getInstance(BleManagerKgw3Activity.this).selectDevice(mMokoDevice.mac);
         mMokoDevice.name = device.name;
         mBind.tvDeviceName.setText(mMokoDevice.name);
     }

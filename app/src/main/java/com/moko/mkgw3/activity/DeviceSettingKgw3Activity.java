@@ -1,9 +1,7 @@
 package com.moko.mkgw3.activity;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputFilter;
@@ -12,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-
-import androidx.core.content.ContextCompat;
 
 import com.elvishew.xlog.XLog;
 import com.google.gson.Gson;
@@ -24,7 +20,7 @@ import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityDeviceSettingKgw3Binding;
-import com.moko.mkgw3.db.DBTools;
+import com.moko.mkgw3.db.MKgw3DBTools;
 import com.moko.mkgw3.dialog.AlertMessageDialog;
 import com.moko.mkgw3.dialog.CustomDialog;
 import com.moko.mkgw3.entity.MQTTConfig;
@@ -34,7 +30,6 @@ import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
 import com.moko.support.mkgw3.MQTTSupport;
 import com.moko.support.mkgw3.entity.MsgConfigResult;
-import com.moko.support.mkgw3.entity.MsgReadResult;
 import com.moko.support.mkgw3.event.DeviceDeletedEvent;
 import com.moko.support.mkgw3.event.DeviceModifyNameEvent;
 import com.moko.support.mkgw3.event.DeviceOnlineEvent;
@@ -126,7 +121,7 @@ public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettin
                         e.printStackTrace();
                     }
                 }
-                DBTools.getInstance(this).deleteDevice(mMokoDevice);
+                MKgw3DBTools.getInstance(this).deleteDevice(mMokoDevice);
                 EventBus.getDefault().post(new DeviceDeletedEvent(mMokoDevice.id));
                 mBind.tvName.postDelayed(() -> {
                     dismissLoadingProgressDialog();
@@ -144,7 +139,7 @@ public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettin
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceModifyNameEvent(DeviceModifyNameEvent event) {
         // 修改了设备名称
-        MokoDevice device = DBTools.getInstance(this).selectDevice(mMokoDevice.mac);
+        MokoDevice device = MKgw3DBTools.getInstance(this).selectDevice(mMokoDevice.mac);
         mMokoDevice.name = device.name;
         mBind.tvName.setText(mMokoDevice.name);
     }
@@ -176,7 +171,7 @@ public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettin
                         return;
                     }
                     mMokoDevice.name = name;
-                    DBTools.getInstance(DeviceSettingKgw3Activity.this).updateDevice(mMokoDevice);
+                    MKgw3DBTools.getInstance(DeviceSettingKgw3Activity.this).updateDevice(mMokoDevice);
                     EventBus.getDefault().post(new DeviceModifyNameEvent(mMokoDevice.mac));
                     etDeviceName.setText(name);
                     dialog12.dismiss();

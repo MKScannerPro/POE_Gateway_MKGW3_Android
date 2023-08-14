@@ -12,7 +12,6 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
 
-import com.moko.mkgw3.activity.RemoteMainActivity;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -26,6 +25,8 @@ import java.io.OutputStream;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import com.moko.mkgw3.activity.MKGW3MainActivity;
 
 public class FileUtils {
     /**
@@ -238,7 +239,7 @@ public class FileUtils {
                 String displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                 try {
                     InputStream is = contentResolver.openInputStream(uri);
-                    File tempFile = new File(RemoteMainActivity.PATH_LOGCAT + File.separator + displayName);
+                    File tempFile = new File(MKGW3MainActivity.PATH_LOGCAT + File.separator + displayName);
                     FileOutputStream fos = new FileOutputStream(tempFile);
                     copyStream(is, fos);
                     file = tempFile;

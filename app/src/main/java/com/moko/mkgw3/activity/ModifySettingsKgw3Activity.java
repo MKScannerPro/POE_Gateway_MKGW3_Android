@@ -19,7 +19,7 @@ import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityModifySettingsKgw3Binding;
-import com.moko.mkgw3.db.DBTools;
+import com.moko.mkgw3.db.MKgw3DBTools;
 import com.moko.mkgw3.dialog.AlertMessageDialog;
 import com.moko.mkgw3.entity.MQTTConfig;
 import com.moko.mkgw3.entity.MokoDevice;
@@ -137,7 +137,7 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
                 mqttConfig.lwtTopic = mqttDeviceConfig.lwtTopic;
                 mqttConfig.lwtPayload = mqttDeviceConfig.lwtPayload;
                 mMokoDevice.mqttInfo = new Gson().toJson(mqttConfig, MQTTConfig.class);
-                DBTools.getInstance(this).updateDevice(mMokoDevice);
+                MKgw3DBTools.getInstance(this).updateDevice(mMokoDevice);
                 mBind.tvName.postDelayed(() -> {
                     dismissLoadingProgressDialog();
                     mHandler.removeMessages(0);
@@ -171,7 +171,7 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent i = new Intent(this, ModifyWifiSettingsKgw3Activity.class);
+        Intent i = new Intent(this, ModifyNetworkSettingsKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startActivity(i);
     }

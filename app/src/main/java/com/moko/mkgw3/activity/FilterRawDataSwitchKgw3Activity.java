@@ -235,7 +235,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent i = new Intent(this, FilterUIDActivity.class);
+        Intent i = new Intent(this, FilterUIDKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startFilterDetail.launch(i);
     }
@@ -247,7 +247,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent i = new Intent(this, FilterUrlActivity.class);
+        Intent i = new Intent(this, FilterUrlKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startFilterDetail.launch(i);
     }
@@ -259,7 +259,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent i = new Intent(this, FilterTLMActivity.class);
+        Intent i = new Intent(this, FilterTLMKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDevice);
         startFilterDetail.launch(i);
     }

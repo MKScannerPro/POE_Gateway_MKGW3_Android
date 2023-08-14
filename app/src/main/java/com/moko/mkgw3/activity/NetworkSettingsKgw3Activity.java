@@ -7,9 +7,9 @@ import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.elvishew.xlog.XLog;
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
@@ -54,6 +54,16 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
     private final String[] networkTypeValues = {"Ethernet", "WiFi"};
     private int selectedNetworkType;
     private Pattern pattern;
+    private String wifiIp;
+    private String wifiMask;
+    private String wifiGateway;
+    private String wifiDns;
+    private String ethernetIp;
+    private String ethernetMask;
+    private String ethernetGateway;
+    private String ethernetDns;
+    private boolean wifiDhcpEnable;
+    private boolean ethernetDhcpEnable;
 
     @Override
     protected void onCreate() {
@@ -88,11 +98,9 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
             if (selectedNetworkType == 0) {
                 ethernetDhcpEnable = !ethernetDhcpEnable;
                 setDhcpEnable(ethernetDhcpEnable);
-                setIpInfo(ethernetIpInfoVal);
             } else {
                 wifiDhcpEnable = !wifiDhcpEnable;
                 setDhcpEnable(wifiDhcpEnable);
-                setIpInfo(wifiIpInfoVal);
             }
         });
     }
@@ -130,7 +138,7 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
             mBind.layoutWifi.setVisibility(value == 1 ? View.VISIBLE : View.GONE);
             //更新开关状态
             setDhcpEnable(value == 0 ? ethernetDhcpEnable : wifiDhcpEnable);
-            setIpInfo(value == 0 ? ethernetIpInfoVal : wifiIpInfoVal);
+            setIpInfo();
         });
         dialog.show(getSupportFragmentManager());
     }
@@ -286,35 +294,41 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
                                     break;
 
                                 case KEY_WIFI_DHCP:
-                                    if (selectedNetworkType == 1) {
-                                        wifiDhcpEnable = (value[4] & 0xff) == 1;
-                                        setDhcpEnable(wifiDhcpEnable);
-                                    }
+                                    wifiDhcpEnable = (value[4] & 0xff) == 1;
+                                    if (selectedNetworkType == 1) setDhcpEnable(wifiDhcpEnable);
                                     break;
 
                                 case KEY_WIFI_IP_INFO:
-                                    if (selectedNetworkType == 1) {
-                                        if (length == 16) {
-                                            setIpInfo(value);
-                                            wifiIpInfoVal = value;
-                                        }
+                                    if (length == 16) {
+                                        wifiIp = String.format(Locale.getDefault(), "%d.%d.%d.%d",
+                                                value[4] & 0xFF, value[5] & 0xFF, value[6] & 0xFF, value[7] & 0xFF);
+                                        wifiMask = String.format(Locale.getDefault(), "%d.%d.%d.%d",
+                                                value[8] & 0xFF, value[9] & 0xFF, value[10] & 0xFF, value[11] & 0xFF);
+                                        wifiGateway = String.format(Locale.getDefault(), "%d.%d.%d.%d",
+                                                value[12] & 0xFF, value[13] & 0xFF, value[14] & 0xFF, value[15] & 0xFF);
+                                        wifiDns = String.format(Locale.getDefault(), "%d.%d.%d.%d",
+                                                value[16] & 0xFF, value[17] & 0xFF, value[18] & 0xFF, value[19] & 0xFF);
                                     }
+                                    if (selectedNetworkType == 1) setIpInfo();
                                     break;
 
                                 case KEY_ETHERNET_DHCP:
-                                    if (selectedNetworkType == 0) {
-                                        ethernetDhcpEnable = (value[4] & 0xff) == 1;
-                                        setDhcpEnable(ethernetDhcpEnable);
-                                    }
+                                    ethernetDhcpEnable = (value[4] & 0xff) == 1;
+                                    if (selectedNetworkType == 0) setDhcpEnable(ethernetDhcpEnable);
                                     break;
 
                                 case KEY_ETHERNET_IP_INFO:
-                                    if (selectedNetworkType == 0) {
-                                        if (length == 16) {
-                                            setIpInfo(value);
-                                            ethernetIpInfoVal = value;
-                                        }
+                                    if (length == 16) {
+                                        ethernetIp = String.format(Locale.getDefault(), "%d.%d.%d.%d",
+                                                value[4] & 0xFF, value[5] & 0xFF, value[6] & 0xFF, value[7] & 0xFF);
+                                        ethernetMask = String.format(Locale.getDefault(), "%d.%d.%d.%d",
+                                                value[8] & 0xFF, value[9] & 0xFF, value[10] & 0xFF, value[11] & 0xFF);
+                                        ethernetGateway = String.format(Locale.getDefault(), "%d.%d.%d.%d",
+                                                value[12] & 0xFF, value[13] & 0xFF, value[14] & 0xFF, value[15] & 0xFF);
+                                        ethernetDns = String.format(Locale.getDefault(), "%d.%d.%d.%d",
+                                                value[16] & 0xFF, value[17] & 0xFF, value[18] & 0xFF, value[19] & 0xFF);
                                     }
+                                    if (selectedNetworkType == 0) setIpInfo();
                                     break;
                             }
                         }
@@ -329,24 +343,11 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
         mBind.layoutIp.clIp.setVisibility(enable ? View.GONE : View.VISIBLE);
     }
 
-    private byte[] wifiIpInfoVal;
-    private byte[] ethernetIpInfoVal;
-    private boolean wifiDhcpEnable;
-    private boolean ethernetDhcpEnable;
-
-    private void setIpInfo(@NonNull byte[] value) {
-        String ip = String.format(Locale.getDefault(), "%d.%d.%d.%d",
-                value[4] & 0xFF, value[5] & 0xFF, value[6] & 0xFF, value[7] & 0xFF);
-        String mask = String.format(Locale.getDefault(), "%d.%d.%d.%d",
-                value[8] & 0xFF, value[9] & 0xFF, value[10] & 0xFF, value[11] & 0xFF);
-        String gateway = String.format(Locale.getDefault(), "%d.%d.%d.%d",
-                value[12] & 0xFF, value[13] & 0xFF, value[14] & 0xFF, value[15] & 0xFF);
-        String dns = String.format(Locale.getDefault(), "%d.%d.%d.%d",
-                value[16] & 0xFF, value[17] & 0xFF, value[18] & 0xFF, value[19] & 0xFF);
-        mBind.layoutIp.etIp.setText(ip);
-        mBind.layoutIp.etMask.setText(mask);
-        mBind.layoutIp.etGateway.setText(gateway);
-        mBind.layoutIp.etDns.setText(dns);
+    private void setIpInfo() {
+        mBind.layoutIp.etIp.setText(selectedNetworkType == 1 ? wifiIp : ethernetIp);
+        mBind.layoutIp.etMask.setText(selectedNetworkType == 1 ? wifiMask : ethernetMask);
+        mBind.layoutIp.etGateway.setText(selectedNetworkType == 1 ? wifiGateway : ethernetGateway);
+        mBind.layoutIp.etDns.setText(selectedNetworkType == 1 ? wifiDns : ethernetDns);
     }
 
     public void onSelectSecurity(View view) {
@@ -452,9 +453,11 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
     }
 
     private boolean isParaError() {
-        String ssid = mBind.etSsid.getText().toString();
-        if (TextUtils.isEmpty(ssid)) return true;
-        if (mSecuritySelected != 0) {
+        if (selectedNetworkType == 1) {
+            String ssid = mBind.etSsid.getText().toString();
+            if (TextUtils.isEmpty(ssid)) return true;
+        }
+        if (selectedNetworkType == 1 && mSecuritySelected != 0) {
             if (mEAPTypeSelected != 2 && !mBind.cbVerifyServer.isChecked()) {
                 return false;
             }
@@ -475,6 +478,17 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
                     || !matcherGateway.matches()
                     || !matcherDns.matches())
                 return true;
+            if (selectedNetworkType == 1) {
+                wifiIp = ip;
+                wifiMask = mask;
+                wifiGateway = gateway;
+                wifiDns = dns;
+            } else {
+                ethernetIp = ip;
+                ethernetMask = mask;
+                ethernetGateway = gateway;
+                ethernetDns = dns;
+            }
         }
         return false;
     }
@@ -528,8 +542,6 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
             }
             orderTasks.add(OrderTaskAssembler.setNetworkType(selectedNetworkType));
             MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-            showLoadingProgressDialog();
-            getNetworkInfo();
         } catch (Exception e) {
             ToastUtils.showToast(this, "File is missing");
         }
@@ -574,8 +586,11 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
     }
 
     private void back() {
-        if (mIsSaved)
-            setResult(RESULT_OK);
+        if (mIsSaved) {
+            Intent intent = new Intent();
+            intent.putExtra("type", selectedNetworkType);
+            setResult(RESULT_OK, intent);
+        }
         finish();
     }
 

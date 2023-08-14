@@ -15,7 +15,7 @@ public class MQTTConstants {
     public static final int CONFIG_MSG_ID_ADV_SWITCH = 1015;
     public static final int CONFIG_MSG_ID_WIFI_SETTINGS = 1020;
     public static final int CONFIG_MSG_ID_WIFI_CERT_FILE = 1021;
-    public static final int CONFIG_MSG_ID_NETWORK_SETTINGS = 1023;
+    public static final int CONFIG_MSG_ID_WIFI_PARAMS = 1023;
     public static final int CONFIG_MSG_ID_NETWORK_TYPE = 1024;
     public static final int CONFIG_MSG_ID_ETHERNET_PARAMS = 1025;
     public static final int CONFIG_MSG_ID_MQTT_SETTINGS = 1030;
@@ -64,7 +64,7 @@ public class MQTTConstants {
     public static final int READ_MSG_ID_DEVICE_STATUS = 2012;
     public static final int READ_MSG_ID_ADV_STATE = 2016;
     public static final int READ_MSG_ID_WIFI_SETTINGS = 2020;
-    public static final int READ_MSG_ID_NETWORK_SETTINGS = 2023;
+    public static final int READ_MSG_ID_WIFI_PARAMS = 2023;
     public static final int READ_MSG_ID_NETWORK_TYPE = 2024;
     public static final int READ_MSG_ID_ETHERNET_PARAMS = 2025;
     public static final int READ_MSG_ID_MQTT_SETTINGS = 2030;

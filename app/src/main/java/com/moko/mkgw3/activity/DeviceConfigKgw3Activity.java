@@ -23,7 +23,7 @@ import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityDeviceConfigKgw3Binding;
-import com.moko.mkgw3.db.DBTools;
+import com.moko.mkgw3.db.MKgw3DBTools;
 import com.moko.mkgw3.dialog.CustomDialog;
 import com.moko.mkgw3.entity.MQTTConfig;
 import com.moko.mkgw3.entity.MokoDevice;
@@ -56,6 +56,7 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
     private DonutProgress donutProgress;
     private boolean isSettingSuccess;
     private boolean isDeviceConnectSuccess;
+    private int networkType;
 
     @Override
     protected void onCreate() {
@@ -161,7 +162,7 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
             // 关闭进度条弹框，保存数据，跳转修改设备名称页面
             mBind.tvName.postDelayed(() -> {
                 dismissConnMqttDialog();
-                MokoDevice mokoDevice = DBTools.getInstance(DeviceConfigKgw3Activity.this).selectDeviceByMac(mDeviceMqttConfig.staMac);
+                MokoDevice mokoDevice = MKgw3DBTools.getInstance(DeviceConfigKgw3Activity.this).selectDeviceByMac(mDeviceMqttConfig.staMac);
                 String mqttConfigStr = new Gson().toJson(mDeviceMqttConfig, MQTTConfig.class);
                 if (mokoDevice == null) {
                     mokoDevice = new MokoDevice();
@@ -173,7 +174,8 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
                     mokoDevice.lwtEnable = mDeviceMqttConfig.lwtEnable ? 1 : 0;
                     mokoDevice.lwtTopic = mDeviceMqttConfig.lwtTopic;
                     mokoDevice.deviceType = mSelectedDeviceType;
-                    DBTools.getInstance(DeviceConfigKgw3Activity.this).insertDevice(mokoDevice);
+                    mokoDevice.networkType = networkType;
+                    MKgw3DBTools.getInstance(DeviceConfigKgw3Activity.this).insertDevice(mokoDevice);
                 } else {
                     mokoDevice.name = mDeviceMqttConfig.deviceName;
                     mokoDevice.mac = mDeviceMqttConfig.staMac;
@@ -183,7 +185,8 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
                     mokoDevice.lwtEnable = mDeviceMqttConfig.lwtEnable ? 1 : 0;
                     mokoDevice.lwtTopic = mDeviceMqttConfig.lwtTopic;
                     mokoDevice.deviceType = mSelectedDeviceType;
-                    DBTools.getInstance(DeviceConfigKgw3Activity.this).updateDevice(mokoDevice);
+                    mokoDevice.networkType = networkType;
+                    MKgw3DBTools.getInstance(DeviceConfigKgw3Activity.this).updateDevice(mokoDevice);
                 }
                 Intent modifyIntent = new Intent(DeviceConfigKgw3Activity.this, ModifyNameKgw3Activity.class);
                 modifyIntent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mokoDevice);
@@ -215,7 +218,7 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
 
     public void onWifiSettings(View view) {
         if (isWindowLocked()) return;
-        Intent intent = new Intent(this, WifiSettingsKgw3Activity.class);
+        Intent intent = new Intent(this, NetworkSettingsKgw3Activity.class);
         startWIFISettings.launch(intent);
     }
 
@@ -252,7 +255,7 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
     public void onConnect(View view) {
         if (isWindowLocked()) return;
         if (!mIsWIFIConfigFinished || !mIsMQTTConfigFinished) {
-            ToastUtils.showToast(this, "Please configure WIFI and MQTT settings first!");
+            ToastUtils.showToast(this, "Please configure network and MQTT settings first!");
             return;
         }
         showLoadingProgressDialog();
@@ -260,11 +263,13 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
     }
 
     private final ActivityResultLauncher<Intent> startWIFISettings = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        if (result.getResultCode() == RESULT_OK)
+        if (result.getResultCode() == RESULT_OK && null != result.getData()) {
             mIsWIFIConfigFinished = true;
+            networkType = result.getData().getIntExtra("type", 0);
+        }
     });
     private final ActivityResultLauncher<Intent> startMQTTSettings = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        if (result.getResultCode() == RESULT_OK) {
+        if (result.getResultCode() == RESULT_OK && null != result.getData()) {
             mIsMQTTConfigFinished = true;
             mDeviceMqttConfig = (MQTTConfig) result.getData().getSerializableExtra(AppConstants.EXTRA_KEY_MQTT_CONFIG_DEVICE);
         }
@@ -273,7 +278,7 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
 
     private void showConnMqttDialog() {
         isDeviceConnectSuccess = false;
-        View view = LayoutInflater.from(this).inflate(R.layout.mqtt_conn_content, null);
+        View view = LayoutInflater.from(this).inflate(R.layout.mqtt_conn_content, mBind.getRoot(), false);
         donutProgress = view.findViewById(R.id.dp_progress);
         mqttConnDialog = new CustomDialog.Builder(this)
                 .setContentView(view)

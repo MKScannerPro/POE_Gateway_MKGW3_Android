@@ -8,13 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
-import com.moko.mkgw3.activity.ModifyMQTTSettingsActivity;
+import androidx.fragment.app.Fragment;
+
+import com.moko.mkgw3.activity.ModifyMQTTSettingsKgw3Activity;
 import com.moko.mkgw3.databinding.FragmentSslDeviceUrlBinding;
 import com.moko.mkgw3.dialog.BottomDialog;
 
 import java.util.ArrayList;
-
-import androidx.fragment.app.Fragment;
 
 public class SSLDeviceUrlFragment extends Fragment {
 
@@ -22,7 +22,7 @@ public class SSLDeviceUrlFragment extends Fragment {
     private FragmentSslDeviceUrlBinding mBind;
 
 
-    private ModifyMQTTSettingsActivity activity;
+    private ModifyMQTTSettingsKgw3Activity activity;
 
     private int mConnectMode = 0;
 
@@ -52,19 +52,16 @@ public class SSLDeviceUrlFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
         mBind = FragmentSslDeviceUrlBinding.inflate(inflater, container, false);
-        activity = (ModifyMQTTSettingsActivity) getActivity();
+        activity = (ModifyMQTTSettingsKgw3Activity) getActivity();
         mBind.clCertificate.setVisibility(mConnectMode > 0 ? View.VISIBLE : View.GONE);
         mBind.cbSsl.setChecked(mConnectMode > 0);
-        mBind.cbSsl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked) {
-                    mConnectMode = 0;
-                } else {
-                    mConnectMode = selected + 1;
-                }
-                mBind.clCertificate.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        mBind.cbSsl.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isChecked) {
+                mConnectMode = 0;
+            } else {
+                mConnectMode = selected + 1;
             }
+            mBind.clCertificate.setVisibility(isChecked ? View.VISIBLE : View.GONE);
         });
         values = new ArrayList<>();
         values.add("CA signed server certificate");

@@ -179,12 +179,8 @@ public class SetAppMQTTKgw3Activity extends BaseActivity<ActivityMqttAppKgw3Bind
         dialog.setMessage("Please confirm whether to save the modified parameters?");
         dialog.setConfirm("YES");
         dialog.setCancel("NO");
-        dialog.setOnAlertConfirmListener(() -> {
-            onSave(null);
-        });
-        dialog.setOnAlertCancelListener(() -> {
-            finish();
-        });
+        dialog.setOnAlertConfirmListener(() -> onSave(null));
+        dialog.setOnAlertCancelListener(this::finish);
         dialog.show(getSupportFragmentManager());
     }
 

@@ -1,12 +1,11 @@
 package com.moko.mkgw3.adapter;
 
+import androidx.core.content.ContextCompat;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.entity.MokoDevice;
-
-import androidx.core.content.ContextCompat;
-
 
 public class DeviceAdapter extends BaseQuickAdapter<MokoDevice, BaseViewHolder> {
 
@@ -26,12 +25,13 @@ public class DeviceAdapter extends BaseQuickAdapter<MokoDevice, BaseViewHolder> 
             helper.setText(R.id.tv_device_status, mContext.getString(R.string.device_state_online));
             helper.setTextColor(R.id.tv_device_status, ContextCompat.getColor(mContext, R.color.blue_0188cc));
             if (item.networkType == 1) {
-                if (item.netStatus == 0)
+                if (item.wifiRssi >= -50) {
                     helper.setImageResource(R.id.iv_net_status, R.drawable.ic_net_good);
-                else if (item.netStatus == 1)
+                } else if (item.wifiRssi >= -65) {
                     helper.setImageResource(R.id.iv_net_status, R.drawable.ic_net_medium);
-                else if (item.netStatus == 2)
+                } else {
                     helper.setImageResource(R.id.iv_net_status, R.drawable.ic_net_poor);
+                }
             } else {
                 helper.setImageResource(R.id.iv_net_status, R.drawable.ethernet_online);
             }
