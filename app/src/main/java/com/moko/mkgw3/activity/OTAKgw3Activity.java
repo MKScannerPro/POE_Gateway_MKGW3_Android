@@ -15,6 +15,7 @@ import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityOtaKgw3Binding;
+import com.moko.mkgw3.dialog.MKgw3BottomDialog;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
@@ -31,6 +32,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class OTAKgw3Activity extends BaseActivity<ActivityOtaKgw3Binding> {
     private final String FILTER_ASCII = "[ -~]*";
@@ -38,6 +41,8 @@ public class OTAKgw3Activity extends BaseActivity<ActivityOtaKgw3Binding> {
     private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
     private Handler mHandler;
+    private final String[] otaTypeArr = {"WIFI firmware", "Bluetooth firmware"};
+    private int otaType;
 
     @Override
     protected void onCreate() {
@@ -53,11 +58,23 @@ public class OTAKgw3Activity extends BaseActivity<ActivityOtaKgw3Binding> {
         appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
         mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
         mHandler = new Handler(Looper.getMainLooper());
+        mBind.tvOtaType.setOnClickListener(v -> selectOtaType());
     }
 
     @Override
     protected ActivityOtaKgw3Binding getViewBinding() {
         return ActivityOtaKgw3Binding.inflate(getLayoutInflater());
+    }
+
+    private void selectOtaType() {
+        if (isWindowLocked()) return;
+        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
+        dialog.setDatas(new ArrayList<>(Arrays.asList(otaTypeArr)), otaType);
+        dialog.setListener(value -> {
+            otaType = value;
+            mBind.tvOtaType.setText(otaTypeArr[value]);
+        });
+        dialog.show(getSupportFragmentManager());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -94,9 +111,9 @@ public class OTAKgw3Activity extends BaseActivity<ActivityOtaKgw3Binding> {
                 ToastUtils.showToast(this, "Set up failed");
             }, 50 * 1000);
             showLoadingProgressDialog();
-            setOTA(firmwareFileUrlStr);
+            setOTA(firmwareFileUrlStr, otaType == 0 ? MQTTConstants.CONFIG_MSG_ID_OTA : MQTTConstants.CONFIG_MSG_ID_OTA_BLE);
         }
-        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_OTA_RESULT) {
+        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_OTA_RESULT || msg_id == MQTTConstants.NOTIFY_MSG_ID_OTA_BLE_RESULT) {
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
             }.getType();
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
@@ -110,7 +127,7 @@ public class OTAKgw3Activity extends BaseActivity<ActivityOtaKgw3Binding> {
                 ToastUtils.showToast(this, R.string.update_failed);
             }
         }
-        if (msg_id == MQTTConstants.CONFIG_MSG_ID_OTA) {
+        if (msg_id == MQTTConstants.CONFIG_MSG_ID_OTA || msg_id == MQTTConstants.CONFIG_MSG_ID_OTA_BLE) {
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
@@ -164,8 +181,7 @@ public class OTAKgw3Activity extends BaseActivity<ActivityOtaKgw3Binding> {
         }
     }
 
-    private void setOTA(String firmwareFileUrlStr) {
-        int msgId = MQTTConstants.CONFIG_MSG_ID_OTA;
+    private void setOTA(String firmwareFileUrlStr, int msgId) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("firmware_url", firmwareFileUrlStr);
         String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);

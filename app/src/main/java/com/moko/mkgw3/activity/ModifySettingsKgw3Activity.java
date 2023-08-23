@@ -59,7 +59,7 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
             finish();
         }, 30 * 1000);
         showLoadingProgressDialog();
-        mBind.tvName.postDelayed(this::getMqttSettings, 1000);
+        getMqttSettings();
     }
 
     @Override
@@ -87,10 +87,8 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
             Type type = new TypeToken<MsgReadResult<JsonObject>>() {
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
-            dismissLoadingProgressDialog();
-            mHandler.removeMessages(0);
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            getNetworkType();
             mqttDeviceConfig.host = result.data.get("host").getAsString();
             mqttDeviceConfig.port = String.valueOf(result.data.get("port").getAsInt());
             mqttDeviceConfig.clientId = result.data.get("client_id").getAsString();
@@ -107,6 +105,15 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
             mqttDeviceConfig.lwtRetain = result.data.get("lwt_retain").getAsInt() == 1;
             mqttDeviceConfig.lwtTopic = result.data.get("lwt_topic").getAsString();
             mqttDeviceConfig.lwtPayload = result.data.get("lwt_payload").getAsString();
+        }
+        if (msg_id == MQTTConstants.READ_MSG_ID_NETWORK_TYPE) {
+            Type type = new TypeToken<MsgReadResult<JsonObject>>() {
+            }.getType();
+            MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            dismissLoadingProgressDialog();
+            mHandler.removeMessages(0);
+            networkType = result.data.get("net_interface").getAsInt();
         }
         if (msg_id == MQTTConstants.CONFIG_MSG_ID_REBOOT) {
             Type type = new TypeToken<MsgConfigResult>() {
@@ -137,6 +144,7 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
                 mqttConfig.lwtTopic = mqttDeviceConfig.lwtTopic;
                 mqttConfig.lwtPayload = mqttDeviceConfig.lwtPayload;
                 mMokoDeviceKgw3.mqttInfo = new Gson().toJson(mqttConfig, MQTTConfigKgw3.class);
+                if (networkType != -1) mMokoDeviceKgw3.networkType = networkType;
                 MKgw3DBTools.getInstance(this).updateDevice(mMokoDeviceKgw3);
                 mBind.tvName.postDelayed(() -> {
                     dismissLoadingProgressDialog();
@@ -171,10 +179,17 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
             ToastUtils.showToast(this, R.string.network_error);
             return;
         }
-        Intent i = new Intent(this, ModifyNetworkSettingsKgw3Activity.class);
-        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
-        startActivity(i);
+        Intent intent = new Intent(this, ModifyNetworkSettingsKgw3Activity.class);
+        intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
+        netLauncher.launch(intent);
     }
+
+    private int networkType = -1;
+    private final ActivityResultLauncher<Intent> netLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getResultCode() == RESULT_OK && null != result.getData()) {
+            networkType = result.getData().getIntExtra("type", 0);
+        }
+    });
 
     public void onMqttSettings(View view) {
         if (isWindowLocked()) return;
@@ -187,16 +202,26 @@ public class ModifySettingsKgw3Activity extends BaseActivity<ActivityModifySetti
         launcher.launch(i);
     }
 
-    private final ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> onMQTTSettingsResult(result));
+    private final ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::onMQTTSettingsResult);
 
     private void onMQTTSettingsResult(ActivityResult result) {
-        if (result.getResultCode() == RESULT_OK) {
+        if (result.getResultCode() == RESULT_OK && null != result.getData()) {
             mqttDeviceConfig = (MQTTConfigKgw3) result.getData().getSerializableExtra(AppConstants.EXTRA_KEY_MQTT_CONFIG_DEVICE);
         }
     }
 
     private void getMqttSettings() {
         int msgId = MQTTConstants.READ_MSG_ID_MQTT_SETTINGS;
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
+        try {
+            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getNetworkType() {
+        int msgId = MQTTConstants.READ_MSG_ID_NETWORK_TYPE;
         String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);

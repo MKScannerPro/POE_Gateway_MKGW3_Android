@@ -160,11 +160,13 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMQTTUnSubscribeSuccessEvent(MQTTUnSubscribeSuccessEvent event) {
         dismissLoadingProgressDialog();
+        mHandler.removeMessages(0);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMQTTUnSubscribeFailureEvent(MQTTUnSubscribeFailureEvent event) {
         dismissLoadingProgressDialog();
+        mHandler.removeMessages(0);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -260,6 +262,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
                             device.topicSubscribe = mokoDeviceKgw3.topicSubscribe;
                             device.lwtEnable = mokoDeviceKgw3.lwtEnable;
                             device.lwtTopic = mokoDeviceKgw3.lwtTopic;
+                            device.networkType = mokoDeviceKgw3.networkType;
                             break;
                         }
                     }
@@ -325,6 +328,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
                 return;
             }
             showLoadingProgressDialog();
+            mHandler.postDelayed(this::dismissLoadingProgressDialog,5000);
             // 取消订阅
             if (TextUtils.isEmpty(mAppMqttConfig.topicSubscribe)) {
                 try {

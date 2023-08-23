@@ -313,7 +313,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="20dp"
-                android:text="iBeacon Minor"
+                android:text="Minor"
                 android:textColor="@color/black_333333"
                 android:textSize="15sp"
                 app:layout_constraintLeft_toLeftOf="parent"

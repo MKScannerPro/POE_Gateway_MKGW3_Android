@@ -208,10 +208,14 @@ public class BXPButtonInfoKgw3Activity extends BaseActivity<ActivityBxpButtonInf
         intent.putExtra(AppConstants.EXTRA_KEY_MAC, mBXPButtonInfo.mac);
         startBeaconDFU.launch(intent);
     }
+
     private final ActivityResultLauncher<Intent> startBeaconDFU = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        if (result.getResultCode() == RESULT_OK) {
-            ToastUtils.showToast(this, "Bluetooth disconnect");
-            finish();
+        if (result.getResultCode() == RESULT_OK && null != result.getData()) {
+            int code = result.getData().getIntExtra("code", 0);
+            if (code != 3) {
+                ToastUtils.showToast(this, "Bluetooth disconnect");
+                finish();
+            }
         }
     });
 

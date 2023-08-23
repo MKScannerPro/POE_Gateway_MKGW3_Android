@@ -492,8 +492,7 @@ public class MQTTSupport {
     }
 
     public void unSubscribe(String topic) throws MqttException {
-        if (!isConnected())
-            return;
+        if (!isConnected()) return;
         mqttAndroidClient.unsubscribe(topic, null, new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {

@@ -28,12 +28,42 @@
             android:textSize="17sp" />
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:focusable="true"
         android:layout_marginTop="10dp"
-        android:focusableInTouchMode="true"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp">
+
+        <TextView
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="Firmware type"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tvOtaType"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/shape_radius_blue_btn_bg"
+            android:gravity="center_vertical"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp"
+            android:text="WIFI firmware"
+            android:textColor="@color/white_ffffff"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:paddingLeft="12dp"
         android:paddingRight="12dp">
 
@@ -47,20 +77,19 @@
 
         <EditText
             android:id="@+id/et_firmware_file_url"
-            android:layout_width="match_parent"
+            android:layout_width="0px"
             android:layout_height="45dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="130dp"
+            android:layout_weight="1"
             android:background="@drawable/shape_corner_btn_bg_white"
             android:hint="1-256 Characters"
             android:maxLength="256"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:singleLine="true"
-            android:text=""
+            android:layout_marginLeft="10dp"
             android:textColor="@color/black_333333"
-            android:textSize="15sp" />
-    </RelativeLayout>
+            android:textSize="14sp" />
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

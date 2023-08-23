@@ -1,5 +1,6 @@
 package com.moko.mkgw3.activity;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputFilter;
@@ -347,7 +348,19 @@ public class ModifyNetworkSettingsKgw3Activity extends BaseActivity<ActivityModi
     }
 
     public void onBack(View view) {
+        back();
+    }
+
+    private void back() {
+        Intent intent = new Intent();
+        intent.putExtra("type", selectedNetworkType);
+        setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        back();
     }
 
     private void setNetworkType() {

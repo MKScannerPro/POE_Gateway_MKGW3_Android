@@ -400,7 +400,7 @@ public class SetAppMQTTKgw3Activity extends BaseActivity<ActivityMqttAppKgw3Bind
                     row12.createCell(1).setCellValue("value:1");
                 }
                 row11.createCell(2).setCellValue("Range: 0/1 0:Disable SSL (TCP mode) 1:Enable SSL");
-                row12.createCell(2).setCellValue("Valid when SSL is enabled, range: 1/2/3 1: CA certificate file 2: CA certificate file 3: Self signed certificates");
+                row12.createCell(2).setCellValue("Valid when SSL is enabled, range: 1/2/3 1: CA signed server certificate 2: CA certificate 3: Self signed certificates");
 
                 Uri uri = Uri.fromFile(expertFile);
                 try {

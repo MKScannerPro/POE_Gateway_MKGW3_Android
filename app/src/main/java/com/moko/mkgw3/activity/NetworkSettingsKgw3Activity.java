@@ -457,10 +457,11 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
             if (TextUtils.isEmpty(ssid)) return true;
         }
         if (selectedNetworkType == 1 && mSecuritySelected != 0) {
-            if (mEAPTypeSelected != 2 && !mBind.cbVerifyServer.isChecked()) {
-                return false;
+            if (mEAPTypeSelected != 2 && mBind.cbVerifyServer.isChecked()) {
+                return TextUtils.isEmpty(mCaPath);
+            } else if (mEAPTypeSelected == 2) {
+                return (TextUtils.isEmpty(mCaPath) || TextUtils.isEmpty(mCertPath) || TextUtils.isEmpty(mKeyPath));
             }
-            return TextUtils.isEmpty(mCaPath);
         }
         if (!ethernetDhcpEnable || !wifiDhcpEnable) {
             //检查ip地址是否合法
@@ -519,11 +520,8 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
                         orderTasks.add(OrderTaskAssembler.setWifiEapDomainId(domainId));
                         orderTasks.add(OrderTaskAssembler.getWifiEapVerifyServiceEnable());
                         orderTasks.add(OrderTaskAssembler.setWifiCA(new File(mCaPath)));
-                        if (!TextUtils.isEmpty(mCertPath))
-                            orderTasks.add(OrderTaskAssembler.setWifiClientCert(new File(mCertPath)));
-                        if (!TextUtils.isEmpty(mKeyPath))
-                            orderTasks.add(OrderTaskAssembler.setWifiClientKey(new File(mKeyPath)));
-
+                        orderTasks.add(OrderTaskAssembler.setWifiClientCert(new File(mCertPath)));
+                        orderTasks.add(OrderTaskAssembler.setWifiClientKey(new File(mKeyPath)));
                     }
                 }
                 if (!wifiDhcpEnable) {

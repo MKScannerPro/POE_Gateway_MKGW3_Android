@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_f2f2f2"
@@ -10,7 +12,16 @@
         android:layout_height="55dp"
         android:background="@color/blue_0188cc">
 
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Disconnect"
+            android:textSize="15sp"
+            android:visibility="invisible" />
+
         <ImageView
+            android:id="@+id/ivBack"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:onClick="onBack"
@@ -18,23 +29,31 @@
             android:paddingRight="16dp"
             android:src="@drawable/back" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_device_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:text=""
+            android:layout_toStartOf="@+id/tvConnect"
+            android:layout_toEndOf="@+id/tv1"
+            android:gravity="center"
+            android:lines="1"
+            android:paddingEnd="2dp"
             android:textColor="@color/white_ffffff"
-            android:textSize="17sp" />
+            android:textSize="17sp"
+            app:autoSizeMaxTextSize="17sp"
+            app:autoSizeMinTextSize="12sp"
+            app:autoSizeStepGranularity="1sp"
+            app:autoSizeTextType="uniform"
+            tools:text="FFDFAFDA21212113FF" />
 
         <TextView
+            android:id="@+id/tvConnect"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:clickable="true"
             android:gravity="center"
             android:onClick="onDisconnect"
-            android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="Disconnect"
             android:textColor="@color/white_ffffff"
@@ -124,9 +143,9 @@
                     android:id="@+id/tv_device_firmware_version"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:layout_marginRight="10dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginRight="10dp"
+                    android:text=""
                     android:textColor="@color/black_333333"
                     android:textSize="15sp" />
 

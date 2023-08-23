@@ -31,6 +31,7 @@ import com.moko.support.mkgw3.MQTTSupport;
 import com.moko.support.mkgw3.entity.BleCharResponse;
 import com.moko.support.mkgw3.entity.BleCharacteristic;
 import com.moko.support.mkgw3.entity.BleService;
+import com.moko.support.mkgw3.entity.MsgConfigResult;
 import com.moko.support.mkgw3.entity.MsgNotify;
 import com.moko.support.mkgw3.entity.OtherDeviceInfo;
 import com.moko.support.mkgw3.event.DeviceModifyNameEvent;
@@ -116,6 +117,18 @@ public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3
             e.printStackTrace();
             return;
         }
+        if (msg_id == MQTTConstants.CONFIG_MSG_ID_BLE_OTHER_WRITE_CHAR_VALUE) {
+            //写结果的通知
+            Type type = new TypeToken<MsgConfigResult>() {
+            }.getType();
+            MsgConfigResult result = new Gson().fromJson(message, type);
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (result.result_code != 0) {
+                mHandler.removeMessages(0);
+                dismissLoadingProgressDialog();
+                ToastUtils.showToast(this, "write failed");
+            }
+        }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_OTHER_CHANGE_NOTIFY_ENABLE) {
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
@@ -190,8 +203,7 @@ public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3
             Type type = new TypeToken<MsgNotify<BleCharResponse>>() {
             }.getType();
             MsgNotify<BleCharResponse> result = new Gson().fromJson(message, type);
-            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             BleCharResponse charResponse = result.data;
             if (charResponse.result_code != 0) {
                 ToastUtils.showToast(this, "Setup failed");
