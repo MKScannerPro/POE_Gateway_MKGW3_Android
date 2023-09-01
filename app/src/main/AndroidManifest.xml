@@ -251,6 +251,21 @@
         <activity android:name=".activity.AdvertiseIBeaconMkgw3Activity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".activity.SelectBeaconTypeActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".activity.BxpCInfoActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".activity.THDataActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".activity.LightDataActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".activity.AccActivity"
+            android:screenOrientation="portrait"/>
+
         <service android:name="com.moko.mkgw3.service.DfuService" />
         <provider
             android:name="androidx.core.content.FileProvider"

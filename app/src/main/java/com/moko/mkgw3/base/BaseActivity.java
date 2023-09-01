@@ -50,7 +50,8 @@ public abstract class BaseActivity<VM extends ViewBinding> extends FragmentActiv
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
     }
 
     @Override

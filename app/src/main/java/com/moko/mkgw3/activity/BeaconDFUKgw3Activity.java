@@ -49,7 +49,6 @@ public class BeaconDFUKgw3Activity extends BaseActivity<ActivityBeaconDfuKgw3Bin
             if (!(source + "").matches(FILTER_ASCII)) {
                 return "";
             }
-
             return null;
         };
         mBind.etFirmwareFileUrl.setFilters(new InputFilter[]{new InputFilter.LengthFilter(256), inputFilter});
@@ -72,8 +71,7 @@ public class BeaconDFUKgw3Activity extends BaseActivity<ActivityBeaconDfuKgw3Bin
         // 更新所有设备的网络状态
         final String topic = event.getTopic();
         final String message = event.getMessage();
-        if (TextUtils.isEmpty(message))
-            return;
+        if (TextUtils.isEmpty(message)) return;
         int msg_id;
         try {
             JsonObject object = new Gson().fromJson(message, JsonObject.class);
@@ -87,8 +85,7 @@ public class BeaconDFUKgw3Activity extends BaseActivity<ActivityBeaconDfuKgw3Bin
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
             }.getType();
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             int percent = result.data.get("percent").getAsInt();
             if (!isFinishing() && mLoadingMessageDialog != null && mLoadingMessageDialog.isResumed())
                 mLoadingMessageDialog.setMessage(String.format("Beacon DFU process: %d%%", percent));
@@ -97,8 +94,7 @@ public class BeaconDFUKgw3Activity extends BaseActivity<ActivityBeaconDfuKgw3Bin
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
             }.getType();
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingMessageDialog();
             int resultCode = result.data.get("result_code").getAsInt();
             ToastUtils.showToast(this,
@@ -112,8 +108,7 @@ public class BeaconDFUKgw3Activity extends BaseActivity<ActivityBeaconDfuKgw3Bin
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             showLoadingMessageDialog("Beacon DFU process: 0%", false);
@@ -125,8 +120,7 @@ public class BeaconDFUKgw3Activity extends BaseActivity<ActivityBeaconDfuKgw3Bin
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
             }.getType();
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             finish();
         }
     }

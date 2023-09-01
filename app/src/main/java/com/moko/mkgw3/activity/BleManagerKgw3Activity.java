@@ -30,6 +30,7 @@ import com.moko.support.mkgw3.MQTTSupport;
 import com.moko.support.mkgw3.MokoSupport;
 import com.moko.support.mkgw3.entity.BXPButtonInfo;
 import com.moko.support.mkgw3.entity.BleDevice;
+import com.moko.support.mkgw3.entity.BxpCInfo;
 import com.moko.support.mkgw3.entity.MsgNotify;
 import com.moko.support.mkgw3.entity.OtherDeviceInfo;
 import com.moko.support.mkgw3.event.DeviceModifyNameEvent;
@@ -49,7 +50,6 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3Binding> implements BaseQuickAdapter.OnItemChildClickListener {
-
     private MokoDeviceKgw3 mMokoDeviceKgw3;
     private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
@@ -59,10 +59,12 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
     private ConcurrentHashMap<String, BleDevice> mBleDevicesMap;
     private Handler mHandler;
     private int mIndex;
+    private int from;
 
     @Override
     protected void onCreate() {
         mMokoDeviceKgw3 = (MokoDeviceKgw3) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
+        from = getIntent().getIntExtra("from", 0);
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
         appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
         mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
@@ -102,10 +104,8 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 100)
     public void onMQTTMessageArrivedEvent(MQTTMessageArrivedEvent event) {
         // 更新所有设备的网络状态
-        final String topic = event.getTopic();
         final String message = event.getMessage();
-        if (TextUtils.isEmpty(message))
-            return;
+        if (TextUtils.isEmpty(message)) return;
         int msg_id;
         try {
             JsonObject object = new Gson().fromJson(message, JsonObject.class);
@@ -121,11 +121,14 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
                 Type type = new TypeToken<MsgNotify<List<BleDevice>>>() {
                 }.getType();
                 MsgNotify<List<BleDevice>> result = new Gson().fromJson(message, type);
-                if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
-                    return;
+                if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
                 List<BleDevice> bleDevices = result.data;
+
                 for (BleDevice device : bleDevices) {
-                    if (device.rssi < filterRssi)
+                    if (device.rssi < filterRssi) continue;
+                    if (from == 0 && device.type_code != 7) continue;
+                    if (from == 1 && device.type_code != 4 && device.type_code != 6) continue;
+                    if (from == 2 && (device.type_code == 7 || device.type_code == 4 || device.type_code == 6))
                         continue;
                     if (!mBleDevicesMap.containsKey(device.mac)) {
                         device.index = mIndex++;
@@ -160,6 +163,25 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
                 startActivity(intent);
             });
         }
+        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_C_CONNECT_RESULT) {
+            runOnUiThread(() -> {
+                dismissLoadingProgressDialog();
+                mHandler.removeMessages(0);
+                Type type = new TypeToken<MsgNotify<BxpCInfo>>() {
+                }.getType();
+                MsgNotify<BxpCInfo> result = new Gson().fromJson(message, type);
+                if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
+                BxpCInfo bxpInfo = result.data;
+                if (bxpInfo.result_code != 0) {
+                    ToastUtils.showToast(this, bxpInfo.result_msg);
+                    return;
+                }
+                Intent intent = new Intent(this, BxpCInfoActivity.class);
+                intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
+                intent.putExtra(AppConstants.EXTRA_KEY_BXP_BUTTON_INFO, bxpInfo);
+                startActivity(intent);
+            });
+        }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_OTHER_CONNECT_RESULT) {
             runOnUiThread(() -> {
                 dismissLoadingProgressDialog();
@@ -167,8 +189,7 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
                 Type type = new TypeToken<MsgNotify<OtherDeviceInfo>>() {
                 }.getType();
                 MsgNotify<OtherDeviceInfo> result = new Gson().fromJson(message, type);
-                if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
-                    return;
+                if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
                 OtherDeviceInfo otherDeviceInfo = result.data;
                 if (otherDeviceInfo.result_code != 0) {
                     ToastUtils.showToast(this, otherDeviceInfo.result_msg);
@@ -308,7 +329,7 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
         if (isWindowLocked()) return;
         BleDevice bleDevice = (BleDevice) adapter.getItem(position);
         if (bleDevice == null) return;
-        if (bleDevice.type_code == 7) {
+        if (from == 0 || from == 1) {
             // BXP-Button
             // show password
             final PasswordBleDialogKgw3 dialog = new PasswordBleDialogKgw3();
@@ -338,7 +359,7 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
     }
 
     private void getBleDeviceInfo(BleDevice bleDevice, String password) {
-        int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_BUTTON_CONNECT;
+        int msgId = from == 0 ? MQTTConstants.CONFIG_MSG_ID_BLE_BXP_BUTTON_CONNECT : MQTTConstants.CONFIG_MSG_ID_BLE_BXP_C_CONNECT;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", bleDevice.mac);
         jsonObject.addProperty("passwd", password);

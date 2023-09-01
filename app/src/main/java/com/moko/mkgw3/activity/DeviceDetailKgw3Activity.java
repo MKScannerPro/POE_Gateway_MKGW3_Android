@@ -27,6 +27,7 @@ import com.moko.support.mkgw3.MQTTConstants;
 import com.moko.support.mkgw3.MQTTSupport;
 import com.moko.support.mkgw3.entity.BXPButtonInfo;
 import com.moko.support.mkgw3.entity.BleConnectedList;
+import com.moko.support.mkgw3.entity.BxpCInfo;
 import com.moko.support.mkgw3.entity.MsgConfigResult;
 import com.moko.support.mkgw3.entity.MsgNotify;
 import com.moko.support.mkgw3.entity.MsgReadResult;
@@ -55,6 +56,7 @@ public class DeviceDetailKgw3Activity extends BaseActivity<ActivityDetailKgw3Bin
     private ArrayList<String> mScanDevices;
     private Handler mHandler;
     private BXPButtonInfo mConnectedBXPButtonInfo;
+    private boolean isOnResume;
 
     @Override
     protected void onCreate() {
@@ -143,8 +145,7 @@ public class DeviceDetailKgw3Activity extends BaseActivity<ActivityDetailKgw3Bin
             Type type = new TypeToken<MsgConfigResult>() {
             }.getType();
             MsgConfigResult result = new Gson().fromJson(message, type);
-            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             if (result.result_code == 0) {
@@ -157,22 +158,21 @@ public class DeviceDetailKgw3Activity extends BaseActivity<ActivityDetailKgw3Bin
             Type type = new TypeToken<MsgReadResult<BleConnectedList>>() {
             }.getType();
             MsgReadResult<BleConnectedList> result = new Gson().fromJson(message, type);
-            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             if (result.data.ble_conn_list != null && !result.data.ble_conn_list.isEmpty()) {
                 // 当前连接的设备有值
                 BleConnectedList.BleDevice bleDevice = result.data.ble_conn_list.get(0);
                 // 根据类型请求不同数据
-                if (bleDevice.type == 1) {
-                    mConnectedBXPButtonInfo = new BXPButtonInfo();
-                    readBXPButtonInfo(bleDevice.mac);
-                } else {
+                if (bleDevice.type == 1 || bleDevice.type == 2) {
+                    if (bleDevice.type == 1) mConnectedBXPButtonInfo = new BXPButtonInfo();
+                    readBXPButtonInfo(bleDevice.mac, bleDevice.type);
+                } else if (bleDevice.type == 0) {
                     readOtherInfo(bleDevice.mac);
                 }
             } else {
-                Intent intent = new Intent(this, BleManagerKgw3Activity.class);
+                Intent intent = new Intent(this, SelectBeaconTypeActivity.class);
                 intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
                 startActivity(intent);
             }
@@ -183,8 +183,7 @@ public class DeviceDetailKgw3Activity extends BaseActivity<ActivityDetailKgw3Bin
             Type type = new TypeToken<MsgNotify<BXPButtonInfo>>() {
             }.getType();
             MsgNotify<BXPButtonInfo> result = new Gson().fromJson(message, type);
-            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             BXPButtonInfo bxpButtonInfo = result.data;
             if (bxpButtonInfo.result_code != 0) {
                 ToastUtils.showToast(this, "Setup failed");
@@ -197,6 +196,24 @@ public class DeviceDetailKgw3Activity extends BaseActivity<ActivityDetailKgw3Bin
             mConnectedBXPButtonInfo.software_version = bxpButtonInfo.software_version;
             mConnectedBXPButtonInfo.firmware_version = bxpButtonInfo.firmware_version;
             readBXPButtonStatus(bxpButtonInfo.mac);
+        }
+        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_C_INFO) {
+            if (!isOnResume) return;
+            dismissLoadingProgressDialog();
+            mHandler.removeMessages(0);
+            Type type = new TypeToken<MsgNotify<BxpCInfo>>() {
+            }.getType();
+            MsgNotify<BxpCInfo> result = new Gson().fromJson(message, type);
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            BxpCInfo bxpCInfo = result.data;
+            if (bxpCInfo.result_code != 0) {
+                ToastUtils.showToast(this, "Setup failed");
+                return;
+            }
+            Intent intent = new Intent(this, BxpCInfoActivity.class);
+            intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
+            intent.putExtra(AppConstants.EXTRA_KEY_BXP_BUTTON_INFO, bxpCInfo);
+            startActivity(intent);
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_BUTTON_STATUS) {
             dismissLoadingProgressDialog();
@@ -241,6 +258,18 @@ public class DeviceDetailKgw3Activity extends BaseActivity<ActivityDetailKgw3Bin
             intent.putExtra(AppConstants.EXTRA_KEY_OTHER_DEVICE_INFO, otherDeviceInfo);
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isOnResume = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isOnResume = false;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -317,8 +346,7 @@ public class DeviceDetailKgw3Activity extends BaseActivity<ActivityDetailKgw3Bin
     }
 
     public void onManageBleDevices(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         // 设置扫描间隔
         if (!MQTTSupport.getInstance().isConnected()) {
             ToastUtils.showToast(this, R.string.network_error);
@@ -386,17 +414,17 @@ public class DeviceDetailKgw3Activity extends BaseActivity<ActivityDetailKgw3Bin
         }
     }
 
-    public void readBXPButtonInfo(String mac) {
+    public void readBXPButtonInfo(String mac, int type) {
         mHandler.postDelayed(() -> {
             dismissLoadingProgressDialog();
             ToastUtils.showToast(this, "Setup failed");
         }, 30 * 1000);
         showLoadingProgressDialog();
-        getBXPButtonInfo(mac);
+        getBXPButtonInfo(mac, type);
     }
 
-    private void getBXPButtonInfo(String mac) {
-        int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_BUTTON_INFO;
+    private void getBXPButtonInfo(String mac, int type) {
+        int msgId = type == 1 ? MQTTConstants.CONFIG_MSG_ID_BLE_BXP_BUTTON_INFO : MQTTConstants.CONFIG_MSG_ID_BLE_BXP_C_INFO;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", mac);
         String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
