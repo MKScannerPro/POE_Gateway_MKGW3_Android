@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Historical light data"
+            tools:text="Historical light data"
             android:textColor="@color/white_ffffff"
             android:textSize="17sp"
             android:textStyle="bold" />
@@ -75,7 +75,6 @@
             android:layout_weight="1.0"
             android:drawableTop="@drawable/ic_empty"
             android:gravity="center_horizontal"
-            android:onClick="onEmpty"
             android:text="Erase all"
             android:textColor="@color/black_333333"
             android:textSize="13sp" />

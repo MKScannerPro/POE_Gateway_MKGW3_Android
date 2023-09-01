@@ -6,6 +6,7 @@ import com.moko.mkgw3.R;
 import com.moko.support.mkgw3.entity.LightData;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -16,15 +17,18 @@ import java.util.Locale;
  */
 public class LightDataAdapter extends BaseQuickAdapter<LightData, BaseViewHolder> {
     private final SimpleDateFormat sdf;
+    private final String FLAG_TYPE = "history";
+    private final String flag;
 
-    public LightDataAdapter() {
+    public LightDataAdapter(String flag) {
         super(R.layout.item_light_data);
+        this.flag = flag;
         sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
     }
 
     @Override
     protected void convert(BaseViewHolder helper, LightData item) {
-        helper.setText(R.id.tvTime, sdf.format(new Date(item.timestamp * 1000)));
+        helper.setText(R.id.tvTime, sdf.format(new Date(item.timestamp * (FLAG_TYPE.equals(flag) ? 1000 : 1))));
         String state = item.state == 1 ? "Ambient light \n detected" : "Ambient light NOT \n detected";
         helper.setText(R.id.tvType, state);
     }

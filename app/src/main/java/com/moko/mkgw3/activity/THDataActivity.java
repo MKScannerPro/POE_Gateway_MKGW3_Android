@@ -1,5 +1,6 @@
 package com.moko.mkgw3.activity;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -13,7 +14,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
-import com.moko.mkgw3.adapter.HistoryTHAdapter;
+import com.moko.mkgw3.adapter.THDataAdapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityThDataBinding;
 import com.moko.mkgw3.dialog.AlertMessageDialog;
@@ -24,7 +25,7 @@ import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.mkgw3.utils.Utils;
 import com.moko.support.mkgw3.MQTTConstants;
 import com.moko.support.mkgw3.MQTTSupport;
-import com.moko.support.mkgw3.entity.HistoryTHData;
+import com.moko.support.mkgw3.entity.THData;
 import com.moko.support.mkgw3.entity.MsgNotify;
 import com.moko.support.mkgw3.event.MQTTMessageArrivedEvent;
 
@@ -39,6 +40,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -56,10 +58,12 @@ public class THDataActivity extends BaseActivity<ActivityThDataBinding> {
     private Handler mHandler;
     private String mac;
     private Animation animation;
-    private final List<HistoryTHData> dataList = new ArrayList<>();
-    private HistoryTHAdapter adapter;
+    private final List<THData> dataList = new ArrayList<>();
+    private THDataAdapter adapter;
     private StringBuilder exportStr = new StringBuilder();
-    private final String title = "history_th_data";
+    private String title;
+    private String flag;
+    private final String FLAG_TYPE = "history";
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
 
     @Override
@@ -67,18 +71,30 @@ public class THDataActivity extends BaseActivity<ActivityThDataBinding> {
         return ActivityThDataBinding.inflate(getLayoutInflater());
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate() {
         mMokoDeviceKgw3 = (MokoDeviceKgw3) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
         mac = getIntent().getStringExtra(AppConstants.EXTRA_KEY_MAC);
+        flag = getIntent().getStringExtra("flag");
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
         appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
         mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
         mHandler = new Handler(Looper.getMainLooper());
         animation = AnimationUtils.loadAnimation(this, R.anim.rotate_refresh);
-        adapter = new HistoryTHAdapter();
+        adapter = new THDataAdapter(flag);
         mBind.rvList.setAdapter(adapter);
         mBind.tvExport.setEnabled(false);
+        if (FLAG_TYPE.equals(flag)) {
+            mBind.tvEmpty.setVisibility(View.VISIBLE);
+            mBind.tvTitle.setText("Historical T&H data");
+            title = "history_th_data";
+            mBind.tvEmpty.setOnClickListener(v -> onEmpty());
+        } else {
+            mBind.tvEmpty.setVisibility(View.GONE);
+            mBind.tvTitle.setText("Real-time T&H data");
+            title = "realtime_th_data";
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -95,7 +111,7 @@ public class THDataActivity extends BaseActivity<ActivityThDataBinding> {
             e.printStackTrace();
             return;
         }
-        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_HISTORY_TH_ENABLE_STATUS) {
+        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_HISTORY_TH_ENABLE || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_REALTIME_TH_ENABLE) {
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
             }.getType();
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
@@ -118,17 +134,18 @@ public class THDataActivity extends BaseActivity<ActivityThDataBinding> {
                 }
             }
         }
-        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_HISTORY_TH_DATA) {
+        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_HISTORY_TH_DATA || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_REALTIME_TH_DATA) {
             //历史温湿度数据
-            Type type = new TypeToken<MsgNotify<HistoryTHData>>() {
+            Type type = new TypeToken<MsgNotify<THData>>() {
             }.getType();
-            MsgNotify<HistoryTHData> result = new Gson().fromJson(message, type);
+            MsgNotify<THData> result = new Gson().fromJson(message, type);
             if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
-            HistoryTHData data = result.data;
+            THData data = result.data;
+            if (!FLAG_TYPE.equals(flag)) data.timestamp = Calendar.getInstance().getTimeInMillis();
             dataList.add(0, data);
             adapter.replaceData(dataList);
             mBind.tvExport.setEnabled(true);
-            exportStr.insert(0, "\n" + sdf.format(new Date(data.timestamp * 1000)) + "\t" + data.temperature + "\t" + data.humidity);
+            exportStr.insert(0, "\n" + sdf.format(new Date(data.timestamp * (FLAG_TYPE.equals(flag) ? 1000 : 1))) + "\t" + data.temperature + "\t" + data.humidity);
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_HISTORY_TH_DATA_CLEAR) {
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
@@ -158,7 +175,7 @@ public class THDataActivity extends BaseActivity<ActivityThDataBinding> {
         changeNotifyStatus(!isSync ? 1 : 0);
     }
 
-    public void onEmpty(View view) {
+    private void onEmpty() {
         if (isWindowLocked()) return;
         AlertMessageDialog dialog = new AlertMessageDialog();
         dialog.setTitle("Warning!");
@@ -202,7 +219,7 @@ public class THDataActivity extends BaseActivity<ActivityThDataBinding> {
     }
 
     private void writeTrackedFile(String thLog) {
-        File file = new File(MKGW3MainActivity.PATH_LOGCAT + File.separator + "historyTH.txt");
+        File file = new File(MKGW3MainActivity.PATH_LOGCAT + File.separator + (FLAG_TYPE.equals(flag) ? "historyTH.txt" : "realtimeTH.txt"));
         try {
             if (!file.exists()) {
                 file.createNewFile();
@@ -217,7 +234,7 @@ public class THDataActivity extends BaseActivity<ActivityThDataBinding> {
     }
 
     private File getTrackedFile() {
-        File file = new File(MKGW3MainActivity.PATH_LOGCAT + File.separator + "historyTH.txt");
+        File file = new File(MKGW3MainActivity.PATH_LOGCAT + File.separator + (FLAG_TYPE.equals(flag) ? "historyTH.txt" : "realtimeTH.txt"));
         try {
             if (!file.exists()) {
                 file.createNewFile();
@@ -229,7 +246,7 @@ public class THDataActivity extends BaseActivity<ActivityThDataBinding> {
     }
 
     private void changeNotifyStatus(int status) {
-        int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_HISTORY_TH_ENABLE;
+        int msgId = FLAG_TYPE.equals(flag) ? MQTTConstants.CONFIG_MSG_ID_BLE_BXP_HISTORY_TH_ENABLE : MQTTConstants.CONFIG_MSG_ID_BLE_BXP_REALTIME_TH_ENABLE;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", mac);
         jsonObject.addProperty("switch_value", status);

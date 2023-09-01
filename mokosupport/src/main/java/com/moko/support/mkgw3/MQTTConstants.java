@@ -129,9 +129,9 @@ public class MQTTConstants {
     public static final int NOTIFY_MSG_ID_BLE_OTHER_WRITE_CHAR_VALUE = 3310;
     public static final int NOTIFY_MSG_ID_BLE_OTHER_NOTIFY_CHAR_VALUE = 3311;
     public static final int NOTIFY_MSG_ID_OFFLINE = 3999;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_HISTORY_TH_ENABLE_STATUS = 3165;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_HISTORY_TH_ENABLE = 3165;
     public static final int NOTIFY_MSG_ID_BLE_BXP_HISTORY_TH_DATA = 3166;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_HISTORY_LIGHT_ENABLE_STATUS = 3171;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_HISTORY_LIGHT_ENABLE = 3171;
     public static final int NOTIFY_MSG_ID_BLE_BXP_HISTORY_LIGHT_DATA = 3172;
     public static final int NOTIFY_MSG_ID_BLE_BXP_HISTORY_TH_DATA_CLEAR = 3158;
     public static final int NOTIFY_MSG_ID_BLE_BXP_HISTORY_LIGHT_DATA_CLEAR = 3160;

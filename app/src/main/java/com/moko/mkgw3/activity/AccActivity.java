@@ -24,7 +24,6 @@ import com.moko.mkgw3.utils.Utils;
 import com.moko.support.mkgw3.MQTTConstants;
 import com.moko.support.mkgw3.MQTTSupport;
 import com.moko.support.mkgw3.entity.AccData;
-import com.moko.support.mkgw3.entity.HistoryTHData;
 import com.moko.support.mkgw3.entity.MsgNotify;
 import com.moko.support.mkgw3.event.MQTTMessageArrivedEvent;
 

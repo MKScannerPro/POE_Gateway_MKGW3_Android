@@ -5,7 +5,7 @@ package com.moko.support.mkgw3.entity;
  * @date: 2023/9/1 9:46
  * @des:
  */
-public class HistoryTHData {
+public class THData {
     public String temperature;
     public String humidity;
     public long timestamp;

@@ -100,15 +100,18 @@ public class BxpCInfoActivity extends BaseActivity<ActivityBxpCInfoBinding> {
         mBind.tvLightRealTime.setVisibility(lightStatus == 1 ? View.VISIBLE : View.GONE);
         mBind.tvReadBattery.setOnClickListener(v -> readBattery());
         mBind.tvPowerOff.setOnClickListener(v -> powerOff());
-        mBind.tvThHistory.setOnClickListener(v -> startActivity(THDataActivity.class));
-        mBind.tvLightHistory.setOnClickListener(v -> startActivity(LightDataActivity.class));
-        mBind.tvAcc.setOnClickListener(v -> startActivity(AccActivity.class));
+        mBind.tvThHistory.setOnClickListener(v -> startActivity(THDataActivity.class, "history"));
+        mBind.tvLightHistory.setOnClickListener(v -> startActivity(LightDataActivity.class, "history"));
+        mBind.tvAcc.setOnClickListener(v -> startActivity(AccActivity.class, null));
+        mBind.tvThRealTime.setOnClickListener(v -> startActivity(THDataActivity.class, null));
+        mBind.tvLightRealTime.setOnClickListener(v -> startActivity(LightDataActivity.class, null));
     }
 
-    private void startActivity(Class<?> clazz) {
+    private void startActivity(Class<?> clazz, String flag) {
         Intent intent = new Intent(this, clazz);
         intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         intent.putExtra(AppConstants.EXTRA_KEY_MAC, bxpCInfo.mac);
+        intent.putExtra("flag", flag);
         startActivity(intent);
     }
 
@@ -116,7 +119,7 @@ public class BxpCInfoActivity extends BaseActivity<ActivityBxpCInfoBinding> {
         if (isWindowLocked()) return;
         mHandler.postDelayed(() -> {
             dismissLoadingProgressDialog();
-            ToastUtils.showToast(this, "Setup failed");
+            ToastUtils.showToast(this, "read failed");
         }, 30 * 1000);
         showLoadingProgressDialog();
         int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_C_INFO;
@@ -179,7 +182,8 @@ public class BxpCInfoActivity extends BaseActivity<ActivityBxpCInfoBinding> {
             }.getType();
             MsgNotify<BxpCInfo> result = new Gson().fromJson(message, type);
             if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
-            if (result.data.result_code != 0) return;
+            int code = result.data.result_code;
+            ToastUtils.showToast(this, code == 0 ? "read succeed！" : "read failed");
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             mBind.tvBatteryVoltage.setText(result.data.battery_level + "%");

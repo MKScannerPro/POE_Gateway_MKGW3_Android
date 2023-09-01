@@ -1,5 +1,6 @@
 package com.moko.mkgw3.activity;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -39,6 +40,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -59,7 +61,9 @@ public class LightDataActivity extends BaseActivity<ActivityLightDataBinding> {
     private final List<LightData> dataList = new ArrayList<>();
     private LightDataAdapter adapter;
     private StringBuilder exportStr = new StringBuilder();
-    private final String title = "history_light_data";
+    private String title;
+    private String flag;
+    private final String FLAG_TYPE = "history";
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
 
     @Override
@@ -67,18 +71,30 @@ public class LightDataActivity extends BaseActivity<ActivityLightDataBinding> {
         return ActivityLightDataBinding.inflate(getLayoutInflater());
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate() {
         mMokoDeviceKgw3 = (MokoDeviceKgw3) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
         mac = getIntent().getStringExtra(AppConstants.EXTRA_KEY_MAC);
+        flag = getIntent().getStringExtra("flag");
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
         appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
         mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
         mHandler = new Handler(Looper.getMainLooper());
         animation = AnimationUtils.loadAnimation(this, R.anim.rotate_refresh);
-        adapter = new LightDataAdapter();
+        adapter = new LightDataAdapter(flag);
         mBind.rvList.setAdapter(adapter);
         mBind.tvExport.setEnabled(false);
+        if (FLAG_TYPE.equals(flag)) {
+            mBind.tvEmpty.setVisibility(View.VISIBLE);
+            mBind.tvTitle.setText("Historical light data");
+            title = "history_light_data";
+            mBind.tvEmpty.setOnClickListener(v -> onEmpty());
+        } else {
+            mBind.tvEmpty.setVisibility(View.GONE);
+            mBind.tvTitle.setText("Real-time light data");
+            title = "realtime_light_data";
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -95,7 +111,7 @@ public class LightDataActivity extends BaseActivity<ActivityLightDataBinding> {
             e.printStackTrace();
             return;
         }
-        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_HISTORY_LIGHT_ENABLE_STATUS) {
+        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_HISTORY_LIGHT_ENABLE || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_REALTIME_LIGHT_ENABLE) {
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
             }.getType();
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
@@ -118,18 +134,19 @@ public class LightDataActivity extends BaseActivity<ActivityLightDataBinding> {
                 }
             }
         }
-        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_HISTORY_LIGHT_DATA) {
+        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_HISTORY_LIGHT_DATA || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_REALTIME_LIGHT_DATA) {
             //历史温湿度数据
-            Type type = new TypeToken<MsgNotify<JsonObject>>() {
+            Type type = new TypeToken<MsgNotify<LightData>>() {
             }.getType();
             MsgNotify<LightData> result = new Gson().fromJson(message, type);
             if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             LightData data = result.data;
+            if (!FLAG_TYPE.equals(flag)) data.timestamp = Calendar.getInstance().getTimeInMillis();
             dataList.add(0, data);
             adapter.replaceData(dataList);
             mBind.tvExport.setEnabled(true);
             String state = data.state == 1 ? "Ambient light detected" : "Ambient light NOT detected";
-            exportStr.insert(0, "\n" + sdf.format(new Date(data.timestamp * 1000)) + "\t" + state);
+            exportStr.insert(0, "\n" + sdf.format(new Date(data.timestamp * (FLAG_TYPE.equals(flag) ? 1000 : 1))) + "\t" + state);
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_HISTORY_LIGHT_DATA_CLEAR) {
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
@@ -159,7 +176,7 @@ public class LightDataActivity extends BaseActivity<ActivityLightDataBinding> {
         changeNotifyStatus(!isSync ? 1 : 0);
     }
 
-    public void onEmpty(View view) {
+    private void onEmpty() {
         if (isWindowLocked()) return;
         AlertMessageDialog dialog = new AlertMessageDialog();
         dialog.setTitle("Warning!");
@@ -203,7 +220,7 @@ public class LightDataActivity extends BaseActivity<ActivityLightDataBinding> {
     }
 
     private void writeTrackedFile(String thLog) {
-        File file = new File(MKGW3MainActivity.PATH_LOGCAT + File.separator + "historyLight.txt");
+        File file = new File(MKGW3MainActivity.PATH_LOGCAT + File.separator + (FLAG_TYPE.equals(flag) ? "historyLight.txt" : "realTimeLight.txt"));
         try {
             if (!file.exists()) {
                 file.createNewFile();
@@ -218,7 +235,7 @@ public class LightDataActivity extends BaseActivity<ActivityLightDataBinding> {
     }
 
     private File getTrackedFile() {
-        File file = new File(MKGW3MainActivity.PATH_LOGCAT + File.separator + "historyLight.txt");
+        File file = new File(MKGW3MainActivity.PATH_LOGCAT + File.separator + (FLAG_TYPE.equals(flag) ? "historyLight.txt" : "realTimeLight.txt"));
         try {
             if (!file.exists()) {
                 file.createNewFile();
@@ -230,7 +247,7 @@ public class LightDataActivity extends BaseActivity<ActivityLightDataBinding> {
     }
 
     private void changeNotifyStatus(int status) {
-        int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_HISTORY_LIGHT_ENABLE;
+        int msgId = FLAG_TYPE.equals(flag) ? MQTTConstants.CONFIG_MSG_ID_BLE_BXP_HISTORY_LIGHT_ENABLE : MQTTConstants.CONFIG_MSG_ID_BLE_BXP_REALTIME_LIGHT_ENABLE;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", mac);
         jsonObject.addProperty("switch_value", status);
