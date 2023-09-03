@@ -58,7 +58,7 @@ public class AccActivity extends BaseActivity<ActivityAccBinding> {
     private Animation animation;
     private final List<AccData> dataList = new ArrayList<>();
     private AccDataAdapter adapter;
-    private StringBuilder exportStr = new StringBuilder();
+    private final StringBuilder exportStr = new StringBuilder();
     private final String title = "acc_data";
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
@@ -125,6 +125,7 @@ public class AccActivity extends BaseActivity<ActivityAccBinding> {
             MsgNotify<AccData> result = new Gson().fromJson(message, type);
             if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             AccData data = result.data;
+            data.timeStamp = Calendar.getInstance().getTimeInMillis();
             dataList.add(0, data);
             adapter.replaceData(dataList);
             mBind.tvExport.setEnabled(true);

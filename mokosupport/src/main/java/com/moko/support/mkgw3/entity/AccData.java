@@ -9,4 +9,5 @@ public class AccData {
     public String x_axis_data;
     public String y_axis_data;
     public String z_axis_data;
+    public long timeStamp;
 }

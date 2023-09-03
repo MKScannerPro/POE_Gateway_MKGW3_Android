@@ -160,7 +160,7 @@ public class THDataActivity extends BaseActivity<ActivityThDataBinding> {
                 dataList.clear();
                 adapter.replaceData(dataList);
                 mBind.tvExport.setEnabled(false);
-                exportStr = new StringBuilder();
+                if (exportStr.length() > 0) exportStr.delete(0, exportStr.length());
             }
         }
     }

@@ -60,7 +60,7 @@ public class LightDataActivity extends BaseActivity<ActivityLightDataBinding> {
     private Animation animation;
     private final List<LightData> dataList = new ArrayList<>();
     private LightDataAdapter adapter;
-    private StringBuilder exportStr = new StringBuilder();
+    private final StringBuilder exportStr = new StringBuilder();
     private String title;
     private String flag;
     private final String FLAG_TYPE = "history";
@@ -161,7 +161,7 @@ public class LightDataActivity extends BaseActivity<ActivityLightDataBinding> {
                 dataList.clear();
                 adapter.replaceData(dataList);
                 mBind.tvExport.setEnabled(false);
-                exportStr = new StringBuilder();
+                if (exportStr.length() > 0) exportStr.delete(0, exportStr.length());
             }
         }
     }

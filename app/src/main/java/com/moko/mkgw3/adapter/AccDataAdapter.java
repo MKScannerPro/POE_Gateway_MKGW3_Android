@@ -25,7 +25,7 @@ public class AccDataAdapter extends BaseQuickAdapter<AccData, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder helper, AccData item) {
-        helper.setText(R.id.tvContent, sdf.format(new Date(Calendar.getInstance().getTimeInMillis())) + " X-axis: " + item.x_axis_data +
+        helper.setText(R.id.tvContent, sdf.format(new Date(item.timeStamp)) + " X-axis: " + item.x_axis_data +
                 ", Y-axis: " + item.y_axis_data + ", Z-axis: " + item.z_axis_data);
     }
 }

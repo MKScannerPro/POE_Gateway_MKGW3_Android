@@ -136,20 +136,27 @@ public class BxpCInfoActivity extends BaseActivity<ActivityBxpCInfoBinding> {
     //关机
     private void powerOff() {
         if (isWindowLocked()) return;
-        mHandler.postDelayed(() -> {
-            dismissLoadingProgressDialog();
-            ToastUtils.showToast(this, "Setup failed");
-        }, 30 * 1000);
-        showLoadingProgressDialog();
-        int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_C_POWER_OFF;
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("mac", bxpCInfo.mac);
-        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
-        try {
-            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
+        AlertMessageDialog dialog = new AlertMessageDialog();
+        dialog.setTitle("Warning！");
+        dialog.setMessage("Are you sure to turn off the Beacon?Please make sure the Beacon has a button to turn on!");
+        dialog.setConfirm("OK");
+        dialog.setOnAlertConfirmListener(() -> {
+            mHandler.postDelayed(() -> {
+                dismissLoadingProgressDialog();
+                ToastUtils.showToast(this, "Setup failed");
+            }, 30 * 1000);
+            showLoadingProgressDialog();
+            int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_C_POWER_OFF;
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("mac", bxpCInfo.mac);
+            String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
+            try {
+                MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
+        });
+        dialog.show(getSupportFragmentManager());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
