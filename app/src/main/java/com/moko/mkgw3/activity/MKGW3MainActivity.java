@@ -12,6 +12,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import okhttp3.RequestBody;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.elvishew.xlog.XLog;
@@ -19,6 +20,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.BuildConfig;
 import com.moko.mkgw3.R;
@@ -27,8 +32,12 @@ import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityMainMkgw3Binding;
 import com.moko.mkgw3.db.MKgw3DBTools;
 import com.moko.mkgw3.dialog.AlertMessageDialog;
+import com.moko.mkgw3.dialog.LoginDialog;
+import com.moko.mkgw3.entity.LoginEntity;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
+import com.moko.mkgw3.net.Urls;
+import com.moko.mkgw3.net.entity.CommonResp;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.mkgw3.utils.Utils;
@@ -66,6 +75,8 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
     public String mAppMqttConfigStr;
     private MQTTConfigKgw3 mAppMqttConfig;
     public static String PATH_LOGCAT;
+
+    public static String mAccessToken;
 
     @Override
     protected void onCreate() {
@@ -297,6 +308,75 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
         }
     }
 
+    public void mainSyncDevices(View view) {
+        if (isWindowLocked()) return;
+        if (devices.isEmpty()) {
+            ToastUtils.showToast(this, "Add devices first");
+            return;
+        }
+        // 登录
+        String account = SPUtiles.getStringValue(this, AppConstants.EXTRA_KEY_LOGIN_ACCOUNT, "");
+        String password = SPUtiles.getStringValue(this, AppConstants.EXTRA_KEY_LOGIN_PASSWORD, "");
+        int env = SPUtiles.getIntValue(this, AppConstants.EXTRA_KEY_LOGIN_ENV, 0);
+        if (TextUtils.isEmpty(account) || TextUtils.isEmpty(password)) {
+            LoginDialog dialog = new LoginDialog();
+            dialog.setOnLoginClicked(this::login);
+            dialog.show(getSupportFragmentManager());
+            return;
+        }
+        login(account, password, env);
+    }
+
+    private void login(String account, String password, int envValue) {
+        LoginEntity entity = new LoginEntity();
+        entity.username = account;
+        entity.password = password;
+        entity.source = 1;
+        Urls.HOST_URL = envValue == 0 ? Urls.HOST_URL_CLOUD : Urls.HOST_URL_TEST;
+        RequestBody body = RequestBody.create(Urls.JSON, new Gson().toJson(entity));
+        OkGo.<String>post(Urls.URL_LOGIN)
+                .upRequestBody(body)
+                .execute(new StringCallback() {
+
+                    @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        showLoadingProgressDialog();
+                    }
+
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Type type = new TypeToken<CommonResp<JsonObject>>() {
+                        }.getType();
+                        CommonResp<JsonObject> commonResp = new Gson().fromJson(response.body(), type);
+                        if (commonResp.code != 200) {
+                            ToastUtils.showToast(MKGW3MainActivity.this, commonResp.msg);
+                            LoginDialog dialog = new LoginDialog();
+                            dialog.setOnLoginClicked((account1, password1, env) -> login(account1, password1, env));
+                            dialog.show(getSupportFragmentManager());
+                            return;
+                        }
+                        SPUtiles.setStringValue(MKGW3MainActivity.this, AppConstants.EXTRA_KEY_LOGIN_ACCOUNT, account);
+                        SPUtiles.setStringValue(MKGW3MainActivity.this, AppConstants.EXTRA_KEY_LOGIN_PASSWORD, password);
+                        SPUtiles.setIntValue(MKGW3MainActivity.this, AppConstants.EXTRA_KEY_LOGIN_ENV, envValue);
+                        mAccessToken = commonResp.data.get("access_token").getAsString();
+                        startActivity(new Intent(MKGW3MainActivity.this, SyncDeviceActivity.class));
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        ToastUtils.showToast(MKGW3MainActivity.this, R.string.request_error);
+                        LoginDialog dialog = new LoginDialog();
+                        dialog.setOnLoginClicked((account12, password12, env) -> login(account12, password12, env));
+                        dialog.show(getSupportFragmentManager());
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        dismissLoadingProgressDialog();
+                    }
+                });
+    }
+
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         MokoDeviceKgw3 mokoDeviceKgw3 = (MokoDeviceKgw3) adapter.getItem(position);
@@ -328,7 +408,7 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
                 return;
             }
             showLoadingProgressDialog();
-            mHandler.postDelayed(this::dismissLoadingProgressDialog,5000);
+            mHandler.postDelayed(this::dismissLoadingProgressDialog, 5000);
             // 取消订阅
             if (TextUtils.isEmpty(mAppMqttConfig.topicSubscribe)) {
                 try {

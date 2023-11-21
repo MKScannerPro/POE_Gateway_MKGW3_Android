@@ -5,7 +5,7 @@ if (!isLibrary.toBoolean()) {
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
     buildToolsVersion '29.0.3'
 
     defaultConfig {
@@ -13,9 +13,9 @@ android {
             applicationId "com.moko.mkgw3"
         }
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.0.3"
         def formatDate = new Date().format("yyyyMMddHHmm")
         setProperty("archivesBaseName", "MKGW3_${versionName}_${formatDate}")
     }
@@ -91,6 +91,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.lzy.net:okgo:3.0.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.10'

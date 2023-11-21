@@ -82,17 +82,38 @@
     </RelativeLayout>
 
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginLeft="53dp"
         android:layout_marginRight="53dp"
         android:layout_marginBottom="50dp"
-        android:background="@drawable/shape_corner_btn_bg"
-        android:clickable="true"
-        android:gravity="center"
-        android:onClick="mainAddDevices"
-        android:text="@string/main_add_device"
-        android:textColor="@color/white_ffffff"
-        android:textSize="15sp" />
+        android:background="@drawable/shape_corner_btn_bg">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="mainAddDevices"
+            android:text="@string/main_add_device"
+            android:textColor="@color/white_ffffff"
+            android:textSize="15sp" />
+
+        <View
+            style="@style/divider_line_vertical"
+            android:background="@color/white_ffffff" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="mainSyncDevices"
+            android:text="@string/main_sync_device"
+            android:textColor="@color/white_ffffff"
+            android:textSize="15sp" />
+    </LinearLayout>
 </LinearLayout>

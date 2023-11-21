@@ -17,4 +17,5 @@ public class MokoDeviceKgw3 implements Serializable {
     public int deviceType;
     public int wifiRssi;
     public int networkType;
+    public boolean isSelected;
 }

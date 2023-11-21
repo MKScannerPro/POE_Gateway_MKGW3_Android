@@ -84,5 +84,8 @@
     <string name="modify_network_settings">Modify Network Settings</string>
     <string name="reset_device_by_button">Reset device by button</string>
 
-
+    // net
+    <string name="main_sync_device">Sync Devices</string>
+    <string name="request_error">Request Error!</string>
+    <string name="account_exit">Exit</string>
 </resources>

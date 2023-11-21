@@ -6,8 +6,6 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.elvishew.xlog.XLog;
 import com.google.gson.Gson;
@@ -49,6 +47,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3Binding> implements BaseQuickAdapter.OnItemChildClickListener {
     private MokoDeviceKgw3 mMokoDeviceKgw3;
     private MQTTConfigKgw3 appMqttConfig;
@@ -85,7 +85,10 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
     private void refreshList() {
         new Thread(() -> {
             while (refreshFlag) {
-                runOnUiThread(() -> mAdapter.replaceData(mBleDevices));
+                runOnUiThread(() -> {
+                    mBind.tvCount.setText(String.format("Count:%d", mBleDevices.size()));
+                    mAdapter.replaceData(mBleDevices);
+                });
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
