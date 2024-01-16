@@ -9,10 +9,10 @@ public class AppConstants {
     public static final String PATTERN_YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
     public static final String PATTERN_YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
     // action
-    public static final String ACTION_FINISH_ACTIVITY = "com.moko.mkremotegw.action.finishActivity";
-    public static final String ACTION_MODIFY_NAME = "com.moko.mkremotegw.action.ACTION_MODIFY_NAME";
-    public static final String ACTION_DELETE_DEVICE = "com.moko.mkremotegw.action.ACTION_DELETE_DEVICE";
-    public static final String ACTION_DEVICE_STATE = "com.moko.mkremotegw.action.ACTION_DEVICE_STATE";
+    public static final String ACTION_FINISH_ACTIVITY = "com.moko.mkgw3.action.finishActivity";
+    public static final String ACTION_MODIFY_NAME = "com.moko.mkgw3.action.ACTION_MODIFY_NAME";
+    public static final String ACTION_DELETE_DEVICE = "com.moko.mkgw3.action.ACTION_DELETE_DEVICE";
+    public static final String ACTION_DEVICE_STATE = "com.moko.mkgw3.action.ACTION_DEVICE_STATE";
     // sp
     public static final String SP_NAME = "sp_name_mkgw3";
     //    public static final String SP_KEY_MQTT_CONFIG = "SP_KEY_MQTT_CONFIG";

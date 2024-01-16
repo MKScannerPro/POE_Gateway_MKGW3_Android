@@ -131,12 +131,14 @@ public class SetAppMQTTKgw3Activity extends BaseActivity<ActivityMqttAppKgw3Bind
     public void onMQTTConnectionCompleteEvent(MQTTConnectionCompleteEvent event) {
         EventBus.getDefault().cancelEventDelivery(event);
         String mqttConfigStr = new Gson().toJson(mqttConfig, MQTTConfigKgw3.class);
-        ToastUtils.showToast(SetAppMQTTKgw3Activity.this, getString(R.string.success));
-        dismissLoadingProgressDialog();
-        Intent intent = new Intent();
-        intent.putExtra(AppConstants.EXTRA_KEY_MQTT_CONFIG_APP, mqttConfigStr);
-        setResult(RESULT_OK, intent);
-        finish();
+        runOnUiThread(() -> {
+            ToastUtils.showToast(SetAppMQTTKgw3Activity.this, getString(R.string.success));
+            dismissLoadingProgressDialog();
+            Intent intent = new Intent();
+            intent.putExtra(AppConstants.EXTRA_KEY_MQTT_CONFIG_APP, mqttConfigStr);
+            setResult(RESULT_OK, intent);
+            finish();
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

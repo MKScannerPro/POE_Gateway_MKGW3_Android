@@ -56,7 +56,7 @@ public class AboutActivity extends BaseActivity<ActivityAboutBinding> {
             return;
         }
         String address = "feedback@mokotechnology.com";
-        StringBuilder mailContent = new StringBuilder("MKRemoteGW_");
+        StringBuilder mailContent = new StringBuilder("MKGW3_");
         Calendar calendar = Calendar.getInstance();
         String date = MokoUtils.calendar2strDate(calendar, "yyyyMMdd");
         mailContent.append(date);

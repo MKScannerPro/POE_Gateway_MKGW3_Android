@@ -45,7 +45,7 @@ public class Utils {
      * @Date 2021/12/27
      * @Author wenzheng.liu
      * @Description 兼容Android 11
-     * @ClassPath com.moko.mkremotegw.utils.Utils
+     * @ClassPath com.moko.mkgw3.utils.Utils
      */
     public static void sendEmail(Context context, String address, String body, String subject, String tips, File... files) {
         if (files.length == 0) {
@@ -61,7 +61,7 @@ public class Utils {
                 if (BuildConfig.IS_LIBRARY) {
                     uri = FileProvider.getUriForFile(context, "com.moko.mkscannerpro.fileprovider", files[0]);
                 } else {
-                    uri = FileProvider.getUriForFile(context, "com.moko.mkremotegw.fileprovider", files[0]);
+                    uri = FileProvider.getUriForFile(context, "com.moko.mkgw3.fileprovider", files[0]);
                 }
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             } else {
