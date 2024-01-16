@@ -139,16 +139,13 @@ public class DeviceScannerKgw3Activity extends BaseActivity<ActivityScannerKgw3B
         // 排序
         if (!mDevices.isEmpty()) {
             System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
-            Collections.sort(mDevices, new Comparator<DeviceInfo>() {
-                @Override
-                public int compare(DeviceInfo lhs, DeviceInfo rhs) {
-                    if (lhs.rssi > rhs.rssi) {
-                        return -1;
-                    } else if (lhs.rssi < rhs.rssi) {
-                        return 1;
-                    }
-                    return 0;
+            Collections.sort(mDevices, (lhs, rhs) -> {
+                if (lhs.rssi > rhs.rssi) {
+                    return -1;
+                } else if (lhs.rssi < rhs.rssi) {
+                    return 1;
                 }
+                return 0;
             });
         }
     }
