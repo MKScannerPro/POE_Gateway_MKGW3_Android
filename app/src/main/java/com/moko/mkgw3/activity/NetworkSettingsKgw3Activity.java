@@ -66,7 +66,7 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
 
     @Override
     protected void onCreate() {
-        String IP_REGEX = "((25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))*";
+        String IP_REGEX = "^((25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))$";
         pattern = Pattern.compile(IP_REGEX);
         mBind.cbVerifyServer.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (mSecuritySelected != 0 && mEAPTypeSelected != 2)
