@@ -14,8 +14,8 @@ android {
         namespace = "com.moko.mkgw3"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 5
-        versionName "1.0.4"
+        versionCode 6
+        versionName "1.0.5"
         def formatDate = new Date().format("yyyyMMddHHmm")
         setProperty("archivesBaseName", "MKGW3_${versionName}_${formatDate}")
     }

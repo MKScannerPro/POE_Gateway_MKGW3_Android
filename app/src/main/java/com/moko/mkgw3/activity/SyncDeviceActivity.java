@@ -85,7 +85,7 @@ public class SyncDeviceActivity extends BaseActivity<ActivityDevicesBinding> imp
 
     private void syncDevices(List<SyncDevice> syncDevices) {
         RequestBody body = RequestBody.create(Urls.JSON, new Gson().toJson(syncDevices));
-        OkGo.<String>post(Urls.URL_SYNC_GATEWAY)
+        OkGo.<String>post(Urls.syncGatewayApi(getApplicationContext()))
                 .upRequestBody(body)
                 .headers("Authorization", MKGW3MainActivity.mAccessToken)
                 .execute(new StringCallback() {

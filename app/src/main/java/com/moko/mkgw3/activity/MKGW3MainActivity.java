@@ -347,9 +347,12 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
         entity.username = account;
         entity.password = password;
         entity.source = 1;
-        Urls.HOST_URL = envValue == 0 ? Urls.HOST_URL_CLOUD : Urls.HOST_URL_TEST;
+        if (envValue == 0)
+            Urls.setCloudEnv(getApplicationContext());
+        else
+            Urls.setTestEnv(getApplicationContext());
         RequestBody body = RequestBody.create(Urls.JSON, new Gson().toJson(entity));
-        OkGo.<String>post(Urls.URL_LOGIN)
+        OkGo.<String>post(Urls.loginApi(getApplicationContext()))
                 .upRequestBody(body)
                 .execute(new StringCallback() {
 

@@ -1,5 +1,10 @@
 package com.moko.mkgw3.net;
 
+import android.content.Context;
+
+import com.moko.mkgw3.AppConstants;
+import com.moko.mkgw3.utils.SPUtiles;
+
 import okhttp3.MediaType;
 
 public class Urls {
@@ -8,20 +13,17 @@ public class Urls {
     /**
      * 测试环境
      */
-    public static final String HOST_URL_TEST = "http://121.199.17.190/prod-api/";
+    private static final String HOST_URL_TEST = "https://test.mokocloud.com/prod-api/";
     /**
      * 正式环境
      */
-    public static final String HOST_URL_CLOUD = "http://cloud.mokotechnology.com/stage-api/";
-
-
-    public static String HOST_URL = HOST_URL_CLOUD;
+    private static final String HOST_URL_CLOUD = "http://cloud.mokotechnology.com/stage-api/";
 
     /**
      * 生产测试
      */
     // 用户登录
-    public static final String URL_LOGIN = HOST_URL + "auth/login";
+    private static final String URL_LOGIN = "auth/login";
     // req:
     // {"username":"lwz","password":"123456"}
     // resp:
@@ -35,7 +37,7 @@ public class Urls {
     //}
 
     // 同步网关
-    public static final String URL_SYNC_GATEWAY = HOST_URL + "mqtt/mqttgateway/batchAdd ";
+    private static final String URL_SYNC_GATEWAY = "mqtt/mqttgateway/batchAdd ";
     // req:
     // [{"macName":"","mac":"","model":"","publishTopic":"","subscribeTopic":"","lastWill":""}]
     // resp:
@@ -46,4 +48,24 @@ public class Urls {
     //
     //    }
     //}
+
+    public static void setTestEnv(Context context) {
+        SPUtiles.setStringValue(context, AppConstants.SP_URL, HOST_URL_TEST);
+    }
+
+    public static void setCloudEnv(Context context) {
+        SPUtiles.setStringValue(context, AppConstants.SP_URL, HOST_URL_CLOUD);
+    }
+
+    private static String getUrl(Context context) {
+        return SPUtiles.getStringValue(context, AppConstants.SP_URL, HOST_URL_CLOUD);
+    }
+
+    public static String loginApi(Context context) {
+        return getUrl(context) + URL_LOGIN;
+    }
+
+    public static String syncGatewayApi(Context context) {
+        return getUrl(context) + URL_SYNC_GATEWAY;
+    }
 }
