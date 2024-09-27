@@ -88,6 +88,15 @@ android {
     packagingOptions {
         exclude 'META-INF/kotlinx_coroutines_core.version'
     }
+
+//    tasks.configureEach {
+//        if (name == "packageDebugResources") {
+//            mustRunAfter(tasks.compileDebugRenderscript)
+//        }
+//        if (name == "packageDebugResources") {
+//            mustRunAfter(tasks.generateDebugResValues)
+//        }
+//    }
 }
 
 dependencies {
