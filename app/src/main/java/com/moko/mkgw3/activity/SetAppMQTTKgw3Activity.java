@@ -146,6 +146,7 @@ public class SetAppMQTTKgw3Activity extends BaseActivity<ActivityMqttAppKgw3Bind
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMQTTConnectionFailureEvent(MQTTConnectionFailureEvent event) {
+        if (!mIsSetAppSettings) return;
         ToastUtils.showToast(SetAppMQTTKgw3Activity.this, getString(R.string.mqtt_connect_failed));
         dismissLoadingProgressDialog();
         finish();
