@@ -50,8 +50,11 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
 
 public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw3Binding> implements RadioGroup.OnCheckedChangeListener {
     private final String FILTER_ASCII = "[ -~]*";
@@ -71,7 +74,7 @@ public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw
     private boolean isFileError;
     private String mStaMac;
     private String mDeviceName;
-
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
 
     @Override
     protected void onCreate() {
@@ -108,7 +111,7 @@ public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw
         });
         mBind.vpMqtt.setOffscreenPageLimit(4);
         mBind.rgMqtt.setOnCheckedChangeListener(this);
-        expertFilePath = MKGW3MainActivity.PATH_LOGCAT + File.separator + "export" + File.separator + "Settings for Device.xlsx";
+        expertFilePath = MKGW3MainActivity.PATH_LOGCAT + File.separator + "export" + File.separator;
         showLoadingProgressDialog();
         mBind.title.postDelayed(() -> {
             ArrayList<OrderTask> orderTasks = new ArrayList<>();
@@ -549,7 +552,8 @@ public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw
         mqttDeviceConfig.lwtTopic = lwtFragment.getTopic();
         mqttDeviceConfig.lwtPayload = lwtFragment.getPayload();
         showLoadingProgressDialog();
-        final File expertFile = new File(expertFilePath);
+        String path = mqttDeviceConfig.clientId.toUpperCase() + "_" + sdf.format(new Date(System.currentTimeMillis())) + ".xlsx";
+        final File expertFile = new File(expertFilePath + path);
         try {
             if (!expertFile.getParentFile().exists()) {
                 expertFile.getParentFile().mkdirs();

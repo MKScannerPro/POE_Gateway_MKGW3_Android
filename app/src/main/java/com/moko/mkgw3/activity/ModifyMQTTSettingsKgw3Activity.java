@@ -57,7 +57,10 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceModifyKgw3Binding> implements RadioGroup.OnCheckedChangeListener {
     public static String TAG = ModifyMQTTSettingsKgw3Activity.class.getSimpleName();
@@ -75,14 +78,12 @@ public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDev
     private MokoDeviceKgw3 mMokoDeviceKgw3;
     private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
-
     public Handler mHandler;
-
     public InputFilter filter;
-
     private String expertFilePath;
     private boolean isFileError;
     private boolean mIsConfigFinish;
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
 
     @Override
     protected void onCreate() {
@@ -119,7 +120,7 @@ public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDev
         });
         mBind.vpMqtt.setOffscreenPageLimit(4);
         mBind.rgMqtt.setOnCheckedChangeListener(this);
-        expertFilePath = MKGW3MainActivity.PATH_LOGCAT + File.separator + "export" + File.separator + "Settings for Device.xlsx";
+        expertFilePath = MKGW3MainActivity.PATH_LOGCAT + File.separator + "export" + File.separator;
         mMokoDeviceKgw3 = (MokoDeviceKgw3) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
         appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
@@ -495,7 +496,8 @@ public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDev
         mqttDeviceConfig.lwtTopic = lwtFragment.getTopic();
         mqttDeviceConfig.lwtPayload = lwtFragment.getPayload();
         showLoadingProgressDialog();
-        final File expertFile = new File(expertFilePath);
+        String path = mqttDeviceConfig.clientId.toUpperCase() + "_" + sdf.format(new Date(System.currentTimeMillis())) + ".xlsx";
+        final File expertFile = new File(expertFilePath + path);
         try {
             if (!expertFile.getParentFile().exists()) {
                 expertFile.getParentFile().mkdirs();
