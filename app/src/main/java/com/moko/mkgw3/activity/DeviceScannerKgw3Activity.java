@@ -123,7 +123,7 @@ public class DeviceScannerKgw3Activity extends BaseActivity<ActivityScannerKgw3B
         byte[] data = map.get(new ParcelUuid(OrderServices.SERVICE_ADV.getUuid()));
         if (data == null || data.length != 1) return;
         deviceInfo.deviceType = data[0] & 0xFF;
-        if (deviceInfo.deviceType != 0x00) return;
+        if (deviceInfo.deviceType > 1) return;
         mDeviceMap.put(deviceInfo.mac, deviceInfo);
     }
 

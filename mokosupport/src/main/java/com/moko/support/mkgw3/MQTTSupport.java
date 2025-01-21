@@ -21,6 +21,7 @@ import com.moko.support.mkgw3.event.MQTTSubscribeSuccessEvent;
 import com.moko.support.mkgw3.event.MQTTUnSubscribeFailureEvent;
 import com.moko.support.mkgw3.event.MQTTUnSubscribeSuccessEvent;
 
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMDecryptorProvider;
 import org.bouncycastle.openssl.PEMEncryptedKeyPair;
@@ -45,11 +46,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.security.Key;
 import java.security.KeyManagementException;
-import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.Security;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -407,14 +409,16 @@ public class MQTTSupport {
             converter = new JcaPEMKeyConverter().setProvider("BC");
         }
 
-        KeyPair key;
+        Key key = null;
         if (object instanceof PEMEncryptedKeyPair) {
             XLog.e("Encrypted key - we will use provided password");
             key = converter.getKeyPair(((PEMEncryptedKeyPair) object)
-                    .decryptKeyPair(decProv));
+                    .decryptKeyPair(decProv)).getPrivate();
+        } else if (object instanceof PrivateKeyInfo) {
+            key = converter.getPrivateKey((PrivateKeyInfo) object);
         } else {
             XLog.e("Unencrypted key - no password needed");
-            key = converter.getKeyPair((PEMKeyPair) object);
+            key = converter.getKeyPair((PEMKeyPair) object).getPrivate();
         }
         pemParser.close();
 
@@ -430,8 +434,7 @@ public class MQTTSupport {
         KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
         ks.load(null, null);
         ks.setCertificateEntry("certificate", cert);
-        ks.setKeyEntry("private-key", key.getPrivate(), "".toCharArray(),
-                new java.security.cert.Certificate[]{cert});
+        ks.setKeyEntry("private-key", key, "".toCharArray(), new Certificate[]{cert});
         KeyManagerFactory kmf =
                 KeyManagerFactory.getInstance(KeyManagerFactory
                         .getDefaultAlgorithm());
