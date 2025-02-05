@@ -20,6 +20,7 @@ import android.view.View;
 import com.moko.mkgw3.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * WheelView滚轮
@@ -42,11 +43,11 @@ public class WheelView extends View {
     /**
      * 选择的内容
      */
-    private ArrayList<ItemObject> itemList = new ArrayList<>();
+    private List<ItemObject> itemList = new ArrayList<>();
     /**
      * 设置数据
      */
-    private ArrayList<String> dataList = new ArrayList<>();
+    private List<String> dataList = new ArrayList<>();
     /**
      * 按下的坐标
      */
@@ -551,7 +552,7 @@ public class WheelView extends View {
      *
      * @param data
      */
-    public void setData(ArrayList<String> data) {
+    public void setData(List<String> data) {
         this.dataList = data;
         initData();
     }

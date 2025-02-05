@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_f2f2f2"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/blue_0188cc">
+
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableLeft="@drawable/back"
+            android:drawablePadding="6dp"
+            android:gravity="center_vertical"
+            android:onClick="onBack"
+            android:paddingLeft="16dp"
+            android:textColor="@color/white_ffffff"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Advertise iBeacon"
+            android:textColor="@color/white_ffffff"
+            android:textSize="17sp" />
+
+        <ImageView
+            android:id="@+id/iv_save"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:onClick="onSave"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:src="@drawable/ic_save" />
+    </RelativeLayout>
+
+    <CheckBox
+        android:id="@+id/cbIBeacon"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:button="@null"
+        android:drawableRight="@drawable/selector_cb_btn"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:text="Advertise iBeacon"
+        android:textColor="@color/black_333333"
+        android:textSize="15sp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutAdvertise"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/tvMajor"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:text="Major"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/etMajor"
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/shape_radius_solid_ffffff"
+            android:gravity="center_vertical"
+            android:hint="0~65535"
+            android:inputType="number"
+            android:maxLength="5"
+            android:paddingStart="10dp"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvMajor"
+            app:layout_constraintLeft_toRightOf="@+id/tvMajor"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvMajor" />
+
+        <TextView
+            android:id="@+id/tvMinor"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:text="Minor"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvMajor" />
+
+        <EditText
+            android:id="@+id/etMinor"
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:background="@drawable/shape_radius_solid_ffffff"
+            android:gravity="center_vertical"
+            android:hint="0~65535"
+            android:inputType="number"
+            android:maxLength="5"
+            android:paddingStart="10dp"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvMinor"
+            app:layout_constraintLeft_toLeftOf="@+id/etMajor"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvMinor" />
+
+        <TextView
+            android:id="@+id/tvUUid"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:text="UUID"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvMinor" />
+
+        <EditText
+            android:id="@+id/etUUid"
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:background="@drawable/shape_radius_solid_ffffff"
+            android:digits="ABCDEFabcdef0123456789"
+            android:gravity="center_vertical"
+            android:hint="16 Bytes"
+            android:maxLength="32"
+            android:paddingStart="10dp"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvUUid"
+            app:layout_constraintLeft_toLeftOf="@+id/etMajor"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvUUid" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutRssi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvUUid">
+
+            <TextView
+                android:id="@+id/rssi_1m"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RSSI@1m"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toTopOf="@id/sb_rssi_filter"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="(-100dBm~0dBm)"
+                android:textColor="@color/grey_b3b3b3"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@id/sb_rssi_filter"
+                app:layout_constraintLeft_toRightOf="@id/rssi_1m" />
+
+            <SeekBar
+                android:id="@+id/sb_rssi_filter"
+                style="@style/CustomSeekbarStyle"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:max="100"
+                android:maxHeight="2dp"
+                android:minHeight="2dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:progress="59"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/tv_rssi_filter_value"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_rssi_filter_value"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="-59dBm"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@id/sb_rssi_filter"
+                app:layout_constraintLeft_toRightOf="@id/sb_rssi_filter"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/sb_rssi_filter" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tvAdInterval"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:text="ADV interval"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutRssi" />
+
+        <EditText
+            android:id="@+id/etAdInterval"
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/shape_radius_solid_ffffff"
+            android:gravity="center_vertical"
+            android:hint="1-100"
+            android:inputType="number"
+            android:maxLength="3"
+            android:paddingStart="10dp"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvAdInterval"
+            app:layout_constraintLeft_toRightOf="@+id/tvAdInterval"
+            app:layout_constraintRight_toLeftOf="@+id/tvIntervalUnit"
+            app:layout_constraintTop_toTopOf="@+id/tvAdInterval" />
+
+        <TextView
+            android:id="@+id/tvIntervalUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="x 100ms"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvAdInterval"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvAdInterval" />
+
+        <TextView
+            android:id="@+id/tvTxPower"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:text="Tx Power"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvAdInterval" />
+
+        <TextView
+            android:id="@+id/tvTxPowerVal"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/shape_radius_blue_btn_bg"
+            android:gravity="center"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:textColor="@color/white_ffffff"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTxPower"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvTxPower"
+            tools:text="-24dBm" />
+
+        <CheckBox
+            android:id="@+id/cbConnectable"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:button="@null"
+            android:drawableRight="@drawable/selector_cb_btn"
+            android:text="Connectable"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTxPowerVal" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

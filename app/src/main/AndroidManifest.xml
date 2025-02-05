@@ -249,25 +249,51 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
-        <activity android:name=".activity.AdvertiseIBeaconMkgw3Activity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.AdvertiseIBeaconMkgw3Activity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.SelectBeaconTypeActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.SelectBeaconTypeActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.BxpCInfoActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.BxpCInfoActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.THDataActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.THDataActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.LightDataActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.LightDataActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.AccActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.AccActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.SyncDeviceActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.AdvSettingsMkgw3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ScanAndUploadKgw3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.NetworkSettingsKgw3v2Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.NearbyWifiKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />

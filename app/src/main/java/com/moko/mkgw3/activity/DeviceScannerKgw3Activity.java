@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -61,6 +62,7 @@ public class DeviceScannerKgw3Activity extends BaseActivity<ActivityScannerKgw3B
     private String mPassword;
     private String mSavedPassword;
     private int mSelectedDeviceType;
+    private boolean mIsFirstConfig;
 
     @Override
     protected void onCreate() {
@@ -122,7 +124,13 @@ public class DeviceScannerKgw3Activity extends BaseActivity<ActivityScannerKgw3B
         if (map == null || map.isEmpty()) return;
         byte[] data = map.get(new ParcelUuid(OrderServices.SERVICE_ADV.getUuid()));
         if (data == null || data.length != 1) return;
+        SparseArray<byte[]> sparseArray = scanRecord.getManufacturerSpecificData();
+        boolean isFirstConfig = false;
+        if (sparseArray == null || sparseArray.get(0xAA0F) != null) {
+            isFirstConfig = true;
+        }
         deviceInfo.deviceType = data[0] & 0xFF;
+        deviceInfo.isFirstConfig = isFirstConfig;
         if (deviceInfo.deviceType > 1) return;
         mDeviceMap.put(deviceInfo.mac, deviceInfo);
     }
@@ -201,6 +209,7 @@ public class DeviceScannerKgw3Activity extends BaseActivity<ActivityScannerKgw3B
                     XLog.i(password);
                     mPassword = password;
                     mSelectedDeviceType = deviceInfo.deviceType;
+                    mIsFirstConfig = deviceInfo.isFirstConfig;
                     if (animation != null) {
                         mHandler.removeMessages(0);
                         mokoBleScanner.stopScanDevice();
@@ -289,6 +298,7 @@ public class DeviceScannerKgw3Activity extends BaseActivity<ActivityScannerKgw3B
                                 // 跳转配置页面
                                 Intent intent = new Intent(this, DeviceConfigKgw3Activity.class);
                                 intent.putExtra(AppConstants.EXTRA_KEY_SELECTED_DEVICE_TYPE, mSelectedDeviceType);
+                                intent.putExtra(AppConstants.EXTRA_KEY_FIRST_CONFIG, mIsFirstConfig);
                                 startLauncher.launch(intent);
                             }
                             if (0 == result) {

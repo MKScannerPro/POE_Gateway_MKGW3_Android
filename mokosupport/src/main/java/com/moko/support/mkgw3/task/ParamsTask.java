@@ -31,13 +31,7 @@ public class ParamsTask extends OrderTask {
     }
 
     public void setData(ParamsLongKeyEnum key) {
-        switch (key) {
-            case KEY_MQTT_USERNAME:
-            case KEY_MQTT_PASSWORD:
-            case KEY_FILTER_NAME_RULES:
-                createGetLongConfigData(key.getParamsKey());
-                break;
-        }
+        createGetLongConfigData(key.getParamsKey());
     }
 
     private void createGetLongConfigData(int paramsKey) {
@@ -58,6 +52,15 @@ public class ParamsTask extends OrderTask {
                 (byte) 0x00
         };
         response.responseValue = data;
+    }
+
+    public void getNearbyWifi() {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_WIFI_SEARCH.getParamsKey(),
+                (byte) 0x00
+        };
     }
 
     public void setIBeaconEnable(@IntRange(from = 0, to = 1) int enable) {
@@ -128,6 +131,26 @@ public class ParamsTask extends OrderTask {
         };
     }
 
+    public void setIBeaconRssi1M(@IntRange(from = -100, to = 0) int rssi1M) {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_I_BEACON_RSSI1M.getParamsKey(),
+                (byte) 0x01,
+                (byte) rssi1M
+        };
+    }
+
+    public void setIBeaconConnectable(@IntRange(from = 0, to = 1) int enable) {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_I_BEACON_CONNECTABLE.getParamsKey(),
+                (byte) 0x01,
+                (byte) enable
+        };
+    }
+
     public void reboot() {
         data = new byte[]{
                 (byte) 0xED,
@@ -161,6 +184,7 @@ public class ParamsTask extends OrderTask {
         }
         response.responseValue = data;
     }
+
     public void setNetworkType(@IntRange(from = 0, to = 1) int type) {
         response.responseValue = data = new byte[]{
                 (byte) 0xED,
@@ -762,6 +786,21 @@ public class ParamsTask extends OrderTask {
                 (byte) ParamsKeyEnum.KEY_FILTER_NAME_REVERSE.getParamsKey(),
                 (byte) 0x01,
                 (byte) enable
+        };
+        response.responseValue = data;
+    }
+
+    public void setReportInterval(@IntRange(from = 0, to = 86400) int interval) {
+        byte[] dataBytes = MokoUtils.toByteArray(interval, 24);
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_REPORT_INTERVAL.getParamsKey(),
+                (byte) 0x04,
+                (byte) dataBytes[0],
+                (byte) dataBytes[1],
+                (byte) dataBytes[2],
+                (byte) dataBytes[3]
         };
         response.responseValue = data;
     }

@@ -340,6 +340,12 @@ public class OrderTaskAssembler {
         return task;
     }
 
+    public static OrderTask getReportInterval() {
+        ParamsTask task = new ParamsTask();
+        task.setData(ParamsKeyEnum.KEY_REPORT_INTERVAL);
+        return task;
+    }
+
     public static OrderTask getIBeaconEnable() {
         ParamsTask task = new ParamsTask();
         task.setData(ParamsKeyEnum.KEY_I_BEACON_SWITCH);
@@ -373,6 +379,18 @@ public class OrderTaskAssembler {
     public static OrderTask getIBeaconTxPower() {
         ParamsTask task = new ParamsTask();
         task.setData(ParamsKeyEnum.KEY_I_BEACON_TX_POWER);
+        return task;
+    }
+
+    public static OrderTask getIBeaconRssi1M() {
+        ParamsTask task = new ParamsTask();
+        task.setData(ParamsKeyEnum.KEY_I_BEACON_RSSI1M);
+        return task;
+    }
+
+    public static OrderTask getIBeaconConnectable() {
+        ParamsTask task = new ParamsTask();
+        task.setData(ParamsKeyEnum.KEY_I_BEACON_CONNECTABLE);
         return task;
     }
 
@@ -414,6 +432,18 @@ public class OrderTaskAssembler {
     public static OrderTask setIBeaconTxPower(@IntRange(from = 0, to = 15) int txPower) {
         ParamsTask task = new ParamsTask();
         task.setIBeaconTxPower(txPower);
+        return task;
+    }
+
+    public static OrderTask setIBeaconRssi1M(@IntRange(from = -100, to = 0) int rssi1M) {
+        ParamsTask task = new ParamsTask();
+        task.setIBeaconRssi1M(rssi1M);
+        return task;
+    }
+
+    public static OrderTask setIBeaconConnectable(@IntRange(from = 0, to = 1) int enable) {
+        ParamsTask task = new ParamsTask();
+        task.setIBeaconConnectable(enable);
         return task;
     }
 
@@ -707,6 +737,12 @@ public class OrderTaskAssembler {
         return task;
     }
 
+    public static OrderTask setReportInterval(@IntRange(from = 0, to = 86400) int interval) {
+        ParamsTask task = new ParamsTask();
+        task.setReportInterval(interval);
+        return task;
+    }
+
     public static OrderTask setMqttUserName(String username) {
         ParamsTask task = new ParamsTask();
         task.setLongChar(ParamsLongKeyEnum.KEY_MQTT_USERNAME, username);
@@ -764,6 +800,12 @@ public class OrderTaskAssembler {
     public static OrderTask getNetworkType() {
         ParamsTask task = new ParamsTask();
         task.setData(ParamsKeyEnum.KEY_NETWORK_TYPE);
+        return task;
+    }
+
+    public static OrderTask getNearbyWifi() {
+        ParamsTask task = new ParamsTask();
+        task.getNearbyWifi();
         return task;
     }
 

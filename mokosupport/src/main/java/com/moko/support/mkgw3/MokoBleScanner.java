@@ -43,9 +43,12 @@ public final class MokoBleScanner {
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                 .build();
         List<ScanFilter> scanFilterList = new ArrayList<>();
-        ScanFilter.Builder builder = new ScanFilter.Builder();
-        builder.setServiceData(new ParcelUuid(OrderServices.SERVICE_ADV.getUuid()), null);
-        scanFilterList.add(builder.build());
+        ScanFilter.Builder configBuilder = new ScanFilter.Builder();
+        configBuilder.setServiceData(new ParcelUuid(OrderServices.SERVICE_ADV.getUuid()), null);
+        scanFilterList.add(configBuilder.build());
+//        ScanFilter.Builder iBeaconBuilder = new ScanFilter.Builder();
+//        iBeaconBuilder.setManufacturerData(0x004C, null);
+//        scanFilterList.add(iBeaconBuilder.build());
 //        List<ScanFilter> scanFilterList = Collections.singletonList(new ScanFilter.Builder().build());
         mMokoLeScanHandler = new MokoLeScanHandler(callback);
         scanner.startScan(scanFilterList, settings, mMokoLeScanHandler);

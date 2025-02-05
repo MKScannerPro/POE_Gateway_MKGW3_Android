@@ -59,8 +59,8 @@
     <string name="permission_location_close_content">Please find it in cellphone setting- permission, and allow MKGW3 use the Location permission</string>
     <string name="permission_location_need_content">MKGW3 requires access to Location permission. If the permissions are not on, MKGW3 cannot be used normally.</string>
     <string name="permission_ble_content">MKGW3 requires access to bluetooth scan contract and location permission. If the permissions are not on, MKGW3 cannot be used normally.</string>
-    
-    
+
+
     <string name="version_info">Version:%s</string>
     <string name="about_moko_name">MOKO TECHNOLOGY LTD.</string>
     <string name="company_website">www.mokosmart.com</string>
@@ -73,7 +73,9 @@
     <string name="mqtt_settings">MQTT Settings</string>
     <string name="network_settings">Network Settings</string>
     <string name="scanner_filter">Scanner Filter</string>
+    <string name="scan_and_upload">Scan &amp; Upload</string>
     <string name="advertise_iBeacon">Advertise iBeacon</string>
+    <string name="advertise_settings">Advertisement Settings</string>
     <string name="device_information">Device Information</string>
     <string name="indicator_settings">Indicator settings</string>
     <string name="network_status_report_interval">Network status report interval</string>
