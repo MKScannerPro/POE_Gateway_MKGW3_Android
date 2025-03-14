@@ -177,6 +177,7 @@
             </RelativeLayout>
 
             <View style="@style/divider_line" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -206,6 +207,7 @@
             </RelativeLayout>
 
             <View style="@style/divider_line" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -309,6 +311,7 @@
                 android:onClick="onFilterByBXPTag">
 
                 <TextView
+                    android:id="@+id/tvFilterByBxpTag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -332,9 +335,11 @@
                     android:text="ON"
                     android:textColor="@color/black_333333"
                     android:textSize="15sp" />
+
             </RelativeLayout>
 
             <View style="@style/divider_line" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -369,6 +374,44 @@
             </RelativeLayout>
 
             <View style="@style/divider_line" />
+
+            <RelativeLayout
+                android:id="@+id/rlFilterByMKTOF"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/white_ffffff"
+                android:clickable="true"
+                android:onClick="onFilterByMKTOF">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:text="MK TOF"
+                    android:textColor="@color/black_333333"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tvFilterByMKTOF"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:drawableRight="@drawable/arrow_right"
+                    android:drawablePadding="10dp"
+                    android:gravity="center_vertical"
+                    android:text="ON"
+                    android:textColor="@color/black_333333"
+                    android:textSize="15sp" />
+
+                <View
+                    style="@style/divider_line"
+                    android:layout_alignParentBottom="true" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"

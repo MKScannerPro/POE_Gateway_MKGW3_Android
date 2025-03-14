@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
-import com.moko.mkgw3.activity.ModifyMQTTSettingsKgw3Activity;
+import com.moko.mkgw3.activity.modify.ModifyMQTTSettingsKgw3Activity;
 import com.moko.mkgw3.databinding.FragmentSslDeviceUrlKgw3Binding;
 import com.moko.mkgw3.dialog.MKgw3BottomDialog;
 

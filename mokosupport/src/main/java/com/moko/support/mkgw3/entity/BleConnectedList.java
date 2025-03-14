@@ -7,7 +7,14 @@ public class BleConnectedList {
 
     public static class BleDevice {
         // 0:通用连接
-        // 1:bxp_b1连接
+        // 1:bxp_b_d
+        // 2:bxp_b_cr
+        // 3:bxp_c
+        // 4:bxp_d
+        // 5:bxp_tag
+        // 6:bxp_s
+        // 7:pir
+        // 8:tof
         public int type;
         public String mac;
     }

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/shape_radius_white_bg"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="Beacon Type"
+            android:textColor="@color/black_333333"
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:id="@+id/rgBeaconType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/rbBXPBD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="BXP-B-D"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp" />
+
+            <RadioButton
+                android:id="@+id/rbBXPBCR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BXP-B-CR"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp" />
+
+            <RadioButton
+                android:id="@+id/rbBXPC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BXP-C"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp" />
+
+            <RadioButton
+                android:id="@+id/rbBXPD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BXP-D"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp" />
+
+            <RadioButton
+                android:id="@+id/rbBXPT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BXP-T"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp" />
+
+            <RadioButton
+                android:id="@+id/rbBXPS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BXP-S"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp" />
+
+            <RadioButton
+                android:id="@+id/rbMKPIR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MK PIR"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp" />
+
+            <RadioButton
+                android:id="@+id/rbMKTOF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MK TOF"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp" />
+
+            <RadioButton
+                android:id="@+id/rbOther"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Other"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp" />
+        </RadioGroup>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/grey_ebebeb" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                android:id="@+id/tv_cancel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="@string/cancel"
+                android:textColor="@color/blue_0188cc"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="@color/grey_ebebeb" />
+
+            <TextView
+                android:id="@+id/tv_ensure"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="@string/confirm"
+                android:textColor="@color/blue_0188cc"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

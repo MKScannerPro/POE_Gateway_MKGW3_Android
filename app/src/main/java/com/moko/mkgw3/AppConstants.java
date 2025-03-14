@@ -18,6 +18,7 @@ public class AppConstants {
     //    public static final String SP_KEY_MQTT_CONFIG = "SP_KEY_MQTT_CONFIG";
     public static final String SP_KEY_MQTT_CONFIG_APP = "SP_KEY_MQTT_CONFIG_APP";
     public static final String SP_URL = "SP_URL";
+    public static final String SP_BEACON_TYPE = "SP_BEACON_TYPE";
 
 
     public static final String SP_KEY_DEVICE_ADDRESS = "sp_key_device_address";
@@ -33,7 +34,8 @@ public class AppConstants {
     public static final String EXTRA_KEY_FROM_ACTIVITY = "EXTRA_KEY_FROM_ACTIVITY";
     public static final String EXTRA_KEY_MAC = "EXTRA_KEY_MAC";
     public static final String EXTRA_KEY_DEVICE = "EXTRA_KEY_DEVICE";
-    public static final String EXTRA_KEY_BXP_BUTTON_INFO = "EXTRA_KEY_BXP_BUTTON_INFO";
+    public static final String EXTRA_KEY_BEACON_TYPE = "EXTRA_KEY_BEACON_TYPE";
+    public static final String EXTRA_KEY_BEACON_INFO = "EXTRA_KEY_BEACON_INFO";
     public static final String EXTRA_KEY_OTHER_DEVICE_INFO = "EXTRA_KEY_OTHER_DEVICE_INFO";
     public static final String EXTRA_DELETE_DEVICE_ID = "EXTRA_DELETE_DEVICE_ID";
     public static final String EXTRA_KEY_SCAN_SWITCH = "EXTRA_KEY_SCAN_SWITCH";
@@ -45,6 +47,7 @@ public class AppConstants {
     public static final String EXTRA_KEY_SELECTED_DEVICE_MAC = "EXTRA_KEY_SELECTED_DEVICE_MAC";
     public static final String EXTRA_KEY_SELECTED_DEVICE_NAME = "EXTRA_KEY_SELECTED_DEVICE_NAME";
     public static final String EXTRA_KEY_SELECTED_DEVICE_TYPE = "EXTRA_KEY_SELECTED_DEVICE_TYPE";
+    public static final String EXTRA_KEY_FIRST_CONFIG = "EXTRA_KEY_FIRST_CONFIG";
     public static final String EXTRA_KEY_DEVICE_SUBSCRIBE_TOPIC = "EXTRA_KEY_DEVICE_SUBSCRIBE_TOPIC";
     public static final String EXTRA_KEY_DEVICE_PUBLISH_TOPIC = "EXTRA_KEY_DEVICE_PUBLISH_TOPIC";
     public static final String EXTRA_KEY_DEVICE_LWT_ENABLE = "EXTRA_KEY_DEVICE_LWT_ENABLE";

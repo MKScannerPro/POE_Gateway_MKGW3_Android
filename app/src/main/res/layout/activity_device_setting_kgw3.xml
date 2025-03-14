@@ -78,6 +78,7 @@
                 android:textSize="15sp" />
 
             <TextView
+                android:id="@+id/tvReconnectTimeout"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="1dp"
@@ -109,6 +110,7 @@
                 android:textSize="15sp" />
 
             <TextView
+                android:id="@+id/tvDataReportTimeout"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="1dp"
@@ -138,6 +140,7 @@
                 android:textSize="15sp" />
 
             <TextView
+                android:id="@+id/tvAdvIbeacon"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="1dp"
@@ -148,6 +151,21 @@
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
                 android:text="@string/advertise_iBeacon"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tvAdvSettings"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white_ffffff"
+                android:drawableEnd="@drawable/arrow_right"
+                android:gravity="center_vertical"
+                android:onClick="onAdvSettings"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="@string/advertise_settings"
                 android:textColor="@color/black_333333"
                 android:textSize="15sp" />
 

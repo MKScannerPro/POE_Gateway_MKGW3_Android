@@ -1,5 +1,6 @@
 package com.moko.mkgw3.activity;
 
+import android.bluetooth.le.AdvertiseSettings;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -18,6 +19,17 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
+import com.moko.mkgw3.activity.add.AdvSettingsMkgw3Activity;
+import com.moko.mkgw3.activity.add.AdvertiseIBeaconMkgw3Activity;
+import com.moko.mkgw3.activity.modify.ModifySettingsKgw3Activity;
+import com.moko.mkgw3.activity.settings.CommunicateTimeoutKgw3Activity;
+import com.moko.mkgw3.activity.settings.DataReportTimeoutKgw3Activity;
+import com.moko.mkgw3.activity.settings.DeviceInfoKgw3Activity;
+import com.moko.mkgw3.activity.settings.IndicatorSettingKgw3Activity;
+import com.moko.mkgw3.activity.settings.NetworkReportIntervalKgw3Activity;
+import com.moko.mkgw3.activity.settings.OTAKgw3Activity;
+import com.moko.mkgw3.activity.settings.ReconnectTimeoutKgw3Activity;
+import com.moko.mkgw3.activity.settings.SystemTimeKgw3Activity;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityDeviceSettingKgw3Binding;
 import com.moko.mkgw3.db.MKgw3DBTools;
@@ -64,6 +76,10 @@ public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettin
         appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
         mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
         mHandler = new Handler(Looper.getMainLooper());
+        mBind.tvReconnectTimeout.setVisibility(mMokoDeviceKgw3.deviceType == 0 ? View.VISIBLE : View.GONE);
+        mBind.tvDataReportTimeout.setVisibility(mMokoDeviceKgw3.deviceType == 0 ? View.VISIBLE : View.GONE);
+        mBind.tvAdvIbeacon.setVisibility(mMokoDeviceKgw3.deviceType == 0 ? View.VISIBLE : View.GONE);
+        mBind.tvAdvSettings.setVisibility(mMokoDeviceKgw3.deviceType != 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -254,6 +270,17 @@ public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettin
             return;
         }
         Intent i = new Intent(this, AdvertiseIBeaconMkgw3Activity.class);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
+        startActivity(i);
+    }
+
+    public void onAdvSettings(View view) {
+        if (isWindowLocked()) return;
+        if (!MQTTSupport.getInstance().isConnected()) {
+            ToastUtils.showToast(this, R.string.network_error);
+            return;
+        }
+        Intent i = new Intent(this, AdvSettingsMkgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startActivity(i);
     }

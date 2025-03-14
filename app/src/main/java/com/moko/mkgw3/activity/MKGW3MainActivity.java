@@ -27,6 +27,8 @@ import com.lzy.okgo.request.base.Request;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.BuildConfig;
 import com.moko.mkgw3.R;
+import com.moko.mkgw3.activity.add.DeviceScannerKgw3Activity;
+import com.moko.mkgw3.activity.modify.ModifySettingsKgw3Activity;
 import com.moko.mkgw3.adapter.DeviceKgw3Adapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityMainMkgw3Binding;

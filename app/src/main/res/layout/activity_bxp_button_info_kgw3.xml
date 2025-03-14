@@ -45,7 +45,7 @@
             app:autoSizeMinTextSize="12sp"
             app:autoSizeStepGranularity="1sp"
             app:autoSizeTextType="uniform"
-            tools:text="FFDFAFDA21212113FF" />
+            tools:text="" />
 
         <TextView
             android:id="@+id/tvConnect"
@@ -257,7 +257,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1.0"
-                    android:text="Read battery and alarm info"
+                    android:text="Battery and alarm info"
                     android:textColor="@color/black_333333"
                     android:textSize="15sp" />
 

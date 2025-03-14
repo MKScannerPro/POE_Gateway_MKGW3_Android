@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_radius_white_bg"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tvSlot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="5dp"
+        android:text="Slot 1:No data"
+        android:textColor="@color/black_333333"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvSlotConfig"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:background="@drawable/shape_radius_blue_btn_bg"
+        android:clickable="true"
+        android:gravity="center"
+        android:minWidth="70dp"
+        android:minHeight="30dp"
+        android:onClick="onSlotConfig"
+        android:text="Set"
+        android:textColor="@color/white_ffffff"
+        android:textSize="15sp"
+        android:visibility="gone"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvSlot"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llSlotAdv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSlot">
+
+        <TextView
+            android:id="@+id/tvTriggerType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Trigger type:"
+            android:textStyle="bold" />
+
+        <include
+            android:id="@+id/layoutAdvParams"
+            layout="@layout/layout_slot_adv_params" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

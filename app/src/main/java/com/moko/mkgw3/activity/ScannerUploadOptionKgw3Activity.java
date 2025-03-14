@@ -15,6 +15,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
+import com.moko.mkgw3.activity.filter.DuplicateDataFilterKgw3Activity;
+import com.moko.mkgw3.activity.upload.UploadDataOptionKgw3Activity;
+import com.moko.mkgw3.activity.filter.FilterAdvNameKgw3Activity;
+import com.moko.mkgw3.activity.filter.FilterMacAddressKgw3Activity;
+import com.moko.mkgw3.activity.filter.FilterRawDataSwitchKgw3Activity;
+import com.moko.mkgw3.activity.upload.UploadDataIntervalKgw3Activity;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityScannerUploadOptionKgw3Binding;
 import com.moko.mkgw3.dialog.MKgw3BottomDialog;
@@ -43,7 +49,9 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
     private String mAppTopic;
     public Handler mHandler;
     private ArrayList<String> mRelationshipValues;
+    private ArrayList<String> mDuplicateDataValues;
     private int mRelationshipSelected;
+    private int mDuplicateDataSelected;
     private final String[] phyArr = {"1M PHY(V4.2)", "1M PHY(V5.0)", "1M PHY(V4.2) & 1M PHY(V5.0)", "Coded PHY(V5.0)"};
     private int phySelected;
 
@@ -66,6 +74,14 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
         mRelationshipValues.add("MAC&ADV name&Raw data");
         mRelationshipValues.add("ADV name | Raw data");
         mRelationshipValues.add("ADV NAME & MAC");
+        mDuplicateDataValues = new ArrayList<>();
+        mDuplicateDataValues.add("Disable");
+        mDuplicateDataValues.add("MAC");
+        mDuplicateDataValues.add("MAC+DATA TYPE");
+        mDuplicateDataValues.add("MAC+RAW DATA");
+        mBind.clDuplicateDataFilter.setVisibility(mMokoDeviceKgw3.deviceType != 0 ? View.VISIBLE : View.GONE);
+        mBind.tvDuplicateDataFilter.setVisibility(mMokoDeviceKgw3.deviceType != 0 ? View.GONE : View.VISIBLE);
+        mBind.tvUploadDataInterval.setVisibility(mMokoDeviceKgw3.deviceType != 0 ? View.VISIBLE : View.GONE);
         mHandler.postDelayed(() -> {
             dismissLoadingProgressDialog();
             finish();
@@ -136,10 +152,24 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
             }.getType();
             MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
             if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
-            dismissLoadingProgressDialog();
-            mHandler.removeMessages(0);
             phySelected = result.data.get("phy_filter").getAsInt();
             mBind.tvFilterPhy.setText(phyArr[phySelected]);
+            if (mMokoDeviceKgw3.deviceType != 0) {
+                getDuplicateDataFilter();
+                return;
+            }
+            mHandler.removeMessages(0);
+            dismissLoadingProgressDialog();
+        }
+        if (msg_id == MQTTConstants.READ_MSG_ID_DUPLICATE_DATA_FILTER) {
+            Type type = new TypeToken<MsgReadResult<JsonObject>>() {
+            }.getType();
+            MsgReadResult<JsonObject> result = new Gson().fromJson(message, type);
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            dismissLoadingProgressDialog();
+            mHandler.removeMessages(0);
+            mDuplicateDataSelected = result.data.get("rule").getAsInt();
+            mBind.tvDuplicateDataFilter.setText(mDuplicateDataValues.get(mDuplicateDataSelected));
         }
         if (msg_id == MQTTConstants.CONFIG_MSG_ID_FILTER_RSSI) {
             Type type = new TypeToken<MsgConfigResult<?>>() {
@@ -164,6 +194,24 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
             }.getType();
             MsgConfigResult<?> result = new Gson().fromJson(message, type);
             if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            if (mMokoDeviceKgw3.deviceType != 0) {
+                setDuplicateDataFilter();
+                return;
+            }
+            dismissLoadingProgressDialog();
+            mHandler.removeMessages(0);
+            if (result.result_code == 0) {
+                ToastUtils.showToast(this, "Set up succeed");
+            } else {
+                ToastUtils.showToast(this, "Set up failed");
+            }
+        }
+        if (msg_id == MQTTConstants.CONFIG_MSG_ID_DUPLICATE_DATA_FILTER) {
+            Type type = new TypeToken<MsgConfigResult>() {
+            }.getType();
+            MsgConfigResult result = new Gson().fromJson(message, type);
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
+                return;
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             if (result.result_code == 0) {
@@ -249,6 +297,29 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
         }
     }
 
+    private void getDuplicateDataFilter() {
+        int msgId = MQTTConstants.READ_MSG_ID_DUPLICATE_DATA_FILTER;
+        String message = assembleReadCommon(msgId, mMokoDeviceKgw3.mac);
+        try {
+            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setDuplicateDataFilter() {
+        int msgId = MQTTConstants.CONFIG_MSG_ID_DUPLICATE_DATA_FILTER;
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("rule", mDuplicateDataSelected);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
+        try {
+            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void onFilterRelationship(View view) {
         if (isWindowLocked())
             return;
@@ -257,6 +328,18 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
         dialog.setListener(value -> {
             mRelationshipSelected = value;
             mBind.tvFilterRelationship.setText(mRelationshipValues.get(value));
+        });
+        dialog.show(getSupportFragmentManager());
+    }
+
+    public void onFilterDuplicateData(View view) {
+        if (isWindowLocked())
+            return;
+        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
+        dialog.setDatas(mDuplicateDataValues, mDuplicateDataSelected);
+        dialog.setListener(value -> {
+            mDuplicateDataSelected = value;
+            mBind.tvDuplicateDataFilter.setText(mDuplicateDataValues.get(value));
         });
         dialog.show(getSupportFragmentManager());
     }
@@ -282,6 +365,18 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
             return;
         }
         Intent i = new Intent(this, UploadDataOptionKgw3Activity.class);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
+        startActivity(i);
+    }
+
+    public void onUploadDataInterval(View view) {
+        if (isWindowLocked())
+            return;
+        if (!MQTTSupport.getInstance().isConnected()) {
+            ToastUtils.showToast(this, R.string.network_error);
+            return;
+        }
+        Intent i = new Intent(this, UploadDataIntervalKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startActivity(i);
     }

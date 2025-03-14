@@ -32,7 +32,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.MqttSettingsKgw3Activity"
+            android:name="com.moko.mkgw3.activity.add.MqttSettingsKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait" />
@@ -51,7 +51,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.DeviceScannerKgw3Activity"
+            android:name="com.moko.mkgw3.activity.add.DeviceScannerKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -67,37 +67,37 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.DeviceInfoKgw3Activity"
+            android:name="com.moko.mkgw3.activity.settings.DeviceInfoKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.OTAKgw3Activity"
+            android:name="com.moko.mkgw3.activity.settings.OTAKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.IndicatorSettingKgw3Activity"
+            android:name="com.moko.mkgw3.activity.settings.IndicatorSettingKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.DataReportTimeoutKgw3Activity"
+            android:name="com.moko.mkgw3.activity.settings.DataReportTimeoutKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.CommunicateTimeoutKgw3Activity"
+            android:name="com.moko.mkgw3.activity.settings.CommunicateTimeoutKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.NetworkReportIntervalKgw3Activity"
+            android:name="com.moko.mkgw3.activity.settings.NetworkReportIntervalKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.DuplicateDataFilterKgw3Activity"
+            android:name="com.moko.mkgw3.activity.filter.DuplicateDataFilterKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -107,91 +107,91 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.FilterMacAddressKgw3Activity"
+            android:name="com.moko.mkgw3.activity.filter.FilterMacAddressKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.FilterAdvNameKgw3Activity"
+            android:name="com.moko.mkgw3.activity.filter.FilterAdvNameKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.FilterRawDataSwitchKgw3Activity"
+            android:name="com.moko.mkgw3.activity.filter.FilterRawDataSwitchKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.FilterIBeaconKgw3Activity"
+            android:name="com.moko.mkgw3.activity.filter.FilterIBeaconKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.FilterUIDKgw3Activity"
+            android:name="com.moko.mkgw3.activity.filter.FilterUIDKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.FilterUrlKgw3Activity"
+            android:name="com.moko.mkgw3.activity.filter.FilterUrlKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.FilterTLMKgw3Activity"
+            android:name="com.moko.mkgw3.activity.filter.FilterTLMKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.FilterOtherKgw3Activity"
-            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name="com.moko.mkgw3.activity.UploadDataOptionKgw3Activity"
-            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name="com.moko.mkgw3.activity.SyncTimeFromNTPKgw3Activity"
-            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name="com.moko.mkgw3.activity.SystemTimeKgw3Activity"
-            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name="com.moko.mkgw3.activity.ModifyMQTTSettingsKgw3Activity"
+            android:name="com.moko.mkgw3.activity.filter.FilterOtherKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.DeviceConfigKgw3Activity"
+            android:name="com.moko.mkgw3.activity.upload.UploadDataOptionKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.NetworkSettingsKgw3Activity"
+            android:name="com.moko.mkgw3.activity.settings.SyncTimeFromNTPKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.NtpSettingsKgw3Activity"
+            android:name="com.moko.mkgw3.activity.settings.SystemTimeKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.ScannerFilterKgw3Activity"
+            android:name="com.moko.mkgw3.activity.modify.ModifyMQTTSettingsKgw3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="com.moko.mkgw3.activity.add.DeviceConfigKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.DeviceInformationKgw3Activity"
+            android:name="com.moko.mkgw3.activity.add.NetworkSettingsKgw3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="com.moko.mkgw3.activity.add.NtpSettingsKgw3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="com.moko.mkgw3.activity.add.ScannerFilterKgw3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="com.moko.mkgw3.activity.add.DeviceInformationKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -201,73 +201,224 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.BXPButtonInfoKgw3Activity"
+            android:name="com.moko.mkgw3.activity.ble.BXPButtonInfoKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.BleOtherInfoKgw3Activity"
+            android:name="com.moko.mkgw3.activity.ble.BleOtherInfoKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.ReconnectTimeoutKgw3Activity"
+            android:name="com.moko.mkgw3.activity.settings.ReconnectTimeoutKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.FilterBXPButtonKgw3Activity"
+            android:name="com.moko.mkgw3.activity.filter.FilterBXPButtonKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.FilterBXPTagKgw3Activity"
+            android:name="com.moko.mkgw3.activity.filter.FilterBXPTagKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.FilterPIRKgw3Activity"
+            android:name="com.moko.mkgw3.activity.filter.FilterPIRKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.ModifySettingsKgw3Activity"
+            android:name="com.moko.mkgw3.activity.modify.ModifySettingsKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.ModifyNetworkSettingsKgw3Activity"
+            android:name="com.moko.mkgw3.activity.modify.ModifyNetworkSettingsKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.mkgw3.activity.BeaconDFUKgw3Activity"
+            android:name="com.moko.mkgw3.activity.ble.BeaconDFUKgw3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
-        <activity android:name=".activity.AdvertiseIBeaconMkgw3Activity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.add.AdvertiseIBeaconMkgw3Activity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.SelectBeaconTypeActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ble.SelectBeaconTypeActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.BxpCInfoActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ble.BXPCGW3Activity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.THDataActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ble.THDataActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.LightDataActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ble.LightDataActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.AccActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ble.AccActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.SyncDeviceActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.add.AdvSettingsMkgw3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.add.ScanAndUploadKgw3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.add.NetworkSettingsKgw3v2Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.add.NearbyWifiKgw3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.upload.UploadDataIntervalKgw3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.filter.FilterMKTOFActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.modify.ModifyNetworkSettingsKgw3v2Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.BXPBDGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.BeaconDFUKgw3v2Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.BXPBDRemoteReminderGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.BXPAccGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.BXPBAdvParamsGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.BXPBCRGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.BXPBCRRemoteReminderGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.BXPCRAlarmEventGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.BXPCTHSampleRateGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.BXPAdvParamsGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.BXPDGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.BXPDAccParamsGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.BXPTRemoteReminderGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.BXPTMotionEventGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.BXPTAccParamsGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.BXPSHallEventGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.BXPSGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.MKPIRSensorDataGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.MKPIRSensorParamsGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.MKAdvParamsGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.MKTOFSensorDataGW3Activity"
+            android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ble.MKTOFSensorParamsGW3Activity"
             android:configChanges="orientation|keyboard|keyboardHidden|locale|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />

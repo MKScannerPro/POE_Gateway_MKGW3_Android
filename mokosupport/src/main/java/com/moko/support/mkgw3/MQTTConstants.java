@@ -1,7 +1,9 @@
 package com.moko.support.mkgw3;
 
 public class MQTTConstants {
+    ///////////////////////////////////////////////////////////////////////////
     // CONFIG
+    ///////////////////////////////////////////////////////////////////////////
     public static final int CONFIG_MSG_ID_REBOOT = 1000;
     public static final int CONFIG_MSG_ID_BUTTON_RESET = 1001;
     public static final int CONFIG_MSG_ID_NETWORK_REPORT_INTERVAL = 1003;
@@ -38,33 +40,134 @@ public class MQTTConstants {
     public static final int CONFIG_MSG_ID_FILTER_OTHER = 1056;
     public static final int CONFIG_MSG_ID_DUPLICATE_DATA_FILTER = 1057;
     public static final int CONFIG_MSG_ID_DATA_REPORT_TIMEOUT = 1058;
-    public static final int CONFIG_MSG_ID_UPLOAD_DATA_OPTION= 1059;
+    public static final int CONFIG_MSG_ID_UPLOAD_DATA_OPTION = 1059;
     public static final int CONFIG_MSG_ID_FILTER_PHY = 1060;
     public static final int CONFIG_MSG_ID_BEACON_PARAMS = 1061;
-    public static final int CONFIG_MSG_ID_BLE_BXP_BUTTON_CONNECT = 1100;
-    public static final int CONFIG_MSG_ID_BLE_BXP_BUTTON_INFO = 1102;
-    public static final int CONFIG_MSG_ID_BLE_BXP_BUTTON_STATUS = 1104;
-    public static final int CONFIG_MSG_ID_BLE_BXP_C_INFO = 1152;
-    public static final int CONFIG_MSG_ID_BLE_BXP_C_POWER_OFF = 1155;
+    public static final int CONFIG_MSG_ID_FILTER_TOF = 1062;
+    public static final int CONFIG_MSG_ID_UPLOAD_DATA_INTERVAL = 1063;
+    public static final int CONFIG_MSG_ID_BLE_CONNECT_TIMEOUT = 1209;
+    // BXP-B-D
+    //    public static final int CONFIG_MSG_ID_BLE_BXP_BUTTON_CONNECT = 1100;
+//    public static final int CONFIG_MSG_ID_BLE_BXP_BUTTON_INFO = 1102;
+//    public static final int CONFIG_MSG_ID_BLE_BXP_BUTTON_STATUS = 1104;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_D_CONNECT = 1100;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_D_INFO = 1102;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_D_STATUS = 1104;
     public static final int CONFIG_MSG_ID_BLE_BXP_BUTTON_DISMISS_ALARM = 1106;
     public static final int CONFIG_MSG_ID_BLE_BXP_BUTTON_LED = 1109;
     public static final int CONFIG_MSG_ID_BLE_BXP_BUTTON_BUZZER = 1111;
-    public static final int CONFIG_MSG_ID_BLE_BXP_C_CONNECT = 1150;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_D_CLEAR_PRESS_EVENT = 1113;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_D_POWER_OFF = 1118;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_D_ACC_REALTIME_ENABLE = 1115;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_D_ADV_PARAMS_READ = 1120;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_D_ADV_PARAMS_WRITE = 1122;
+    // BXP-B-CR
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_CONNECT = 1150;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_INFO = 1152;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_STATUS = 1154;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_DISMISS_ALARM = 1156;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_LED = 1158;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_BUZZER = 1160;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_CLEAR_PRESS_EVENT = 1162;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_ACC_ENABLE = 1164;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_POWER_OFF = 1167;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_VIBRATION = 1169;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_ALARM_EVENT_ENABLE = 1171;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_ADV_PARAMS_READ = 1174;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_ADV_PARAMS_WRITE = 1176;
+    // BXP-C
+    public static final int CONFIG_MSG_ID_BLE_BXP_C_CONNECT = 1350;
+    public static final int CONFIG_MSG_ID_BLE_BXP_C_INFO = 1352;
+    public static final int CONFIG_MSG_ID_BLE_BXP_C_STATUS = 1354;
+    public static final int CONFIG_MSG_ID_BLE_BXP_C_TH_REALTIME_ENABLE = 1356;
+    public static final int CONFIG_MSG_ID_BLE_BXP_C_ACC_REALTIME_ENABLE = 1359;
+    public static final int CONFIG_MSG_ID_BLE_BXP_C_TH_HISTORY_ENABLE = 1362;
+    public static final int CONFIG_MSG_ID_BLE_BXP_C_TH_HISTORY_CLEAR = 1365;
+    public static final int CONFIG_MSG_ID_BLE_BXP_C_POWER_OFF = 1367;
+    public static final int CONFIG_MSG_ID_BLE_BXP_C_TH_SAMPLE_RATE_READ = 1369;
+    public static final int CONFIG_MSG_ID_BLE_BXP_C_TH_SAMPLE_RATE_WRITE = 1371;
+    public static final int CONFIG_MSG_ID_BLE_BXP_C_ADV_PARAMS_READ = 1373;
+    public static final int CONFIG_MSG_ID_BLE_BXP_C_ADV_PARAMS_WRITE = 1375;
+    // BXP-D
+    public static final int CONFIG_MSG_ID_BLE_BXP_D_CONNECT = 1400;
+    public static final int CONFIG_MSG_ID_BLE_BXP_D_INFO = 1402;
+    public static final int CONFIG_MSG_ID_BLE_BXP_D_STATUS = 1404;
+    public static final int CONFIG_MSG_ID_BLE_BXP_D_ACC_PARAMS_READ = 1406;
+    public static final int CONFIG_MSG_ID_BLE_BXP_D_ACC_PARAMS_WRITE = 1408;
+    public static final int CONFIG_MSG_ID_BLE_BXP_D_ACC_ACCURACY_READ = 1410;
+    public static final int CONFIG_MSG_ID_BLE_BXP_D_ACC_ACCURACY_WRITE = 1412;
+    public static final int CONFIG_MSG_ID_BLE_BXP_D_ACC_REALTIME_ENABLE = 1414;
+    public static final int CONFIG_MSG_ID_BLE_BXP_D_POWER_OFF = 1417;
+    public static final int CONFIG_MSG_ID_BLE_BXP_D_ADV_PARAMS_READ = 1419;
+    public static final int CONFIG_MSG_ID_BLE_BXP_D_ADV_PARAMS_WRITE = 1421;
+    // BXP-T
+    public static final int CONFIG_MSG_ID_BLE_BXP_T_CONNECT = 1450;
+    public static final int CONFIG_MSG_ID_BLE_BXP_T_INFO = 1452;
+    public static final int CONFIG_MSG_ID_BLE_BXP_T_STATUS = 1454;
+    public static final int CONFIG_MSG_ID_BLE_BXP_T_ACC_PARAMS_READ = 1456;
+    public static final int CONFIG_MSG_ID_BLE_BXP_T_ACC_PARAMS_WRITE = 1458;
+    public static final int CONFIG_MSG_ID_BLE_BXP_T_MOTION_EVENT = 1460;
+    public static final int CONFIG_MSG_ID_BLE_BXP_T_MOTION_EVENT_CLEAR = 1462;
+    public static final int CONFIG_MSG_ID_BLE_BXP_T_LED = 1464;
+    public static final int CONFIG_MSG_ID_BLE_BXP_T_ACC_REALTIME_ENABLE = 1466;
+    public static final int CONFIG_MSG_ID_BLE_BXP_T_POWER_OFF = 1469;
+    public static final int CONFIG_MSG_ID_BLE_BXP_T_ADV_PARAMS_READ = 1471;
+    public static final int CONFIG_MSG_ID_BLE_BXP_T_ADV_PARAMS_WRITE = 1473;
+    // BXP-S
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_CONNECT = 1500;
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_INFO = 1502;
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_STATUS = 1504;
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_TH_REALTIME_ENABLE = 1506;
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_ACC_REALTIME_ENABLE = 1509;
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_TH_HISTORY_ENABLE = 1512;
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_TH_HISTORY_CLEAR = 1515;
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_TH_SAMPLE_RATE_READ = 1517;
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_TH_SAMPLE_RATE_WRITE = 1519;
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_HALL_EVENT = 1521;
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_HALL_EVENT_CLEAR = 1523;
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_LED = 1525;
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_POWER_OFF = 1527;
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_ADV_PARAMS_READ = 1529;
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_ADV_PARAMS_WRITE = 1531;
+    // PIR
+    public static final int CONFIG_MSG_ID_BLE_MK_PIR_CONNECT = 1550;
+    public static final int CONFIG_MSG_ID_BLE_MK_PIR_INFO = 1552;
+    public static final int CONFIG_MSG_ID_BLE_MK_PIR_STATUS = 1554;
+    public static final int CONFIG_MSG_ID_BLE_MK_PIR_ENABLE = 1556;
+    public static final int CONFIG_MSG_ID_BLE_MK_PIR_SENSITIVITY_READ = 1559;
+    public static final int CONFIG_MSG_ID_BLE_MK_PIR_SENSITIVITY_WRITE = 1561;
+    public static final int CONFIG_MSG_ID_BLE_MK_PIR_DELAY_READ = 1563;
+    public static final int CONFIG_MSG_ID_BLE_MK_PIR_DELAY_WRITE = 1565;
+    public static final int CONFIG_MSG_ID_BLE_MK_PIR_POWER_OFF = 1567;
+    public static final int CONFIG_MSG_ID_BLE_MK_PIR_ADV_PARAMS_READ = 1569;
+    public static final int CONFIG_MSG_ID_BLE_MK_PIR_ADV_PARAMS_WRITE = 1571;
+    // TOF
+    public static final int CONFIG_MSG_ID_BLE_MK_TOF_CONNECT = 1600;
+    public static final int CONFIG_MSG_ID_BLE_MK_TOF_INFO = 1602;
+    public static final int CONFIG_MSG_ID_BLE_MK_TOF_STATUS = 1604;
+    public static final int CONFIG_MSG_ID_BLE_MK_TOF_ACC_REALTIME_ENABLE = 1606;
+    public static final int CONFIG_MSG_ID_BLE_MK_TOF_POWER_OFF = 1609;
+    public static final int CONFIG_MSG_ID_BLE_MK_TOF_ADV_PARAMS_READ = 1611;
+    public static final int CONFIG_MSG_ID_BLE_MK_TOF_ADV_PARAMS_WRITE = 1613;
+    public static final int CONFIG_MSG_ID_BLE_MK_TOF_SENSOR_PARAMS_READ = 1615;
+    public static final int CONFIG_MSG_ID_BLE_MK_TOF_SENSOR_PARAMS_WRITE = 1617;
+    public static final int CONFIG_MSG_ID_BLE_MK_TOF_RANGE_MODE_READ = 1619;
+    public static final int CONFIG_MSG_ID_BLE_MK_TOF_RANGE_MODE_WRITE = 1621;
+    public static final int CONFIG_MSG_ID_BLE_MK_TOF_ENABLE = 1623;
+    // COMMON
     public static final int CONFIG_MSG_ID_BLE_DISCONNECT = 1200;
     public static final int CONFIG_MSG_ID_BLE_DFU = 1202;
+    public static final int CONFIG_MSG_ID_BLE_DFU_BATCH = 1205;
     public static final int CONFIG_MSG_ID_BLE_OTHER_CONNECT = 1300;
     public static final int CONFIG_MSG_ID_BLE_OTHER_INFO = 1303;
     public static final int CONFIG_MSG_ID_BLE_OTHER_CHANGE_NOTIFY_ENABLE = 1305;
     public static final int CONFIG_MSG_ID_BLE_OTHER_READ_CHAR_VALUE = 1307;
     public static final int CONFIG_MSG_ID_BLE_OTHER_WRITE_CHAR_VALUE = 1309;
-    public static final int CONFIG_MSG_ID_BLE_BXP_HISTORY_TH_ENABLE = 1164;
-    public static final int CONFIG_MSG_ID_BLE_BXP_HISTORY_LIGHT_ENABLE = 1170;
-    public static final int CONFIG_MSG_ID_BLE_BXP_HISTORY_TH_DATA_CLEAR = 1157;
-    public static final int CONFIG_MSG_ID_BLE_BXP_HISTORY_LIGHT_DATA_CLEAR = 1159;
-    public static final int CONFIG_MSG_ID_BLE_BXP_ACC_ENABLE = 1173;
-    public static final int CONFIG_MSG_ID_BLE_BXP_REALTIME_TH_ENABLE = 1161;
-    public static final int CONFIG_MSG_ID_BLE_BXP_REALTIME_LIGHT_ENABLE = 1167;
+
+
+    ///////////////////////////////////////////////////////////////////////////
     // READ
+    ///////////////////////////////////////////////////////////////////////////
     public static final int READ_MSG_ID_BUTTON_RESET = 2001;
     public static final int READ_MSG_ID_DEVICE_INFO = 2002;
     public static final int READ_MSG_ID_NETWORK_REPORT_INTERVAL = 2003;
@@ -99,8 +202,13 @@ public class MQTTConstants {
     public static final int READ_MSG_ID_UPLOAD_DATA_OPTION = 2059;
     public static final int READ_MSG_ID_FILTER_PHY = 2060;
     public static final int READ_MSG_ID_BEACON_PARAMS = 2061;
+    public static final int READ_MSG_ID_FILTER_TOF = 2062;
+    public static final int READ_MSG_ID_UPLOAD_DATA_INTERVAL = 2063;
     public static final int READ_MSG_ID_BLE_CONNECTED_LIST = 2201;
+    public static final int READ_MSG_ID_BLE_CONNECT_TIMEOUT = 2209;
+    ///////////////////////////////////////////////////////////////////////////
     // NOTIFY
+    ///////////////////////////////////////////////////////////////////////////
     public static final int NOTIFY_MSG_ID_NETWORKING_STATUS = 3004;
     public static final int NOTIFY_MSG_ID_OTA_RESULT = 3007;
     public static final int NOTIFY_MSG_ID_OTA_BLE_RESULT = 3016;
@@ -108,19 +216,136 @@ public class MQTTConstants {
     public static final int NOTIFY_MSG_ID_WIFI_CERT_RESULT = 3022;
     public static final int NOTIFY_MSG_ID_MQTT_CERT_RESULT = 3032;
     public static final int NOTIFY_MSG_ID_BLE_SCAN_RESULT = 3070;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_BUTTON_CONNECT_RESULT = 3101;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_C_CONNECT_RESULT = 3151;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_C_INFO = 3153;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_C_POWER_OFF = 3156;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_BUTTON_INFO = 3103;
+    // BXP-B-D
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_D_CONNECT_RESULT = 3101;
     public static final int NOTIFY_MSG_ID_BLE_BXP_BUTTON_STATUS = 3105;
     public static final int NOTIFY_MSG_ID_BLE_BXP_BUTTON_DISMISS_ALARM = 3107;
     public static final int NOTIFY_MSG_ID_BLE_BXP_BUTTON_DISCONNECTED = 3108;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_C_DISCONNECTED = 3154;
     public static final int NOTIFY_MSG_ID_BLE_BXP_BUTTON_LED = 3110;
     public static final int NOTIFY_MSG_ID_BLE_BXP_BUTTON_BUZZER = 3112;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_D_INFO = 3103;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_D_STATUS = 3105;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_D_DISMISS_ALARM = 3107;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_D_CLEAR_PRESS_EVENT = 3114;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_D_ACC_REALTIME_ENABLE = 3116;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_D_ACC_REALTIME_DATA = 3117;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_D_POWER_OFF = 3119;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_D_ADV_PARAMS_READ = 3121;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_D_ADV_PARAMS_WRITE = 3123;
+    // BXP-B-CR
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_INFO = 3153;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_CONNECT_RESULT = 3151;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_STATUS = 3155;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_DISMISS_ALARM = 3157;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_LED = 3159;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_BUZZER = 3161;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_CLEAR_PRESS_EVENT = 3163;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_ACC_ENABLE = 3165;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_ACC_DATA = 3166;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_POWER_OFF = 3168;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_VIBRATION = 3170;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_ALARM_EVENT_ENABLE = 3172;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_ALARM_EVENT_DATA = 3173;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_ADV_PARAMS_READ = 3175;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_ADV_PARAMS_WRITE = 3177;
+    // BXP-C
+    public static final int NOTIFY_MSG_ID_BLE_BXP_C_CONNECT_RESULT = 3351;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_C_INFO = 3353;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_C_STATUS = 3355;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_C_TH_REALTIME_ENABLE = 3357;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_C_TH_REALTIME_DATA = 3358;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_C_ACC_REALTIME_ENABLE = 3360;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_C_ACC_REALTIME_DATA = 3361;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_C_TH_HISTORY_ENABLE = 3363;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_C_TH_HISTORY_DATA = 3364;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_C_TH_HISTORY_CLEAR = 1366;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_C_POWER_OFF = 3368;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_C_TH_SAMPLE_RATE_READ = 3370;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_C_TH_SAMPLE_RATE_WRITE = 3372;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_C_ADV_PARAMS_READ = 3374;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_C_ADV_PARAMS_WRITE = 3376;
+    // BXP-D
+    public static final int NOTIFY_MSG_ID_BLE_BXP_D_CONNECT_RESULT = 3401;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_D_INFO = 3403;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_D_STATUS = 3405;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_D_ACC_PARAMS_READ = 3407;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_D_ACC_PARAMS_WRITE = 3409;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_D_ACC_ACCURACY_READ = 3411;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_D_ACC_ACCURACY_WRITE = 3413;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_D_ACC_REALTIME_ENABLE = 3415;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_D_ACC_REALTIME_DATA = 3416;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_D_POWER_OFF = 3418;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_D_ADV_PARAMS_READ = 3420;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_D_ADV_PARAMS_WRITE = 3422;
+    // BXP-T
+    public static final int NOTIFY_MSG_ID_BLE_BXP_T_CONNECT_RESULT = 3451;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_T_INFO = 3453;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_T_STATUS = 3455;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_T_ACC_PARAMS_READ = 3457;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_T_ACC_PARAMS_WRITE = 3459;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_T_MOTION_EVENT = 3461;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_T_MOTION_EVENT_CLEAR = 3463;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_T_LED = 3465;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_T_ACC_REALTIME_ENABLE = 3467;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_T_ACC_REALTIME_DATA = 3468;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_T_POWER_OFF = 3470;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_T_ADV_PARAMS_READ = 3472;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_T_ADV_PARAMS_WRITE = 3474;
+    // BXP-S
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_CONNECT_RESULT = 3501;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_INFO = 3503;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_STATUS = 3505;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_TH_REALTIME_ENABLE = 3507;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_TH_REALTIME_DATA = 3508;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_ACC_REALTIME_ENABLE = 3510;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_ACC_REALTIME_DATA = 3511;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_TH_HISTORY_ENABLE = 3513;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_TH_HISTORY_DATA = 3514;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_TH_HISTORY_CLEAR = 3516;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_TH_SAMPLE_RATE_READ = 3518;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_TH_SAMPLE_RATE_WRITE = 3520;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_EVENT_HALL = 3522;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_HALL_EVENT_CLEAR = 3524;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_LED = 3526;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_POWER_OFF = 3528;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_ADV_PARAMS_READ = 3530;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_ADV_PARAMS_WRITE = 3532;
+    // PIR
+    public static final int NOTIFY_MSG_ID_BLE_MK_PIR_CONNECT_RESULT = 3551;
+    public static final int NOTIFY_MSG_ID_BLE_MK_PIR_INFO = 3553;
+    public static final int NOTIFY_MSG_ID_BLE_MK_PIR_STATUS = 3554;
+    public static final int NOTIFY_MSG_ID_BLE_MK_PIR_ENABLE = 3557;
+    public static final int NOTIFY_MSG_ID_BLE_MK_PIR_DATA = 3558;
+    public static final int NOTIFY_MSG_ID_BLE_MK_PIR_SENSITIVITY_READ = 3560;
+    public static final int NOTIFY_MSG_ID_BLE_MK_PIR_SENSITIVITY_WRITE = 3562;
+    public static final int NOTIFY_MSG_ID_BLE_MK_PIR_DELAY_READ = 3564;
+    public static final int NOTIFY_MSG_ID_BLE_MK_PIR_DELAY_WRITE = 3566;
+    public static final int NOTIFY_MSG_ID_BLE_MK_PIR_POWER_OFF = 3568;
+    public static final int NOTIFY_MSG_ID_BLE_MK_PIR_ADV_PARAMS_READ = 3570;
+    public static final int NOTIFY_MSG_ID_BLE_MK_PIR_ADV_PARAMS_WRITE = 3572;
+    // TOF
+    public static final int NOTIFY_MSG_ID_BLE_MK_TOF_CONNECT_RESULT = 3601;
+    public static final int NOTIFY_MSG_ID_BLE_MK_TOF_INFO = 3603;
+    public static final int NOTIFY_MSG_ID_BLE_MK_TOF_STATUS = 3605;
+    public static final int NOTIFY_MSG_ID_BLE_MK_TOF_ACC_REALTIME_ENABLE = 3607;
+    public static final int NOTIFY_MSG_ID_BLE_MK_TOF_ACC_REALTIME_DATA = 3608;
+    public static final int NOTIFY_MSG_ID_BLE_MK_TOF_POWER_OFF = 3610;
+    public static final int NOTIFY_MSG_ID_BLE_MK_TOF_ADV_PARAMS_READ = 3612;
+    public static final int NOTIFY_MSG_ID_BLE_MK_TOF_ADV_PARAMS_WRITE = 3614;
+    public static final int NOTIFY_MSG_ID_BLE_MK_TOF_SENSOR_PARAMS_READ = 3616;
+    public static final int NOTIFY_MSG_ID_BLE_MK_TOF_SENSOR_PARAMS_WRITE = 3618;
+    public static final int NOTIFY_MSG_ID_BLE_MK_TOF_RANGE_MODE_READ = 3620;
+    public static final int NOTIFY_MSG_ID_BLE_MK_TOF_RANGE_MODE_WRITE = 3622;
+    public static final int NOTIFY_MSG_ID_BLE_MK_TOF_ENABLE = 3624;
+    public static final int NOTIFY_MSG_ID_BLE_MK_TOF_DATA = 3625;
+    // DFU
     public static final int NOTIFY_MSG_ID_BLE_DFU_PERCENT = 3203;
     public static final int NOTIFY_MSG_ID_BLE_DFU_RESULT = 3204;
+    public static final int NOTIFY_MSG_ID_BLE_DFU_PERCENT_BATCH = 3206;
+    public static final int NOTIFY_MSG_ID_BLE_DFU_RESULT_BATCH = 3207;
+    public static final int NOTIFY_MSG_ID_BLE_DFU_FAILED_BATCH = 3208;
+    public static final int NOTIFY_MSG_ID_BLE_DISCONNECT = 3210;
+    // OTHER
     public static final int NOTIFY_MSG_ID_BLE_OTHER_CONNECT_RESULT = 3301;
     public static final int NOTIFY_MSG_ID_BLE_OTHER_DISCONNECTED = 3302;
     public static final int NOTIFY_MSG_ID_BLE_OTHER_INFO = 3304;
@@ -129,16 +354,4 @@ public class MQTTConstants {
     public static final int NOTIFY_MSG_ID_BLE_OTHER_WRITE_CHAR_VALUE = 3310;
     public static final int NOTIFY_MSG_ID_BLE_OTHER_NOTIFY_CHAR_VALUE = 3311;
     public static final int NOTIFY_MSG_ID_OFFLINE = 3999;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_HISTORY_TH_ENABLE = 3165;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_HISTORY_TH_DATA = 3166;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_HISTORY_LIGHT_ENABLE = 3171;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_HISTORY_LIGHT_DATA = 3172;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_HISTORY_TH_DATA_CLEAR = 3158;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_HISTORY_LIGHT_DATA_CLEAR = 3160;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_ACC_ENABLE = 3174;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_ACC_DATA = 3175;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_REALTIME_TH_ENABLE = 3162;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_REALTIME_TH_DATA = 3163;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_REALTIME_LIGHT_ENABLE = 3168;
-    public static final int NOTIFY_MSG_ID_BLE_BXP_REALTIME_LIGHT_DATA = 3169;
 }

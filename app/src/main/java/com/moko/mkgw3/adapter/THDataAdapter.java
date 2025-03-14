@@ -17,18 +17,15 @@ import java.util.Locale;
  */
 public class THDataAdapter extends BaseQuickAdapter<THData, BaseViewHolder> {
     private final SimpleDateFormat sdf;
-    private final String flag;
-    private final String FLAG_TYPE = "history";
 
-    public THDataAdapter(String flag) {
+    public THDataAdapter() {
         super(R.layout.item_th_data);
-        this.flag = flag;
         sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
     }
 
     @Override
     protected void convert(BaseViewHolder helper, THData item) {
-        helper.setText(R.id.tvTime, sdf.format(new Date(item.timestamp * (FLAG_TYPE.equals(flag) ? 1000 : 1))).replace(" ", "\n"));
+        helper.setText(R.id.tvTime, sdf.format(new Date(item.timestamp * 1000)).replace(" ", "\n"));
         helper.setText(R.id.tvTemperature, item.temperature);
         helper.setText(R.id.tvHumidity, item.humidity);
     }

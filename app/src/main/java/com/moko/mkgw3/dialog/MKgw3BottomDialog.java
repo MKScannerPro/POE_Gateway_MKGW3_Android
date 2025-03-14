@@ -6,10 +6,10 @@ import android.view.ViewGroup;
 
 import com.moko.mkgw3.databinding.DialogBottomMkgw3Binding;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class MKgw3BottomDialog extends MokoBaseDialog<DialogBottomMkgw3Binding> {
-    private ArrayList<String> mDatas;
+    private List<String> mDatas;
     private int mIndex;
 
     @Override
@@ -40,7 +40,7 @@ public class MKgw3BottomDialog extends MokoBaseDialog<DialogBottomMkgw3Binding> 
         return 0.7f;
     }
 
-    public void setDatas(ArrayList<String> datas, int index) {
+    public void setDatas(List<String> datas, int index) {
         this.mDatas = datas;
         this.mIndex = index;
     }

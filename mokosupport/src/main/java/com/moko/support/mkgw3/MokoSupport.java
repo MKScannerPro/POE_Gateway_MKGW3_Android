@@ -13,11 +13,13 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.support.mkgw3.entity.OrderCHAR;
 import com.moko.support.mkgw3.handler.MokoCharacteristicHandler;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -121,12 +123,54 @@ public class MokoSupport extends MokoBleLib {
         return responseUUID.equals(orderCHAR.getUuid());
     }
 
+    private String dataBytesStr = "";
+
     @Override
     public boolean orderNotify(BluetoothGattCharacteristic characteristic, byte[] value) {
         final UUID responseUUID = characteristic.getUuid();
         OrderCHAR orderCHAR = null;
         if (responseUUID.equals(OrderCHAR.CHAR_DISCONNECTED_NOTIFY.getUuid())) {
             orderCHAR = OrderCHAR.CHAR_DISCONNECTED_NOTIFY;
+        }
+        if (responseUUID.equals(OrderCHAR.CHAR_PARAMS.getUuid())) {
+            if (value != null && value.length > 2 && (value[2] & 0Xff) == 0x51) {
+                orderCHAR = OrderCHAR.CHAR_PARAMS;
+                final int cmd = value[2] & 0xFF;
+                final int packetCount = value[3] & 0xFF;
+                final int indexPack = value[4] & 0xFF;
+                final int length = value[5] & 0xFF;
+                if (indexPack < (packetCount - 1)) {
+                    byte[] remainBytes = Arrays.copyOfRange(value, 6, 6 + length);
+                    dataBytesStr += MokoUtils.bytesToHexString(remainBytes);
+                } else {
+                    if (length == 0) {
+                        byte[] data = new byte[5];
+                        data[0] = (byte) 0xEE;
+                        data[1] = (byte) 0x02;
+                        data[2] = (byte) cmd;
+                        data[3] = 0;
+                        data[4] = 0;
+                        value = data;
+                    } else {
+                        byte[] remainBytes = Arrays.copyOfRange(value, 6, 6 + length);
+                        dataBytesStr += MokoUtils.bytesToHexString(remainBytes);
+                        byte[] dataBytes = MokoUtils.hex2bytes(dataBytesStr);
+                        int dataLength = dataBytes.length;
+                        byte[] dataLengthBytes = MokoUtils.toByteArray(dataLength, 2);
+                        byte[] data = new byte[dataLength + 5];
+                        data[0] = (byte) 0xEE;
+                        data[1] = (byte) 0x02;
+                        data[2] = (byte) cmd;
+                        data[3] = dataLengthBytes[0];
+                        data[4] = dataLengthBytes[1];
+                        for (int i = 0; i < dataLength; i++) {
+                            data[i + 5] = dataBytes[i];
+                        }
+                        dataBytesStr = "";
+                        value = data;
+                    }
+                }
+            }
         }
         if (orderCHAR == null)
             return false;

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="12dp"
+    tools:viewBindingIgnore="true">
+
+    <TextView
+        android:id="@+id/tv_mfg_code_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Code 1"
+        android:textColor="@color/black_333333"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@id/et_mfg_code"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_mfg_code" />
+
+
+    <EditText
+        android:id="@+id/et_mfg_code"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:digits="0123456789abcdefABCDEF"
+        android:hint="2 Bytes"
+        android:maxLength="4"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:textColor="@color/black_333333"
+        android:textColorHint="@color/grey_d9d9d9"
+        android:textSize="15sp"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.8" />
+</androidx.constraintlayout.widget.ConstraintLayout>
