@@ -20,11 +20,11 @@ public class AlarmEventDataAdapter extends BaseQuickAdapter<AlarmEventData, Base
 
     @Override
     protected void convert(BaseViewHolder helper, AlarmEventData item) {
-        helper.setText(R.id.tvTimestamp, sdf.format(new Date(item.timeStamp)));
+        helper.setText(R.id.tvTimestamp, sdf.format(new Date(item.timestamp)));
         String mode;
-        if (item.alarmType == 0) {
+        if (item.type == 0) {
             mode = "Single press mode";
-        } else if (item.alarmType == 1) {
+        } else if (item.type == 1) {
             mode = "Double press mode";
         } else {
             mode = "Long press mode";

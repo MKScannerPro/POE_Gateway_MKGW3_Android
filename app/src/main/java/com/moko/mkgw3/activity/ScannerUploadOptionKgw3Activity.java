@@ -80,7 +80,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
         mDuplicateDataValues.add("MAC+DATA TYPE");
         mDuplicateDataValues.add("MAC+RAW DATA");
         mBind.clDuplicateDataFilter.setVisibility(mMokoDeviceKgw3.deviceType != 0 ? View.VISIBLE : View.GONE);
-        mBind.tvDuplicateDataFilter.setVisibility(mMokoDeviceKgw3.deviceType != 0 ? View.GONE : View.VISIBLE);
+        mBind.rlDuplicateDataFilter.setVisibility(mMokoDeviceKgw3.deviceType != 0 ? View.GONE : View.VISIBLE);
         mBind.tvUploadDataInterval.setVisibility(mMokoDeviceKgw3.deviceType != 0 ? View.VISIBLE : View.GONE);
         mHandler.postDelayed(() -> {
             dismissLoadingProgressDialog();

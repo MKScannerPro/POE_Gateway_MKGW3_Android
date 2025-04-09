@@ -91,7 +91,6 @@
                 android:minHeight="30dp"
                 android:onClick="onLedReminderColor"
                 android:text="Green"
-                android:tag="0"
                 android:textColor="@color/white_ffffff"
                 android:textSize="15sp"
                 app:layout_constraintRight_toRightOf="parent"

@@ -55,7 +55,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
         mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
 
         mBind.rlFilterByMKTOF.setVisibility(mMokoDeviceKgw3.deviceType != 0 ? View.VISIBLE : View.GONE);
-        mBind.tvFilterByBxpTag.setText(mMokoDeviceKgw3.deviceType != 0 ? "BXP - Tag/Sensor" : "BXP - Tag");
+        mBind.tvFilterByBxpTagTitle.setText(mMokoDeviceKgw3.deviceType != 0 ? "BXP - Tag/Sensor" : "BXP - Tag");
 
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.postDelayed(() -> {

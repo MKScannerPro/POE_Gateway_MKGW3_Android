@@ -25,6 +25,7 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_NTP_ENABLE(0x10),
     KEY_NTP_URL(0x11),
     KEY_NTP_TIME_ZONE(0x12),
+    KEY_BLE_FIRMWARE_VERSION(0x13),
     // MQTT
     KEY_MQTT_HOST(0x20),
     KEY_MQTT_PORT(0x21),

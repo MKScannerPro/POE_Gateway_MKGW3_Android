@@ -683,7 +683,9 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK)
+        if (resultCode != RESULT_OK || (requestCode != AppConstants.REQUEST_CODE_SELECT_CA
+                && requestCode != AppConstants.REQUEST_CODE_SELECT_CLIENT_CERT
+                && requestCode != AppConstants.REQUEST_CODE_SELECT_CLIENT_KEY))
             return;
         //得到uri，后面就是将uri转化成file的过程。
         Uri uri = data.getData();

@@ -53,7 +53,7 @@
             android:id="@+id/tvTriggerType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Trigger type:"
+            android:text="ADV:"
             android:textStyle="bold" />
 
         <include

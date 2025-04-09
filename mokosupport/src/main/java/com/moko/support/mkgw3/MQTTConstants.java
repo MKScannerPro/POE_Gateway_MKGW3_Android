@@ -313,7 +313,7 @@ public class MQTTConstants {
     // PIR
     public static final int NOTIFY_MSG_ID_BLE_MK_PIR_CONNECT_RESULT = 3551;
     public static final int NOTIFY_MSG_ID_BLE_MK_PIR_INFO = 3553;
-    public static final int NOTIFY_MSG_ID_BLE_MK_PIR_STATUS = 3554;
+    public static final int NOTIFY_MSG_ID_BLE_MK_PIR_STATUS = 3555;
     public static final int NOTIFY_MSG_ID_BLE_MK_PIR_ENABLE = 3557;
     public static final int NOTIFY_MSG_ID_BLE_MK_PIR_DATA = 3558;
     public static final int NOTIFY_MSG_ID_BLE_MK_PIR_SENSITIVITY_READ = 3560;

@@ -160,7 +160,7 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
         }.getType();
         MsgNotify<Object> msgNotify = new Gson().fromJson(message, type);
         final String mac = msgNotify.device_info.mac;
-        if (!mDeviceMqttConfig.staMac.equals(mac)) {
+        if (mDeviceMqttConfig == null || !mDeviceMqttConfig.staMac.equals(mac)) {
             return;
         }
         if (donutProgress == null)
@@ -271,6 +271,7 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
     public void onDeviceInfo(View view) {
         if (isWindowLocked()) return;
         Intent intent = new Intent(this, DeviceInformationKgw3Activity.class);
+        intent.putExtra(AppConstants.EXTRA_KEY_SELECTED_DEVICE_TYPE, mSelectedDeviceType);
         startActivity(intent);
     }
 
@@ -282,7 +283,8 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
             dialog.setConfirm("OK");
             dialog.setCancelGone();
             dialog.setOnAlertConfirmListener(() -> {
-                subscribeTopic();
+                if (mIsMQTTConfigFinished)
+                    subscribeTopic();
                 Intent modifyIntent = new Intent(DeviceConfigKgw3Activity.this, MKGW3MainActivity.class);
                 modifyIntent.putExtra(AppConstants.EXTRA_KEY_FROM_ACTIVITY, TAG);
                 if (mDeviceMqttConfig != null) {
@@ -314,6 +316,7 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
                     }
                     modifyIntent.putExtra(AppConstants.EXTRA_KEY_MAC, mokoDeviceKgw3.mac);
                 }
+                MokoSupport.getInstance().disConnectBle();
                 startActivity(modifyIntent);
             });
             dialog.show(getSupportFragmentManager());

@@ -165,7 +165,7 @@ public class AdvSettingsMkgw3Activity extends BaseActivity<ActivityAdvSettingsKg
             int progress = rssi1m + 100;
             mBind.sbRssiFilter.setProgress(progress);
             connectable = result.data.get("connectable").getAsInt();
-            mBind.cbConnectable.setChecked(connectable == 0);
+            mBind.cbConnectable.setChecked(connectable == 1);
         }
         if (msg_id == MQTTConstants.CONFIG_MSG_ID_BEACON_PARAMS) {
             Type type = new TypeToken<MsgConfigResult>() {
@@ -303,7 +303,7 @@ public class AdvSettingsMkgw3Activity extends BaseActivity<ActivityAdvSettingsKg
                                 case KEY_I_BEACON_CONNECTABLE:
                                     if (length == 1) {
                                         int result = value[4] & 0xff;
-                                        mBind.cbConnectable.setChecked(result == 0);
+                                        mBind.cbConnectable.setChecked(result == 1);
                                     }
                                     break;
                             }

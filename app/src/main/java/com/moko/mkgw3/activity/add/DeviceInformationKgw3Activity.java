@@ -8,6 +8,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
+import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityDeviceInformationKgw3Binding;
 import com.moko.support.mkgw3.MokoSupport;
@@ -26,6 +27,7 @@ public class DeviceInformationKgw3Activity extends BaseActivity<ActivityDeviceIn
 
     @Override
     protected void onCreate() {
+        int selectedDeviceType = getIntent().getIntExtra(AppConstants.EXTRA_KEY_SELECTED_DEVICE_TYPE, -1);
         showLoadingProgressDialog();
         mBind.tvDeviceName.postDelayed(() -> {
             List<OrderTask> orderTasks = new ArrayList<>();
@@ -35,6 +37,10 @@ public class DeviceInformationKgw3Activity extends BaseActivity<ActivityDeviceIn
             orderTasks.add(OrderTaskAssembler.getFirmwareVersion());
             orderTasks.add(OrderTaskAssembler.getHardwareVersion());
             orderTasks.add(OrderTaskAssembler.getSoftwareVersion());
+            if (selectedDeviceType != 0) {
+                mBind.tvBleFirmwareVersion.setVisibility(View.VISIBLE);
+                orderTasks.add(OrderTaskAssembler.getBleFirmwareVersion());
+            }
             orderTasks.add(OrderTaskAssembler.getWifiMac());
             orderTasks.add(OrderTaskAssembler.getEthernetMac());
             orderTasks.add(OrderTaskAssembler.getBleMac());
@@ -77,7 +83,7 @@ public class DeviceInformationKgw3Activity extends BaseActivity<ActivityDeviceIn
                     mBind.tvManufacturer.setText(new String(value));
                     break;
                 case CHAR_FIRMWARE_REVISION:
-                    mBind.tvDeviceFirmwareVersion.setText(new String(value));
+                    mBind.tvWifiFirmwareVersion.setText(new String(value));
                     break;
                 case CHAR_HARDWARE_REVISION:
                     mBind.tvDeviceHardwareVersion.setText(new String(value));
@@ -115,6 +121,10 @@ public class DeviceInformationKgw3Activity extends BaseActivity<ActivityDeviceIn
                                     case KEY_ETHERNET_MAC:
                                         byte[] ethernetMacBytes = Arrays.copyOfRange(value, 4, 4 + length);
                                         mBind.tvEthernetMac.setText(MokoUtils.bytesToHexString(ethernetMacBytes).toUpperCase());
+                                        break;
+                                    case KEY_BLE_FIRMWARE_VERSION:
+                                        byte[] bleFirmwareVersionBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                        mBind.tvBleFirmwareVersion.setText(MokoUtils.bytesToHexString(bleFirmwareVersionBytes));
                                         break;
 
                                 }

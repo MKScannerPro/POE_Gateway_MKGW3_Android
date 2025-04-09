@@ -42,13 +42,16 @@
     <string name="more_device_info">Device information</string>
 
     <string name="device_info_manufacturer">Manufacturer</string>
-    <string name="device_info_device_name">Device name</string>
+    <string name="device_info_device_name">Device Name</string>
     <string name="device_info_product_model">Product Model</string>
     <string name="device_info_hardware_version">Hardware Version</string>
     <string name="device_info_software_version">Software Version</string>
     <string name="device_info_firmware_version">Firmware Version</string>
-    <string name="device_info_sta_mac">WIFI STA MAC</string>
-    <string name="device_info_bt_mac">BT MAC</string>
+    <string name="device_info_wifi_firmware_version">WIFI Firmware Version</string>
+    <string name="device_info_ble_firmware_version">BLE Firmware Version</string>
+    <string name="device_info_wifi_mac">WIFI MAC</string>
+    <string name="device_info_eth_mac">Ethernet MAC</string>
+    <string name="device_info_ble_mac">BLE MAC</string>
 
     <string name="permission_storage_close_content">Please find it in cellphone setting- permission, and allow MKGW3 use the Storage and location permission</string>
     <string name="permission_ble_close_content">Please find it in cellphone setting- permission, and allow MKGW3 use the bluetooth and location permission</string>

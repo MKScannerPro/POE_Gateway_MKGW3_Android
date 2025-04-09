@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_f2f2f2"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/blue_0188cc">
+
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:drawableLeft="@drawable/back"
+            android:drawablePadding="6dp"
+            android:gravity="center_vertical"
+            android:onClick="onBack"
+            android:paddingLeft="16dp"
+            android:text=""
+            android:textColor="@color/white_ffffff"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Advertisement parameters"
+            android:textColor="@color/white_ffffff"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clSlot1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_radius_white_bg"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/tvSlot1Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="5dp"
+                    android:text="Slot1:No data"
+                    android:textColor="@color/black_333333"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvSlot1Config"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/shape_radius_blue_btn_bg"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:minWidth="70dp"
+                    android:minHeight="30dp"
+                    android:onClick="onSlot1Config"
+                    android:text="Set"
+                    android:textColor="@color/white_ffffff"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tvSlot1Title"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/llSlot1NormalAdv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvSlot1Title">
+
+                    <TextView
+                        android:id="@+id/tvSlot1NormalAdvType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Normal ADV:"
+                        android:textStyle="bold" />
+
+                    <include
+                        android:id="@+id/layoutSlot1Normal"
+                        layout="@layout/layout_adv_params" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/llSlot1AfterAdv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvSlot1Title">
+
+                    <TextView
+                        android:id="@+id/tvSlot1AfterAdvType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ADV after trigger"
+                        android:textStyle="bold" />
+
+                    <include
+                        android:id="@+id/layoutSlot1AfterAdv"
+                        layout="@layout/layout_adv_params" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/llSlot1BeforeAndAfterAdv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvSlot1Title">
+
+                    <TextView
+                        android:id="@+id/tvSlot1BeforeAdvType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ADV before trigger"
+                        android:textStyle="bold" />
+
+                    <include
+                        android:id="@+id/layoutSlot1BeforeAdv"
+                        layout="@layout/layout_adv_params" />
+
+                    <TextView
+                        android:id="@+id/tvSlot1TriggerAdvType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="ADV after trigger"
+                        android:textStyle="bold" />
+
+                    <include
+                        android:id="@+id/layoutSlot1TriggerAdv"
+                        layout="@layout/layout_adv_params" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clSlot2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_radius_white_bg"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/tvSlot2Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="5dp"
+                    android:text="Slot2:No data"
+                    android:textColor="@color/black_333333"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvSlot2Config"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/shape_radius_blue_btn_bg"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:minWidth="70dp"
+                    android:minHeight="30dp"
+                    android:onClick="onSlot2Config"
+                    android:text="Set"
+                    android:textColor="@color/white_ffffff"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tvSlot2Title"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/llSlot2NormalAdv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvSlot2Title">
+
+                    <TextView
+                        android:id="@+id/tvSlot2NormalAdvType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Normal ADV"
+                        android:textStyle="bold" />
+
+                    <include
+                        android:id="@+id/layoutSlot2Normal"
+                        layout="@layout/layout_adv_params" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/llSlot2AfterAdv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvSlot2Title">
+
+                    <TextView
+                        android:id="@+id/tvSlot2AfterAdvType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ADV after trigger"
+                        android:textStyle="bold" />
+
+                    <include
+                        android:id="@+id/layoutSlot2AfterAdv"
+                        layout="@layout/layout_adv_params" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/llSlot2BeforeAndAfterAdv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvSlot2Title">
+
+                    <TextView
+                        android:id="@+id/tvSlot2BeforeAdvType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ADV before trigger"
+                        android:textStyle="bold" />
+
+                    <include
+                        android:id="@+id/layoutSlot2BeforeAdv"
+                        layout="@layout/layout_adv_params" />
+
+                    <TextView
+                        android:id="@+id/tvSlot2TriggerAdvType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="ADV after trigger"
+                        android:textStyle="bold" />
+
+                    <include
+                        android:id="@+id/layoutSlot2TriggerAdv"
+                        layout="@layout/layout_adv_params" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clSlot3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_radius_white_bg"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/tvSlot3Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="5dp"
+                    android:text="Slot 3:No data"
+                    android:textColor="@color/black_333333"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvSlot3Config"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/shape_radius_blue_btn_bg"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:minWidth="70dp"
+                    android:minHeight="30dp"
+                    android:onClick="onSlot3Config"
+                    android:text="Set"
+                    android:textColor="@color/white_ffffff"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tvSlot3Title"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/llSlot3NormalAdv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvSlot3Title">
+
+                    <TextView
+                        android:id="@+id/tvSlot3NormalAdvType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Normal ADV"
+                        android:textStyle="bold" />
+
+                    <include
+                        android:id="@+id/layoutSlot3Normal"
+                        layout="@layout/layout_adv_params" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/llSlot3AfterAdv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvSlot3Title">
+
+                    <TextView
+                        android:id="@+id/tvSlot3AfterAdvType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ADV after trigger"
+                        android:textStyle="bold" />
+
+                    <include
+                        android:id="@+id/layoutSlot3AfterAdv"
+                        layout="@layout/layout_adv_params" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/llSlot3BeforeAndAfterAdv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvSlot3Title">
+
+                    <TextView
+                        android:id="@+id/tvSlot3BeforeAdvType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ADV before trigger"
+                        android:textStyle="bold" />
+
+                    <include
+                        android:id="@+id/layoutSlot3BeforeAdv"
+                        layout="@layout/layout_adv_params" />
+
+                    <TextView
+                        android:id="@+id/tvSlot3TriggerAdvType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="ADV after trigger"
+                        android:textStyle="bold" />
+
+                    <include
+                        android:id="@+id/layoutSlot3TriggerAdv"
+                        layout="@layout/layout_adv_params" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

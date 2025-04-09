@@ -134,7 +134,6 @@ public class MokoSupport extends MokoBleLib {
         }
         if (responseUUID.equals(OrderCHAR.CHAR_PARAMS.getUuid())) {
             if (value != null && value.length > 2 && (value[2] & 0Xff) == 0x51) {
-                orderCHAR = OrderCHAR.CHAR_PARAMS;
                 final int cmd = value[2] & 0xFF;
                 final int packetCount = value[3] & 0xFF;
                 final int indexPack = value[4] & 0xFF;
@@ -142,7 +141,9 @@ public class MokoSupport extends MokoBleLib {
                 if (indexPack < (packetCount - 1)) {
                     byte[] remainBytes = Arrays.copyOfRange(value, 6, 6 + length);
                     dataBytesStr += MokoUtils.bytesToHexString(remainBytes);
+                    return true;
                 } else {
+                    orderCHAR = OrderCHAR.CHAR_PARAMS;
                     if (length == 0) {
                         byte[] data = new byte[5];
                         data[0] = (byte) 0xEE;

@@ -6,8 +6,6 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.elvishew.xlog.XLog;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -15,17 +13,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
-import com.moko.mkgw3.activity.ble.BXPBCRGW3Activity;
-import com.moko.mkgw3.activity.ble.BXPButtonInfoKgw3Activity;
-import com.moko.mkgw3.activity.ble.BXPBDGW3Activity;
-import com.moko.mkgw3.activity.ble.BXPDGW3Activity;
-import com.moko.mkgw3.activity.ble.BXPSGW3Activity;
-import com.moko.mkgw3.activity.ble.BXPTGW3Activity;
-import com.moko.mkgw3.activity.ble.BleOtherInfoKgw3Activity;
-import com.moko.mkgw3.activity.ble.BXPCGW3Activity;
-import com.moko.mkgw3.activity.ble.MKPIRGW3Activity;
-import com.moko.mkgw3.activity.ble.MKTOFGW3Activity;
-import com.moko.mkgw3.activity.ble.SelectBeaconTypeActivity;
+import com.moko.mkgw3.activity.beacon.BXPBCRGW3Activity;
+import com.moko.mkgw3.activity.beacon.BXPBDGW3Activity;
+import com.moko.mkgw3.activity.beacon.BXPButtonInfoKgw3Activity;
+import com.moko.mkgw3.activity.beacon.BXPCGW3Activity;
+import com.moko.mkgw3.activity.beacon.BXPDGW3Activity;
+import com.moko.mkgw3.activity.beacon.BXPSGW3Activity;
+import com.moko.mkgw3.activity.beacon.BXPTGW3Activity;
+import com.moko.mkgw3.activity.beacon.BleOtherInfoKgw3Activity;
+import com.moko.mkgw3.activity.beacon.MKPIRGW3Activity;
+import com.moko.mkgw3.activity.beacon.MKTOFGW3Activity;
 import com.moko.mkgw3.adapter.ScanDeviceKgw3Adapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityDetailKgw3Binding;
@@ -53,6 +50,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class DeviceDetailKgw3Activity extends BaseActivity<ActivityDetailKgw3Binding> {
     public static final String TAG = DeviceDetailKgw3Activity.class.getSimpleName();

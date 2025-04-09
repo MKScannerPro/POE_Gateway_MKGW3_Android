@@ -1,6 +1,8 @@
 package com.moko.mkgw3.activity.add;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -33,6 +35,8 @@ public class NearbyWifiKgw3Activity extends BaseActivity<ActivityNearbyWifiKgw3B
     private NearbyWifiKgw3Adapter mAdapter;
     private ArrayList<WifiInfo> mWifiInfoList;
 
+    private Handler mHandler;
+
     @Override
     protected void onCreate() {
         mWifiInfoList = new ArrayList<>();
@@ -50,6 +54,7 @@ public class NearbyWifiKgw3Activity extends BaseActivity<ActivityNearbyWifiKgw3B
             showLoadingProgressDialog();
             MokoSupport.getInstance().sendOrder(OrderTaskAssembler.getNearbyWifi());
         });
+        mHandler = new Handler(Looper.getMainLooper());
     }
 
     @Override
@@ -97,6 +102,8 @@ public class NearbyWifiKgw3Activity extends BaseActivity<ActivityNearbyWifiKgw3B
                                     ToastUtils.showToast(this, "Setup failed！");
                                 } else {
                                     ToastUtils.showToast(this, "Setup succeed！");
+                                    showLoadingProgressDialog();
+                                    mHandler.postDelayed(this::dismissLoadingProgressDialog, 3000);
                                 }
                             }
                         }
@@ -117,6 +124,8 @@ public class NearbyWifiKgw3Activity extends BaseActivity<ActivityNearbyWifiKgw3B
                     if (header == 0xEE && flag == 0x02) {
                         ParamsLongKeyEnum configKeyEnum = ParamsLongKeyEnum.fromParamKey(cmd);
                         if (configKeyEnum == ParamsLongKeyEnum.KEY_WIFI_SEARCH_RESULT) {
+                            mHandler.removeMessages(0);
+                            dismissLoadingProgressDialog();
                             int length = MokoUtils.toInt(Arrays.copyOfRange(value, 3, 5));
                             byte[] tlvResult = Arrays.copyOfRange(value, 5, 5 + length);
                             String bssid = "";
@@ -125,7 +134,14 @@ public class NearbyWifiKgw3Activity extends BaseActivity<ActivityNearbyWifiKgw3B
                                 int t = tlvResult[i++];
                                 int l = tlvResult[i++];
                                 if (t == 0x00) {
-                                    bssid = new String(Arrays.copyOfRange(tlvResult, i, i + l));
+                                    String macHex = MokoUtils.bytesToHexString(Arrays.copyOfRange(tlvResult, i, i + l));
+                                    StringBuilder builder = new StringBuilder(macHex);
+                                    builder.insert(2, ":");
+                                    builder.insert(5, ":");
+                                    builder.insert(8, ":");
+                                    builder.insert(11, ":");
+                                    builder.insert(14, ":");
+                                    bssid = builder.toString();
                                 }
                                 if (t == 0x01) {
                                     ssid = new String(Arrays.copyOfRange(tlvResult, i, i + l));
@@ -160,5 +176,6 @@ public class NearbyWifiKgw3Activity extends BaseActivity<ActivityNearbyWifiKgw3B
         assert wifiInfo != null;
         intent.putExtra("ssid", wifiInfo.ssid);
         setResult(RESULT_OK, intent);
+        finish();
     }
 }

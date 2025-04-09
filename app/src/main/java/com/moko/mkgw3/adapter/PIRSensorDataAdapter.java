@@ -20,7 +20,7 @@ public class PIRSensorDataAdapter extends BaseQuickAdapter<PIRSensorData, BaseVi
 
     @Override
     protected void convert(BaseViewHolder helper, PIRSensorData item) {
-        helper.setText(R.id.tvTimestamp, sdf.format(new Date(item.timestamp)));
+        helper.setText(R.id.tvTimestamp, sdf.format(new Date(item.timestamp * 1000)));
         String sensor = String.format("%s/%s",
                 item.hall_status == 1 ? "Door open" : "Door close",
                 item.pir_status == 1 ? "occupied" : "not occupied");

@@ -80,7 +80,11 @@ public class DeviceInfoKgw3Activity extends BaseActivity<ActivityDeviceInformati
             mBind.tvManufacturer.setText(result.data.get("company_name").getAsString());
             mBind.tvDeviceHardwareVersion.setText(result.data.get("hardware_version").getAsString());
             mBind.tvDeviceSoftwareVersion.setText(result.data.get("software_version").getAsString());
-            mBind.tvDeviceFirmwareVersion.setText(result.data.get("firmware_version").getAsString());
+            mBind.tvWifiFirmwareVersion.setText(result.data.get("firmware_version").getAsString());
+            if (result.data.has("sl_ble_version")) {
+                mBind.llBleFirmwareVersion.setVisibility(View.VISIBLE);
+                mBind.tvBleFirmwareVersion.setText(result.data.get("sl_ble_version").getAsString());
+            }
             mBind.tvDeviceStaMac.setText(result.device_info.mac.toUpperCase());
             mBind.tvDeviceBtMac.setText(result.data.get("ble_mac").getAsString().toUpperCase());
             mBind.tvEthernetMac.setText(result.data.get("eth_mac").getAsString().toUpperCase());

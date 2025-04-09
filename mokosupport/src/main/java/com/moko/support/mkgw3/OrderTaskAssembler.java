@@ -122,6 +122,11 @@ public class OrderTaskAssembler {
         task.setData(ParamsKeyEnum.KEY_NTP_TIME_ZONE);
         return task;
     }
+    public static OrderTask getBleFirmwareVersion() {
+        ParamsTask task = new ParamsTask();
+        task.setData(ParamsKeyEnum.KEY_BLE_FIRMWARE_VERSION);
+        return task;
+    }
 
     public static OrderTask getMQTTHost() {
         ParamsTask task = new ParamsTask();

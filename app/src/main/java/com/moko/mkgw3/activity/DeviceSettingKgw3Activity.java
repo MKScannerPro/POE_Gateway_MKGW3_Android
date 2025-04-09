@@ -1,6 +1,5 @@
 package com.moko.mkgw3.activity;
 
-import android.bluetooth.le.AdvertiseSettings;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;

@@ -6,7 +6,6 @@ import com.moko.mkgw3.R;
 import com.moko.support.mkgw3.entity.AccData;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -25,7 +24,7 @@ public class AccDataAdapter extends BaseQuickAdapter<AccData, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder helper, AccData item) {
-        helper.setText(R.id.tvTimestamp, sdf.format(new Date(item.timeStamp)));
+        helper.setText(R.id.tvTimestamp, sdf.format(new Date(item.timeStamp * 1000)));
         helper.setText(R.id.tvAxisData, "X-axis: " + item.x_axis_data +
                 ", Y-axis: " + item.y_axis_data + ", Z-axis: " + item.z_axis_data);
     }

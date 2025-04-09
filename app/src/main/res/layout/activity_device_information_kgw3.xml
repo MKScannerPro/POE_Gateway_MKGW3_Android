@@ -127,12 +127,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1.0"
-            android:text="@string/device_info_firmware_version"
+            android:text="@string/device_info_hardware_version"
             android:textColor="@color/black_333333"
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/tv_device_firmware_version"
+            android:id="@+id/tv_device_hardware_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -174,6 +174,7 @@
         style="@style/divider_line"
         android:background="@color/grey_d9d9d9" />
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -185,12 +186,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1.0"
-            android:text="@string/device_info_hardware_version"
+            android:text="@string/device_info_wifi_firmware_version"
             android:textColor="@color/black_333333"
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/tv_device_hardware_version"
+            android:id="@+id/tv_wifi_firmware_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -203,6 +204,42 @@
         style="@style/divider_line"
         android:background="@color/grey_d9d9d9" />
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llBleFirmwareVersion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1.0"
+                android:text="@string/device_info_ble_firmware_version"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_ble_firmware_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+
+        <View
+            style="@style/divider_line"
+            android:background="@color/grey_d9d9d9" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -214,7 +251,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1.0"
-            android:text="@string/device_info_sta_mac"
+            android:text="@string/device_info_wifi_mac"
             android:textColor="@color/black_333333"
             android:textSize="15sp" />
 
@@ -270,7 +307,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1.0"
-            android:text="@string/device_info_bt_mac"
+            android:text="@string/device_info_ble_mac"
             android:textColor="@color/black_333333"
             android:textSize="15sp" />
 

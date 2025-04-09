@@ -20,7 +20,7 @@ public class TOFSensorDataAdapter extends BaseQuickAdapter<TOFSensorData, BaseVi
 
     @Override
     protected void convert(BaseViewHolder helper, TOFSensorData item) {
-        helper.setText(R.id.tvTimestamp, sdf.format(new Date(item.timestamp)));
+        helper.setText(R.id.tvTimestamp, sdf.format(new Date(item.timestamp * 1000)));
         String sensor = String.format(Locale.getDefault(), "%dmm", item.distance);
         helper.setText(R.id.tvSensorData, sensor);
     }
