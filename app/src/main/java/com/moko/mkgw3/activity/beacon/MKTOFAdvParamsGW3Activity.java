@@ -16,7 +16,7 @@ import com.moko.mkgw3.databinding.ActivityMkAdvParamsKgw3Binding;
 import com.moko.mkgw3.dialog.MKgw3BottomDialog;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
-import com.moko.mkgw3.entity.TxPowerEnum;
+import com.moko.mkgw3.entity.TxPowerPIREnum;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.mkgw3.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
@@ -57,7 +57,6 @@ public class MKTOFAdvParamsGW3Activity extends BaseActivity<ActivityMkAdvParamsK
         mTxPowerArray.add("-8 dBm");
         mTxPowerArray.add("-4 dBm");
         mTxPowerArray.add("0 dBm");
-        mTxPowerArray.add("3 dBm");
         mTxPowerArray.add("4 dBm");
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.postDelayed(() -> {
@@ -170,14 +169,14 @@ public class MKTOFAdvParamsGW3Activity extends BaseActivity<ActivityMkAdvParamsK
     public void onTxPower(View view) {
         if (isWindowLocked()) return;
         int txPower = (int) view.getTag();
-        TxPowerEnum txPowerEnum = TxPowerEnum.fromTxPower(txPower);
+        TxPowerPIREnum txPowerEnum = TxPowerPIREnum.fromTxPower(txPower);
         if (txPowerEnum == null) return;
         int selected = txPowerEnum.ordinal();
         MKgw3BottomDialog dialog = new MKgw3BottomDialog();
         dialog.setDatas(mTxPowerArray, selected);
         dialog.setListener(value -> {
             ((TextView) view).setText(mTxPowerArray.get(value));
-            int txPowerValue = TxPowerEnum.fromOrdinal(value).getTxPower();
+            int txPowerValue = TxPowerPIREnum.fromOrdinal(value).getTxPower();
             view.setTag(txPowerValue);
         });
         dialog.show(getSupportFragmentManager());
