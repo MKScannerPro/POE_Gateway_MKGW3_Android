@@ -55,7 +55,7 @@ public class BXPCRAlarmEventGW3Activity extends BaseActivity<ActivityAlarmEventD
     private final StringBuilder exportStr = new StringBuilder();
     private final String title = "alarm_event_data";
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-    private int mSyncCount;
+    private int mAlarmType;
 
     @Override
     protected ActivityAlarmEventDataKgw3Binding getViewBinding() {
@@ -97,24 +97,30 @@ public class BXPCRAlarmEventGW3Activity extends BaseActivity<ActivityAlarmEventD
             if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             int code = result.data.get("result_code").getAsInt();
             if (code == 0) {
-                mSyncCount++;
+                mAlarmType++;
             }
-            if (mSyncCount == 3) {
+            if (mAlarmType == 1) {
+                if (!isSync) {
+                    mBind.ivSync.startAnimation(animation);
+                    mBind.tvSync.setText("Stop");
+                }
+            }
+            if (mAlarmType == 3) {
                 dismissLoadingProgressDialog();
                 mHandler.removeMessages(0);
                 ToastUtils.showToast(this, "Setup succeed！");
                 if (code == 0) {
-                    if (!isSync) {
-                        isSync = true;
-                        mBind.ivSync.startAnimation(animation);
-                        mBind.tvSync.setText("Stop");
-                    } else {
-                        isSync = false;
+                    if (isSync) {
                         mBind.ivSync.clearAnimation();
                         mBind.tvSync.setText("Sync");
                     }
+                    isSync = !isSync;
                 }
+                return;
             }
+            mBind.tvTitle.postDelayed(() -> {
+                changeNotifyStatus(!isSync ? 1 : 0, mAlarmType);
+            }, 1000);
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_B_CR_ALARM_EVENT_DATA) {
             //历史温湿度数据
@@ -157,7 +163,8 @@ public class BXPCRAlarmEventGW3Activity extends BaseActivity<ActivityAlarmEventD
 //            dataList.clear();
 //            adapter.replaceData(dataList);
 //        }
-        changeNotifyStatus(!isSync ? 1 : 0);
+        mAlarmType = 0;
+        changeNotifyStatus(!isSync ? 1 : 0, mAlarmType);
     }
 
     public void onExport(View view) {
@@ -204,36 +211,15 @@ public class BXPCRAlarmEventGW3Activity extends BaseActivity<ActivityAlarmEventD
         return file;
     }
 
-    private void changeNotifyStatus(int status) {
-        mSyncCount = 0;
+    private void changeNotifyStatus(int status, int type) {
         int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_B_CR_ALARM_EVENT_ENABLE;
         JsonObject jsonObjectSingle = new JsonObject();
         jsonObjectSingle.addProperty("mac", mac);
-        jsonObjectSingle.addProperty("type", 0);
+        jsonObjectSingle.addProperty("type", type);
         jsonObjectSingle.addProperty("switch_value", status);
         String messageSingle = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObjectSingle);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, messageSingle, msgId, appMqttConfig.qos);
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-        JsonObject jsonObjectDouble = new JsonObject();
-        jsonObjectDouble.addProperty("mac", mac);
-        jsonObjectDouble.addProperty("type", 1);
-        jsonObjectDouble.addProperty("switch_value", status);
-        String messageDouble = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObjectDouble);
-        try {
-            MQTTSupport.getInstance().publish(mAppTopic, messageDouble, msgId, appMqttConfig.qos);
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-        JsonObject jsonObjectLong = new JsonObject();
-        jsonObjectLong.addProperty("mac", mac);
-        jsonObjectLong.addProperty("type", 2);
-        jsonObjectLong.addProperty("switch_value", status);
-        String messageLong = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObjectLong);
-        try {
-            MQTTSupport.getInstance().publish(mAppTopic, messageLong, msgId, appMqttConfig.qos);
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -250,7 +236,11 @@ public class BXPCRAlarmEventGW3Activity extends BaseActivity<ActivityAlarmEventD
 
     private void back() {
         EventBus.getDefault().unregister(this);
-        if (isSync) changeNotifyStatus(0);
+        if (isSync) {
+            changeNotifyStatus(0, 0);
+            changeNotifyStatus(0, 1);
+            changeNotifyStatus(0, 2);
+        }
         finish();
     }
 }
