@@ -27,7 +27,7 @@
             android:onClick="onBack"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/back" />
+            android:src="@drawable/ic_back" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_device_name"
@@ -280,7 +280,7 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/white_ffffff"
-                android:drawableEnd="@drawable/arrow_right"
+                android:drawableEnd="@drawable/ic_arrow_right"
                 android:gravity="center_vertical"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
@@ -294,7 +294,7 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="1dp"
                 android:background="@color/white_ffffff"
-                android:drawableEnd="@drawable/arrow_right"
+                android:drawableEnd="@drawable/ic_arrow_right"
                 android:gravity="center_vertical"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
@@ -308,7 +308,7 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="1dp"
                 android:background="@color/white_ffffff"
-                android:drawableEnd="@drawable/arrow_right"
+                android:drawableEnd="@drawable/ic_arrow_right"
                 android:gravity="center_vertical"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
@@ -322,7 +322,7 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="1dp"
                 android:background="@color/white_ffffff"
-                android:drawableEnd="@drawable/arrow_right"
+                android:drawableEnd="@drawable/ic_arrow_right"
                 android:gravity="center_vertical"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
@@ -336,7 +336,7 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="1dp"
                 android:background="@color/white_ffffff"
-                android:drawableEnd="@drawable/arrow_right"
+                android:drawableEnd="@drawable/ic_arrow_right"
                 android:gravity="center_vertical"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"

@@ -28,22 +28,22 @@ import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityBleDevicesKgw3Binding;
 import com.moko.mkgw3.db.MKgw3DBTools;
 import com.moko.mkgw3.dialog.BeaconTypeDialogKgw3;
-import com.moko.mkgw3.dialog.PasswordBleDialogKgw3;
-import com.moko.mkgw3.dialog.ScanFilterDialog;
+import com.moko.lib.scannerui.dialog.PasswordBleDialog;
+import com.moko.lib.scannerui.dialog.ScanFilterDialog;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
-import com.moko.mkgw3.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
-import com.moko.support.mkgw3.MQTTSupport;
+import com.moko.lib.mqtt.MQTTSupport;
 import com.moko.support.mkgw3.MokoSupport;
 import com.moko.support.mkgw3.entity.BeaconInfo;
 import com.moko.support.mkgw3.entity.BleDevice;
-import com.moko.support.mkgw3.entity.MsgNotify;
+import com.moko.lib.mqtt.entity.MsgNotify;
 import com.moko.support.mkgw3.entity.OtherDeviceInfo;
-import com.moko.support.mkgw3.event.DeviceModifyNameEvent;
-import com.moko.support.mkgw3.event.DeviceOnlineEvent;
-import com.moko.support.mkgw3.event.MQTTMessageArrivedEvent;
+import com.moko.lib.mqtt.event.DeviceModifyNameEvent;
+import com.moko.lib.mqtt.event.DeviceOnlineEvent;
+import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.EventBus;
@@ -377,7 +377,7 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
                 showLoadingProgressDialog();
                 getBleDeviceInfo(bleDevice);
             } else {
-                final PasswordBleDialogKgw3 dialog = new PasswordBleDialogKgw3();
+                final PasswordBleDialog dialog = new PasswordBleDialog();
                 dialog.setOnPasswordClicked(password -> {
                     if (!MokoSupport.getInstance().isBluetoothOpen()) {
                         MokoSupport.getInstance().enableBluetooth();

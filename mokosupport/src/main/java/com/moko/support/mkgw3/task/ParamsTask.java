@@ -791,7 +791,7 @@ public class ParamsTask extends OrderTask {
     }
 
     public void setReportInterval(@IntRange(from = 0, to = 86400) int interval) {
-        byte[] dataBytes = MokoUtils.toByteArray(interval, 24);
+        byte[] dataBytes = MokoUtils.toByteArray(interval, 4);
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,

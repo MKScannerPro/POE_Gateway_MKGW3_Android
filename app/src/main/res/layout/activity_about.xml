@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:onClick="back"
             android:padding="16dp"
-            android:src="@drawable/back" />
+            android:src="@drawable/ic_back" />
     </RelativeLayout>
 
     <ScrollView
@@ -52,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:src="@drawable/about_logo" />
+                android:src="@drawable/ic_moko_logo" />
 
             <TextView
                 android:id="@+id/tv_soft_version"
@@ -81,7 +81,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_fax"
+                        android:drawableLeft="@drawable/ic_about_fax"
                         android:drawablePadding="10dp"
                         android:gravity="center_vertical"
                         android:text="Fax"
@@ -113,7 +113,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_tel"
+                        android:drawableLeft="@drawable/ic_about_tel"
                         android:drawablePadding="10dp"
                         android:gravity="center_vertical"
                         android:text="Tel"
@@ -145,7 +145,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="12dp"
                         android:layout_marginTop="12dp"
-                        android:drawableLeft="@drawable/ic_address"
+                        android:drawableLeft="@drawable/ic_about_address"
                         android:drawablePadding="10dp"
                         android:gravity="center_vertical"
                         android:text="Add"
@@ -177,7 +177,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_manual"
+                        android:drawableLeft="@drawable/ic_about_manual"
                         android:drawablePadding="10dp"
                         android:gravity="center_vertical"
                         android:text="Website"

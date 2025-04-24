@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.FragmentGeneralAppKgw3Binding;
-import com.moko.mkgw3.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 
 public class GeneralKgw3Fragment extends Fragment {
 

@@ -15,7 +15,7 @@ import com.moko.mkgw3.adapter.NearbyWifiKgw3Adapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityNearbyWifiKgw3Binding;
 import com.moko.mkgw3.entity.WifiInfo;
-import com.moko.mkgw3.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.mkgw3.MokoSupport;
 import com.moko.support.mkgw3.OrderTaskAssembler;
 import com.moko.support.mkgw3.entity.OrderCHAR;

@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.moko.mkgw3.activity.modify.ModifyMQTTSettingsKgw3Activity;
 import com.moko.mkgw3.databinding.FragmentSslDeviceUrlKgw3Binding;
-import com.moko.mkgw3.dialog.MKgw3BottomDialog;
+import com.moko.lib.scannerui.dialog.BottomDialog;
 
 import java.util.ArrayList;
 
@@ -160,7 +160,7 @@ public class SSLDeviceUrlKgw3Fragment extends Fragment {
     }
 
     public void selectCertificate() {
-        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
+        BottomDialog dialog = new BottomDialog();
         dialog.setDatas(values, selected);
         dialog.setListener(value -> {
             selected = value;

@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.FragmentLwtKgw3Binding;
-import com.moko.mkgw3.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 
 public class LWTKgw3Fragment extends Fragment {
     private static final String TAG = LWTKgw3Fragment.class.getSimpleName();

@@ -20,7 +20,7 @@ public class DeviceKgw3Adapter extends BaseQuickAdapter<MokoDeviceKgw3, BaseView
         if (!item.isOnline) {
             helper.setText(R.id.tv_device_status, mContext.getString(R.string.device_state_offline));
             helper.setTextColor(R.id.tv_device_status, ContextCompat.getColor(mContext, R.color.grey_b3b3b3));
-            helper.setImageResource(R.id.iv_net_status, item.networkType == 1 ? R.drawable.ic_net_offline : R.drawable.ethernet_offline);
+            helper.setImageResource(R.id.iv_net_status, item.networkType == 1 ? R.drawable.ic_net_offline : R.drawable.ic_ethernet_offline);
         } else {
             helper.setText(R.id.tv_device_status, mContext.getString(R.string.device_state_online));
             helper.setTextColor(R.id.tv_device_status, ContextCompat.getColor(mContext, R.color.blue_0188cc));
@@ -33,7 +33,7 @@ public class DeviceKgw3Adapter extends BaseQuickAdapter<MokoDeviceKgw3, BaseView
                     helper.setImageResource(R.id.iv_net_status, R.drawable.ic_net_poor);
                 }
             } else {
-                helper.setImageResource(R.id.iv_net_status, R.drawable.ethernet_online);
+                helper.setImageResource(R.id.iv_net_status, R.drawable.ic_ethernet_online);
             }
         }
     }

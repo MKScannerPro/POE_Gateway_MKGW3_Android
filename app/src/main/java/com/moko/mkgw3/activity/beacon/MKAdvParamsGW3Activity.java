@@ -10,21 +10,20 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.moko.lib.mqtt.MQTTSupport;
+import com.moko.lib.mqtt.entity.MsgNotify;
+import com.moko.lib.mqtt.event.DeviceOnlineEvent;
+import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
+import com.moko.lib.scannerui.dialog.BottomDialog;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityMkAdvParamsKgw3Binding;
-import com.moko.mkgw3.dialog.MKgw3BottomDialog;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
-import com.moko.mkgw3.entity.TxPowerPIREnum;
 import com.moko.mkgw3.utils.SPUtiles;
-import com.moko.mkgw3.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
-import com.moko.support.mkgw3.MQTTSupport;
 import com.moko.support.mkgw3.entity.BeaconInfo;
-import com.moko.support.mkgw3.entity.MsgNotify;
-import com.moko.support.mkgw3.event.DeviceOnlineEvent;
-import com.moko.support.mkgw3.event.MQTTMessageArrivedEvent;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,7 +31,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class MKAdvParamsGW3Activity extends BaseActivity<ActivityMkAdvParamsKgw3Binding> {
     private MokoDeviceKgw3 mMokoDeviceKgw3;
@@ -102,8 +100,8 @@ public class MKAdvParamsGW3Activity extends BaseActivity<ActivityMkAdvParamsKgw3
             }
             int txPower = result.data.get("tx_power").getAsInt();
             int advInterval = result.data.get("adv_interval").getAsInt();
-            mBind.layoutAdvParams.tvTxPower.setText(String.format(Locale.getDefault(), "%d dBm", txPower));
-            mBind.layoutAdvParams.tvTxPower.setTag(txPower);
+            mBind.layoutAdvParams.tvTxPower.setText(mTxPowerArray.get(7 - txPower));
+            mBind.layoutAdvParams.tvTxPower.setTag(7 - txPower);
             mBind.layoutAdvParams.etAdvInterval.setText(String.valueOf(advInterval));
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_DISCONNECT) {
@@ -169,15 +167,11 @@ public class MKAdvParamsGW3Activity extends BaseActivity<ActivityMkAdvParamsKgw3
     public void onTxPower(View view) {
         if (isWindowLocked()) return;
         int txPower = (int) view.getTag();
-        TxPowerPIREnum pirEnum = TxPowerPIREnum.fromTxPower(txPower);
-        if (pirEnum == null) return;
-        int selected = pirEnum.ordinal();
-        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
-        dialog.setDatas(mTxPowerArray, selected);
+        BottomDialog dialog = new BottomDialog();
+        dialog.setDatas(mTxPowerArray, txPower);
         dialog.setListener(value -> {
             ((TextView) view).setText(mTxPowerArray.get(value));
-            int txPowerValue = TxPowerPIREnum.fromOrdinal(value).getTxPower();
-            view.setTag(txPowerValue);
+            view.setTag(value);
         });
         dialog.show(getSupportFragmentManager());
     }
@@ -190,7 +184,7 @@ public class MKAdvParamsGW3Activity extends BaseActivity<ActivityMkAdvParamsKgw3
         int interval = Integer.parseInt(advIntervalStr);
         int txPower = (int) mBind.layoutAdvParams.tvTxPower.getTag();
         jsonObject.addProperty("adv_interval", interval);
-        jsonObject.addProperty("tx_power", txPower);
+        jsonObject.addProperty("tx_power", txPower + 7);
         String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);

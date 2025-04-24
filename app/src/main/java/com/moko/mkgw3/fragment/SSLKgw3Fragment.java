@@ -16,9 +16,9 @@ import androidx.fragment.app.Fragment;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.FragmentSslAppKgw3Binding;
-import com.moko.mkgw3.dialog.MKgw3BottomDialog;
+import com.moko.lib.scannerui.dialog.BottomDialog;
 import com.moko.mkgw3.utils.FileUtils;
-import com.moko.mkgw3.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -165,7 +165,7 @@ public class SSLKgw3Fragment extends Fragment {
     }
 
     public void selectCertificate() {
-        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
+        BottomDialog dialog = new BottomDialog();
         dialog.setDatas(values, selected);
         dialog.setListener(value -> {
             selected = value;

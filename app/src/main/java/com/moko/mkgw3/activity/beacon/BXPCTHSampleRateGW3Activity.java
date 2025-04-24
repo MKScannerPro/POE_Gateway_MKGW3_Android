@@ -15,13 +15,13 @@ import com.moko.mkgw3.databinding.ActivityBxpCThSampleRateKgw3Binding;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
-import com.moko.mkgw3.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
-import com.moko.support.mkgw3.MQTTSupport;
+import com.moko.lib.mqtt.MQTTSupport;
 import com.moko.support.mkgw3.entity.BeaconInfo;
-import com.moko.support.mkgw3.entity.MsgNotify;
-import com.moko.support.mkgw3.event.DeviceOnlineEvent;
-import com.moko.support.mkgw3.event.MQTTMessageArrivedEvent;
+import com.moko.lib.mqtt.entity.MsgNotify;
+import com.moko.lib.mqtt.event.DeviceOnlineEvent;
+import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.Subscribe;

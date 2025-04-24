@@ -18,21 +18,25 @@ import com.elvishew.xlog.XLog;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityGuideBinding;
-import com.moko.mkgw3.dialog.PermissionDialog;
+import com.moko.lib.scannerui.dialog.PermissionDialog;
 import com.moko.mkgw3.utils.Utils;
-import com.moko.support.mkgw3.event.MQTTConnectionCompleteEvent;
+import com.moko.lib.mqtt.event.MQTTConnectionCompleteEvent;
 import com.permissionx.guolindev.PermissionX;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class GuideActivity extends BaseActivity<ActivityGuideBinding> {
+
+    private String mAppName;
+
     @Override
     protected void onCreate() {
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();
             return;
         }
+        mAppName = getString(R.string.app_name);
         requestPermission();
     }
 
@@ -49,8 +53,8 @@ public class GuideActivity extends BaseActivity<ActivityGuideBinding> {
                 return;
             }
             if (!isWriteStoragePermissionOpen() || !isLocationPermissionOpen()) {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION}, getResources().getString(R.string.permission_storage_need_content),
-                        getResources().getString(R.string.permission_storage_close_content));
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION}, getResources().getString(R.string.permission_storage_need_content, mAppName, mAppName),
+                        getResources().getString(R.string.permission_storage_close_content, mAppName));
                 return;
             }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
@@ -61,8 +65,8 @@ public class GuideActivity extends BaseActivity<ActivityGuideBinding> {
             }
             //申请定位权限 BLUETOOTH BLUETOOTH_ADMIN不属于动态权限
             if (!isLocationPermissionOpen()) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, getResources().getString(R.string.permission_location_need_content),
-                        getResources().getString(R.string.permission_location_close_content));
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, getResources().getString(R.string.permission_location_need_content, mAppName, mAppName),
+                        getResources().getString(R.string.permission_location_close_content, mAppName));
                 return;
             }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -73,8 +77,8 @@ public class GuideActivity extends BaseActivity<ActivityGuideBinding> {
             }
             if (!hasBlePermission() || !isLocationPermissionOpen()) {
                 requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN,
-                                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, getResources().getString(R.string.permission_ble_content),
-                        getResources().getString(R.string.permission_ble_close_content));
+                                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, getResources().getString(R.string.permission_ble_content, mAppName, mAppName),
+                        getResources().getString(R.string.permission_ble_close_content, mAppName));
                 return;
             }
         }
@@ -109,8 +113,8 @@ public class GuideActivity extends BaseActivity<ActivityGuideBinding> {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setCancelable(false)
                 .setTitle(R.string.location_need_title)
-                .setMessage(R.string.location_need_content)
-                .setPositiveButton(getString(R.string.permission_open), (dialog1, which) -> {
+                .setMessage(getString(R.string.location_need_content, mAppName))
+                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
                     Intent intent = new Intent();
                     intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startLauncher.launch(intent);

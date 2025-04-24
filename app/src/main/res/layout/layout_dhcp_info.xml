@@ -30,7 +30,7 @@
             android:id="@+id/img_dhcp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/checkbox_open" />
+            android:src="@drawable/ic_checkbox_open" />
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

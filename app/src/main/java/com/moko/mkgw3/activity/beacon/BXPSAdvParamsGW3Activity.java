@@ -14,20 +14,20 @@ import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityBxpSAdvParamsKgw3Binding;
 import com.moko.mkgw3.databinding.LayoutAdvParamsBinding;
-import com.moko.mkgw3.dialog.MKgw3BottomDialog;
+import com.moko.lib.scannerui.dialog.BottomDialog;
 import com.moko.mkgw3.entity.AdvChannelS;
 import com.moko.mkgw3.entity.AdvChannelSInfo;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.entity.TxPowerEnum;
 import com.moko.mkgw3.utils.SPUtiles;
-import com.moko.mkgw3.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
-import com.moko.support.mkgw3.MQTTSupport;
+import com.moko.lib.mqtt.MQTTSupport;
 import com.moko.support.mkgw3.entity.BeaconInfo;
-import com.moko.support.mkgw3.entity.MsgNotify;
-import com.moko.support.mkgw3.event.DeviceOnlineEvent;
-import com.moko.support.mkgw3.event.MQTTMessageArrivedEvent;
+import com.moko.lib.mqtt.entity.MsgNotify;
+import com.moko.lib.mqtt.event.DeviceOnlineEvent;
+import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.Subscribe;
@@ -441,7 +441,7 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
         TxPowerEnum txPowerEnum = TxPowerEnum.fromTxPower(txPower);
         if (txPowerEnum == null) return;
         int selected = txPowerEnum.ordinal();
-        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
+        BottomDialog dialog = new BottomDialog();
         dialog.setDatas(mTxPowerArray, selected);
         dialog.setListener(value -> {
             ((TextView) view).setText(mTxPowerArray.get(value));

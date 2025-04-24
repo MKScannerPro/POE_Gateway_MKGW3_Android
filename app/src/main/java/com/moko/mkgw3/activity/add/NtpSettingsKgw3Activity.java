@@ -10,8 +10,8 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityNtpSettingsKgw3Binding;
-import com.moko.mkgw3.dialog.MKgw3BottomDialog;
-import com.moko.mkgw3.utils.ToastUtils;
+import com.moko.lib.scannerui.dialog.BottomDialog;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.mkgw3.MokoSupport;
 import com.moko.support.mkgw3.OrderTaskAssembler;
 import com.moko.support.mkgw3.entity.OrderCHAR;
@@ -153,7 +153,7 @@ public class NtpSettingsKgw3Activity extends BaseActivity<ActivityNtpSettingsKgw
 
     public void onSelectTimeZone(View view) {
         if (isWindowLocked()) return;
-        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
+        BottomDialog dialog = new BottomDialog();
         dialog.setDatas(mTimeZones, mSelected);
         dialog.setListener(value -> {
             mSelected = value;

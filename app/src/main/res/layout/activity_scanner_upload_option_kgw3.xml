@@ -24,7 +24,7 @@
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/back" />
+                android:src="@drawable/ic_back" />
 
             <TextView
                 android:id="@+id/tv_name"
@@ -155,7 +155,7 @@
             android:layout_marginTop="1dp"
             android:background="@color/white_ffffff"
             android:clickable="true"
-            android:drawableRight="@drawable/arrow_right"
+            android:drawableRight="@drawable/ic_arrow_right"
             android:gravity="center_vertical"
             android:onClick="onFilterByMac"
             android:paddingLeft="12dp"
@@ -170,7 +170,7 @@
             android:layout_marginTop="1dp"
             android:background="@color/white_ffffff"
             android:clickable="true"
-            android:drawableRight="@drawable/arrow_right"
+            android:drawableRight="@drawable/ic_arrow_right"
             android:gravity="center_vertical"
             android:onClick="onFilterByName"
             android:paddingLeft="12dp"
@@ -185,7 +185,7 @@
             android:layout_marginTop="1dp"
             android:background="@color/white_ffffff"
             android:clickable="true"
-            android:drawableRight="@drawable/arrow_right"
+            android:drawableRight="@drawable/ic_arrow_right"
             android:gravity="center_vertical"
             android:onClick="onFilterByRawData"
             android:paddingLeft="12dp"
@@ -289,7 +289,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
-                android:drawableRight="@drawable/arrow_right"
+                android:drawableRight="@drawable/ic_arrow_right"
                 android:text="Duplicate Data Filter"
                 android:textColor="@color/black_333333"
                 android:textSize="15sp" />
@@ -309,7 +309,7 @@
             android:layout_marginTop="12dp"
             android:background="@color/white_ffffff"
             android:clickable="true"
-            android:drawableRight="@drawable/arrow_right"
+            android:drawableRight="@drawable/ic_arrow_right"
             android:gravity="center_vertical"
             android:onClick="onUploadDataOption"
             android:paddingLeft="12dp"
@@ -327,7 +327,7 @@
             android:layout_marginTop="1dp"
             android:background="@color/white_ffffff"
             android:clickable="true"
-            android:drawableRight="@drawable/arrow_right"
+            android:drawableRight="@drawable/ic_arrow_right"
             android:gravity="center_vertical"
             android:onClick="onUploadDataInterval"
             android:paddingLeft="12dp"

@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.moko.lib.scannerui.dialog.CharWriteDialog;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.activity.DeviceDetailKgw3Activity;
@@ -20,24 +21,23 @@ import com.moko.mkgw3.adapter.BleCharacteristicsAdapterKgw3;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityOtherInfoKgw3Binding;
 import com.moko.mkgw3.db.MKgw3DBTools;
-import com.moko.mkgw3.dialog.AlertMessageDialog;
-import com.moko.mkgw3.dialog.CharWriteDialogKgw3;
+import com.moko.lib.scannerui.dialog.AlertMessageDialog;
 import com.moko.mkgw3.entity.BleOtherChar;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
-import com.moko.mkgw3.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
-import com.moko.support.mkgw3.MQTTSupport;
+import com.moko.lib.mqtt.MQTTSupport;
 import com.moko.support.mkgw3.entity.BleCharResponse;
 import com.moko.support.mkgw3.entity.BleCharacteristic;
 import com.moko.support.mkgw3.entity.BleService;
-import com.moko.support.mkgw3.entity.MsgConfigResult;
-import com.moko.support.mkgw3.entity.MsgNotify;
+import com.moko.lib.mqtt.entity.MsgConfigResult;
+import com.moko.lib.mqtt.entity.MsgNotify;
 import com.moko.support.mkgw3.entity.OtherDeviceInfo;
-import com.moko.support.mkgw3.event.DeviceModifyNameEvent;
-import com.moko.support.mkgw3.event.DeviceOnlineEvent;
-import com.moko.support.mkgw3.event.MQTTMessageArrivedEvent;
+import com.moko.lib.mqtt.event.DeviceModifyNameEvent;
+import com.moko.lib.mqtt.event.DeviceOnlineEvent;
+import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.Subscribe;
@@ -320,7 +320,7 @@ public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3
     }
 
     private void openWriteCharValueDialog(BleOtherChar bleOtherChar) {
-        CharWriteDialogKgw3 dialog = new CharWriteDialogKgw3();
+        CharWriteDialog dialog = new CharWriteDialog();
         dialog.setOnCharWriteClicked(payload -> {
             mHandler.postDelayed(() -> {
                 dismissLoadingProgressDialog();

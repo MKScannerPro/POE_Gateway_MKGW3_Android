@@ -15,7 +15,7 @@
             android:id="@+id/tv_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:drawableLeft="@drawable/back"
+            android:drawableLeft="@drawable/ic_back"
             android:drawablePadding="6dp"
             android:gravity="center_vertical"
             android:onClick="onBack"
@@ -424,7 +424,7 @@
                             android:layout_marginLeft="10dp"
                             android:clickable="true"
                             android:onClick="selectCAFile"
-                            android:src="@drawable/select_file" />
+                            android:src="@drawable/ic_select_file" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -467,7 +467,7 @@
                             android:layout_marginLeft="10dp"
                             android:clickable="true"
                             android:onClick="selectCertFile"
-                            android:src="@drawable/select_file" />
+                            android:src="@drawable/ic_select_file" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -510,7 +510,7 @@
                             android:layout_marginLeft="10dp"
                             android:clickable="true"
                             android:onClick="selectKeyFile"
-                            android:src="@drawable/select_file" />
+                            android:src="@drawable/ic_select_file" />
                     </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

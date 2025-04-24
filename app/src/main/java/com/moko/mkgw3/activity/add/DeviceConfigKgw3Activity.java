@@ -26,20 +26,20 @@ import com.moko.mkgw3.activity.ModifyNameKgw3Activity;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityDeviceConfigKgw3Binding;
 import com.moko.mkgw3.db.MKgw3DBTools;
-import com.moko.mkgw3.dialog.AlertMessageDialog;
-import com.moko.mkgw3.dialog.CustomDialog;
+import com.moko.lib.scannerui.dialog.AlertMessageDialog;
+import com.moko.lib.scannerui.dialog.CustomDialog;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
-import com.moko.mkgw3.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
-import com.moko.support.mkgw3.MQTTSupport;
+import com.moko.lib.mqtt.MQTTSupport;
 import com.moko.support.mkgw3.MokoSupport;
 import com.moko.support.mkgw3.OrderTaskAssembler;
-import com.moko.support.mkgw3.entity.MsgNotify;
+import com.moko.lib.mqtt.entity.MsgNotify;
 import com.moko.support.mkgw3.entity.OrderCHAR;
 import com.moko.support.mkgw3.entity.ParamsKeyEnum;
-import com.moko.support.mkgw3.event.MQTTMessageArrivedEvent;
+import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.EventBus;
@@ -346,7 +346,7 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
 
     private void showConnMqttDialog() {
         isDeviceConnectSuccess = false;
-        View view = LayoutInflater.from(this).inflate(R.layout.mqtt_conn_content, mBind.getRoot(), false);
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_mqtt_conn_content, mBind.getRoot(), false);
         donutProgress = view.findViewById(R.id.dp_progress);
         mqttConnDialog = new CustomDialog.Builder(this)
                 .setContentView(view)

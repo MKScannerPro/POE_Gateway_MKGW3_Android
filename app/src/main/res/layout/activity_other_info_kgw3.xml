@@ -17,7 +17,7 @@
             android:onClick="onBack"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/back" />
+            android:src="@drawable/ic_back" />
 
         <TextView
             android:id="@+id/tv_device_name"

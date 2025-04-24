@@ -32,19 +32,19 @@ import com.moko.mkgw3.activity.settings.SystemTimeKgw3Activity;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityDeviceSettingKgw3Binding;
 import com.moko.mkgw3.db.MKgw3DBTools;
-import com.moko.mkgw3.dialog.AlertMessageDialog;
-import com.moko.mkgw3.dialog.CustomDialog;
+import com.moko.lib.scannerui.dialog.AlertMessageDialog;
+import com.moko.lib.scannerui.dialog.CustomDialog;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
-import com.moko.mkgw3.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
-import com.moko.support.mkgw3.MQTTSupport;
-import com.moko.support.mkgw3.entity.MsgConfigResult;
-import com.moko.support.mkgw3.event.DeviceDeletedEvent;
-import com.moko.support.mkgw3.event.DeviceModifyNameEvent;
-import com.moko.support.mkgw3.event.DeviceOnlineEvent;
-import com.moko.support.mkgw3.event.MQTTMessageArrivedEvent;
+import com.moko.lib.mqtt.MQTTSupport;
+import com.moko.lib.mqtt.entity.MsgConfigResult;
+import com.moko.lib.mqtt.event.DeviceDeletedEvent;
+import com.moko.lib.mqtt.event.DeviceModifyNameEvent;
+import com.moko.lib.mqtt.event.DeviceOnlineEvent;
+import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.EventBus;
@@ -170,7 +170,7 @@ public class DeviceSettingKgw3Activity extends BaseActivity<ActivityDeviceSettin
 
     public void onEditName(View view) {
         if (isWindowLocked()) return;
-        View content = LayoutInflater.from(this).inflate(R.layout.modify_name, mBind.getRoot(), false);
+        View content = LayoutInflater.from(this).inflate(R.layout.layout_modify_name, mBind.getRoot(), false);
         final EditText etDeviceName = content.findViewById(R.id.et_device_name);
         String deviceName = etDeviceName.getText().toString();
         etDeviceName.setText(deviceName);

@@ -25,9 +25,9 @@ import com.moko.mkgw3.R;
 import com.moko.mkgw3.adapter.DeviceInfoKgw3Adapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityScannerKgw3Binding;
-import com.moko.mkgw3.dialog.PasswordDialogKgw3;
+import com.moko.lib.scannerui.dialog.PasswordDialog;
 import com.moko.mkgw3.utils.SPUtiles;
-import com.moko.mkgw3.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.mkgw3.MokoBleScanner;
 import com.moko.support.mkgw3.MokoSupport;
 import com.moko.support.mkgw3.OrderTaskAssembler;
@@ -196,9 +196,9 @@ public class DeviceScannerKgw3Activity extends BaseActivity<ActivityScannerKgw3B
                 mokoBleScanner.stopScanDevice();
             }
             // show password
-            final PasswordDialogKgw3 dialog = new PasswordDialogKgw3();
+            final PasswordDialog dialog = new PasswordDialog();
             dialog.setPassword(mSavedPassword);
-            dialog.setOnPasswordClicked(new PasswordDialogKgw3.PasswordClickListener() {
+            dialog.setOnPasswordClicked(new PasswordDialog.PasswordClickListener() {
                 @Override
                 public void onEnsureClicked(String password) {
                     if (!MokoSupport.getInstance().isBluetoothOpen()) {

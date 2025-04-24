@@ -19,9 +19,9 @@ import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityNetworkSettingsKgw3Binding;
-import com.moko.mkgw3.dialog.MKgw3BottomDialog;
+import com.moko.lib.scannerui.dialog.BottomDialog;
 import com.moko.mkgw3.utils.FileUtils;
-import com.moko.mkgw3.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.mkgw3.MokoSupport;
 import com.moko.support.mkgw3.OrderTaskAssembler;
 import com.moko.support.mkgw3.entity.OrderCHAR;
@@ -129,7 +129,7 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
 
     private void onNetworkTypeClick() {
         if (isWindowLocked()) return;
-        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
+        BottomDialog dialog = new BottomDialog();
         dialog.setDatas(new ArrayList<>(Arrays.asList(networkTypeValues)), selectedNetworkType);
         dialog.setListener(value -> {
             selectedNetworkType = value;
@@ -338,7 +338,7 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
     }
 
     private void setDhcpEnable(boolean enable) {
-        mBind.layoutIp.imgDhcp.setImageResource(enable ? R.drawable.checkbox_open : R.drawable.checkbox_close);
+        mBind.layoutIp.imgDhcp.setImageResource(enable ? R.drawable.ic_checkbox_open : R.drawable.ic_checkbox_close);
         mBind.layoutIp.clIp.setVisibility(enable ? View.GONE : View.VISIBLE);
     }
 
@@ -351,7 +351,7 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
 
     public void onSelectSecurity(View view) {
         if (isWindowLocked()) return;
-        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
+        BottomDialog dialog = new BottomDialog();
         dialog.setDatas(mSecurityValues, mSecuritySelected);
         dialog.setListener(value -> {
             mSecuritySelected = value;
@@ -384,7 +384,7 @@ public class NetworkSettingsKgw3Activity extends BaseActivity<ActivityNetworkSet
 
     public void onSelectEAPType(View view) {
         if (isWindowLocked()) return;
-        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
+        BottomDialog dialog = new BottomDialog();
         dialog.setDatas(mEAPTypeValues, mEAPTypeSelected);
         dialog.setListener(value -> {
             mEAPTypeSelected = value;

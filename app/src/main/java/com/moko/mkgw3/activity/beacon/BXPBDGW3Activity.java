@@ -15,17 +15,17 @@ import com.moko.mkgw3.R;
 import com.moko.mkgw3.activity.DeviceDetailKgw3Activity;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityBxpBDInfoKgw3Binding;
-import com.moko.mkgw3.dialog.AlertMessageDialog;
+import com.moko.lib.scannerui.dialog.AlertMessageDialog;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
-import com.moko.mkgw3.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
-import com.moko.support.mkgw3.MQTTSupport;
+import com.moko.lib.mqtt.MQTTSupport;
 import com.moko.support.mkgw3.entity.BeaconInfo;
-import com.moko.support.mkgw3.entity.MsgNotify;
-import com.moko.support.mkgw3.event.DeviceOnlineEvent;
-import com.moko.support.mkgw3.event.MQTTMessageArrivedEvent;
+import com.moko.lib.mqtt.entity.MsgNotify;
+import com.moko.lib.mqtt.event.DeviceOnlineEvent;
+import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.EventBus;
@@ -65,6 +65,7 @@ public class BXPBDGW3Activity extends BaseActivity<ActivityBxpBDInfoKgw3Binding>
         mBind.tvDoublePressCount.setText(String.valueOf(mBeaconInfo.double_alarm_num));
         mBind.tvLongPressCount.setText(String.valueOf(mBeaconInfo.long_alarm_num));
         String alarmStatusStr = "";
+        mBeaconInfo.alarm_status = mBeaconInfo.alarm_status & 0x0F;
         if (mBeaconInfo.alarm_status == 0) {
             alarmStatusStr = "Not triggered";
         } else {
@@ -175,6 +176,7 @@ public class BXPBDGW3Activity extends BaseActivity<ActivityBxpBDInfoKgw3Binding>
                 mBind.tvDoublePressCount.setText(String.valueOf(bxpButtonInfo.double_alarm_num));
                 mBind.tvLongPressCount.setText(String.valueOf(bxpButtonInfo.long_alarm_num));
                 String alarmStatusStr = "";
+                bxpButtonInfo.alarm_status = bxpButtonInfo.alarm_status & 0x0F;
                 if (bxpButtonInfo.alarm_status == 0) {
                     alarmStatusStr = "Not triggered";
                 } else {
@@ -323,7 +325,7 @@ public class BXPBDGW3Activity extends BaseActivity<ActivityBxpBDInfoKgw3Binding>
             ToastUtils.showToast(this, "Setup failed");
         }, 30 * 1000);
         showLoadingProgressDialog();
-        int type = (int) view.getTag();
+        int type = Integer.parseInt((String) view.getTag());
         clearPressEvent(type);
     }
 

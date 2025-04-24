@@ -8,7 +8,7 @@ import com.moko.mkgw3.activity.BleManagerKgw3Activity;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivitySelectBeaconTypeBinding;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
-import com.moko.support.mkgw3.event.MQTTConnectionCompleteEvent;
+import com.moko.lib.mqtt.event.MQTTConnectionCompleteEvent;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

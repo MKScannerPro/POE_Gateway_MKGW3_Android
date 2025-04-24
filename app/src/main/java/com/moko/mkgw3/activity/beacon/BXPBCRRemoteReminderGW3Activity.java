@@ -15,13 +15,13 @@ import com.moko.mkgw3.databinding.ActivityBxpBCrRemoteReminderKgw3Binding;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
-import com.moko.mkgw3.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
-import com.moko.support.mkgw3.MQTTSupport;
+import com.moko.lib.mqtt.MQTTSupport;
 import com.moko.support.mkgw3.entity.BeaconInfo;
-import com.moko.support.mkgw3.entity.MsgNotify;
-import com.moko.support.mkgw3.event.DeviceOnlineEvent;
-import com.moko.support.mkgw3.event.MQTTMessageArrivedEvent;
+import com.moko.lib.mqtt.entity.MsgNotify;
+import com.moko.lib.mqtt.event.DeviceOnlineEvent;
+import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.Subscribe;
@@ -154,7 +154,7 @@ public class BXPBCRRemoteReminderGW3Activity extends BaseActivity<ActivityBxpBCr
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", mMac);
         jsonObject.addProperty("flash_time", ledTime);
-        jsonObject.addProperty("flash_interval", ledInterval * 100);
+        jsonObject.addProperty("flash_interval", ledInterval);
         String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
@@ -172,7 +172,7 @@ public class BXPBCRRemoteReminderGW3Activity extends BaseActivity<ActivityBxpBCr
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", mMac);
         jsonObject.addProperty("ring_time", buzzerTime);
-        jsonObject.addProperty("ring_interval", buzzerInterval * 100);
+        jsonObject.addProperty("ring_interval", buzzerInterval);
         String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
@@ -182,15 +182,15 @@ public class BXPBCRRemoteReminderGW3Activity extends BaseActivity<ActivityBxpBCr
     }
 
     private void setVibrationNotifyRemind() {
-        String buzzerTimeStr = mBind.etRingingTime.getText().toString();
-        String buzzerIntervalStr = mBind.etRingingInterval.getText().toString();
-        int buzzerTime = Integer.parseInt(buzzerTimeStr);
-        int buzzerInterval = Integer.parseInt(buzzerIntervalStr);
+        String vibrationTimeStr = mBind.etRingingTime.getText().toString();
+        String vibrationIntervalStr = mBind.etRingingInterval.getText().toString();
+        int vibrationTime = Integer.parseInt(vibrationTimeStr);
+        int vibrationInterval = Integer.parseInt(vibrationIntervalStr);
         int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_B_CR_VIBRATION;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", mMac);
-        jsonObject.addProperty("shake_time", buzzerTime);
-        jsonObject.addProperty("shake_interval", buzzerInterval * 100);
+        jsonObject.addProperty("shake_time", vibrationTime);
+        jsonObject.addProperty("shake_interval", vibrationInterval);
         String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
@@ -209,7 +209,7 @@ public class BXPBCRRemoteReminderGW3Activity extends BaseActivity<ActivityBxpBCr
         if (buzzerTime < 1 || buzzerTime > 6000)
             return false;
         int buzzerInterval = Integer.parseInt(buzzerIntervalStr);
-        if (buzzerInterval < 1 || buzzerInterval > 100)
+        if (buzzerInterval > 100)
             return false;
         return true;
     }
@@ -224,7 +224,7 @@ public class BXPBCRRemoteReminderGW3Activity extends BaseActivity<ActivityBxpBCr
         if (ledTime < 1 || ledTime > 6000)
             return false;
         int ledInterval = Integer.parseInt(ledIntervalStr);
-        if (ledInterval < 1 || ledInterval > 100)
+        if (ledInterval > 100)
             return false;
         return true;
     }
@@ -239,7 +239,7 @@ public class BXPBCRRemoteReminderGW3Activity extends BaseActivity<ActivityBxpBCr
         if (shakeTime < 1 || shakeTime > 6000)
             return false;
         int shakeInterval = Integer.parseInt(shakeIntervalStr);
-        if (shakeInterval < 1 || shakeInterval > 100)
+        if (shakeInterval > 100)
             return false;
         return true;
     }

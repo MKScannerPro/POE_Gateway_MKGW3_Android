@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:src="@drawable/ic_notify_close"
+        android:src="@drawable/ic_char_notify_close"
         app:layout_constraintBottom_toBottomOf="@id/tv_characteristics_properties"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_characteristics_properties" />
@@ -63,7 +63,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:src="@drawable/ic_write"
+        android:src="@drawable/ic_char_write"
         app:layout_constraintBottom_toBottomOf="@id/tv_characteristics_properties"
         app:layout_constraintRight_toLeftOf="@id/iv_notify"
         app:layout_constraintTop_toTopOf="@id/tv_characteristics_properties" />
@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:src="@drawable/ic_read"
+        android:src="@drawable/ic_char_read"
         app:layout_constraintBottom_toBottomOf="@id/tv_characteristics_properties"
         app:layout_constraintRight_toLeftOf="@id/iv_write"
         app:layout_constraintTop_toTopOf="@id/tv_characteristics_properties" />

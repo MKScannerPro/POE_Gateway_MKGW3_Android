@@ -17,18 +17,18 @@ import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityModifyNetworkSettingsKgw3v2Binding;
 import com.moko.mkgw3.databinding.LayoutDhcpInfoBinding;
-import com.moko.mkgw3.dialog.MKgw3BottomDialog;
+import com.moko.lib.scannerui.dialog.BottomDialog;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
-import com.moko.mkgw3.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
-import com.moko.support.mkgw3.MQTTSupport;
-import com.moko.support.mkgw3.entity.MsgConfigResult;
-import com.moko.support.mkgw3.entity.MsgNotify;
-import com.moko.support.mkgw3.entity.MsgReadResult;
-import com.moko.support.mkgw3.event.DeviceOnlineEvent;
-import com.moko.support.mkgw3.event.MQTTMessageArrivedEvent;
+import com.moko.lib.mqtt.MQTTSupport;
+import com.moko.lib.mqtt.entity.MsgConfigResult;
+import com.moko.lib.mqtt.entity.MsgNotify;
+import com.moko.lib.mqtt.entity.MsgReadResult;
+import com.moko.lib.mqtt.event.DeviceOnlineEvent;
+import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.Subscribe;
@@ -123,7 +123,7 @@ public class ModifyNetworkSettingsKgw3v2Activity extends BaseActivity<ActivityMo
 
     private void onNetworkTypeClick() {
         if (isWindowLocked()) return;
-        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
+        BottomDialog dialog = new BottomDialog();
         dialog.setDatas(new ArrayList<>(Arrays.asList(networkTypeValues)), selectedNetworkType);
         dialog.setListener(value -> {
             selectedNetworkType = value;
@@ -371,7 +371,7 @@ public class ModifyNetworkSettingsKgw3v2Activity extends BaseActivity<ActivityMo
     }
 
     private void setDhcpEnable(LayoutDhcpInfoBinding dhcpInfoBinding, boolean enable) {
-        dhcpInfoBinding.imgDhcp.setImageResource(enable ? R.drawable.checkbox_open : R.drawable.checkbox_close);
+        dhcpInfoBinding.imgDhcp.setImageResource(enable ? R.drawable.ic_checkbox_open : R.drawable.ic_checkbox_close);
         dhcpInfoBinding.clIp.setVisibility(enable ? View.GONE : View.VISIBLE);
     }
 
@@ -539,7 +539,7 @@ public class ModifyNetworkSettingsKgw3v2Activity extends BaseActivity<ActivityMo
 
     public void onSelectSecurity(View view) {
         if (isWindowLocked()) return;
-        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
+        BottomDialog dialog = new BottomDialog();
         dialog.setDatas(mSecurityValues, mSecuritySelected);
         dialog.setListener(value -> {
             mSecuritySelected = value;
@@ -573,7 +573,7 @@ public class ModifyNetworkSettingsKgw3v2Activity extends BaseActivity<ActivityMo
 
     public void onSelectEAPType(View view) {
         if (isWindowLocked()) return;
-        MKgw3BottomDialog dialog = new MKgw3BottomDialog();
+        BottomDialog dialog = new BottomDialog();
         dialog.setDatas(mEAPTypeValues, mEAPTypeSelected);
         dialog.setListener(value -> {
             mEAPTypeSelected = value;

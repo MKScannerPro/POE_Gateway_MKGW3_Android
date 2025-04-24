@@ -34,7 +34,7 @@ public class BleCharacteristicsAdapterKgw3 extends BaseMultiItemQuickAdapter<Ble
                 helper.setGone(R.id.iv_write, writeNoRespFlag | writeFlag);
                 helper.setGone(R.id.iv_notify, notifyFlag);
                 helper.setImageResource(R.id.iv_notify, item.characteristicNotifyStatus == 1 ? R
-                        .drawable.ic_notify_open : R.drawable.ic_notify_close);
+                        .drawable.ic_char_notify_open : R.drawable.ic_char_notify_close);
                 StringBuilder properties = new StringBuilder("");
                 String propertiesStr;
                 if (notifyFlag)

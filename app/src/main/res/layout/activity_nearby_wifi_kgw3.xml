@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:onClick="back"
             android:padding="16dp"
-            android:src="@drawable/back" />
+            android:src="@drawable/ic_back" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
             android:layout_alignParentRight="true"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/refresh" />
+            android:src="@drawable/ic_refresh" />
     </RelativeLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

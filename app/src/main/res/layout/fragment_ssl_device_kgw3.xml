@@ -102,7 +102,7 @@
                 android:layout_marginLeft="10dp"
                 android:clickable="true"
                 android:onClick="selectCAFile"
-                android:src="@drawable/select_file" />
+                android:src="@drawable/ic_select_file" />
         </LinearLayout>
 
         <LinearLayout
@@ -147,7 +147,7 @@
                 android:layout_marginLeft="10dp"
                 android:clickable="true"
                 android:onClick="selectKeyFile"
-                android:src="@drawable/select_file" />
+                android:src="@drawable/ic_select_file" />
         </LinearLayout>
 
         <LinearLayout
@@ -192,7 +192,7 @@
                 android:layout_marginLeft="10dp"
                 android:clickable="true"
                 android:onClick="selectCertFile"
-                android:src="@drawable/select_file" />
+                android:src="@drawable/ic_select_file" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

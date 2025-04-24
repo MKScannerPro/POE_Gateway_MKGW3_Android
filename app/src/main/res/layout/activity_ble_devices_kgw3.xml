@@ -18,7 +18,7 @@
             android:onClick="onBack"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/back" />
+            android:src="@drawable/ic_back" />
 
         <TextView
             android:id="@+id/tv_device_name"
@@ -88,7 +88,7 @@
                 android:onClick="onFilterDelete"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:src="@drawable/filter_delete" />
+                android:src="@drawable/ic_filter_delete" />
 
         </RelativeLayout>
 

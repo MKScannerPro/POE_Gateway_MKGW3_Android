@@ -17,7 +17,7 @@
             android:onClick="onBack"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/back" />
+            android:src="@drawable/ic_back" />
 
         <TextView
             android:id="@+id/tv_device_name"
@@ -36,7 +36,7 @@
             android:onClick="onDeviceSetting"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/more" />
+            android:src="@drawable/ic_more" />
     </RelativeLayout>
 
 
@@ -78,7 +78,7 @@
             android:layout_alignParentRight="true"
             android:clickable="true"
             android:onClick="onScanSwitch"
-            android:src="@drawable/checkbox_close" />
+            android:src="@drawable/ic_checkbox_close" />
     </RelativeLayout>
 
     <TextView
@@ -86,7 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:clickable="true"
-        android:drawableRight="@drawable/arrow_right"
+        android:drawableRight="@drawable/ic_arrow_right"
         android:gravity="center_vertical"
         android:onClick="onManageBleDevices"
         android:paddingLeft="12dp"
