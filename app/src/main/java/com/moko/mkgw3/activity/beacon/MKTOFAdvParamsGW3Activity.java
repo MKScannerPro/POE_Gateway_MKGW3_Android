@@ -18,7 +18,7 @@ import com.moko.lib.scannerui.dialog.BottomDialog;
 import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.ActivityMkAdvParamsKgw3Binding;
+import com.moko.mkgw3.databinding.ActivityMkTofAdvParamsKgw3Binding;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
@@ -32,7 +32,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class MKTOFAdvParamsGW3Activity extends BaseActivity<ActivityMkAdvParamsKgw3Binding> {
+public class MKTOFAdvParamsGW3Activity extends BaseActivity<ActivityMkTofAdvParamsKgw3Binding> {
     private MokoDeviceKgw3 mMokoDeviceKgw3;
     private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
@@ -66,8 +66,8 @@ public class MKTOFAdvParamsGW3Activity extends BaseActivity<ActivityMkAdvParamsK
     }
 
     @Override
-    protected ActivityMkAdvParamsKgw3Binding getViewBinding() {
-        return ActivityMkAdvParamsKgw3Binding.inflate(getLayoutInflater());
+    protected ActivityMkTofAdvParamsKgw3Binding getViewBinding() {
+        return ActivityMkTofAdvParamsKgw3Binding.inflate(getLayoutInflater());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -100,9 +100,9 @@ public class MKTOFAdvParamsGW3Activity extends BaseActivity<ActivityMkAdvParamsK
             }
             int txPower = result.data.get("tx_power").getAsInt();
             int advInterval = result.data.get("adv_interval").getAsInt();
-            mBind.layoutAdvParams.tvTxPower.setText(mTxPowerArray.get(7 - txPower));
-            mBind.layoutAdvParams.tvTxPower.setTag(7 - txPower);
-            mBind.layoutAdvParams.etAdvInterval.setText(String.valueOf(advInterval));
+            mBind.tvTxPower.setText(mTxPowerArray.get(7 - txPower));
+            mBind.tvTxPower.setTag(7 - txPower);
+            mBind.etAdvInterval.setText(String.valueOf(advInterval));
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_DISCONNECT) {
             dismissLoadingProgressDialog();
@@ -180,9 +180,9 @@ public class MKTOFAdvParamsGW3Activity extends BaseActivity<ActivityMkAdvParamsK
         int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_MK_TOF_ADV_PARAMS_WRITE;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", mMac);
-        String advIntervalStr = mBind.layoutAdvParams.etAdvInterval.getText().toString();
+        String advIntervalStr = mBind.etAdvInterval.getText().toString();
         int interval = Integer.parseInt(advIntervalStr);
-        int txPower = (int) mBind.layoutAdvParams.tvTxPower.getTag();
+        int txPower = (int) mBind.tvTxPower.getTag();
         jsonObject.addProperty("adv_interval", interval);
         jsonObject.addProperty("tx_power", txPower + 7);
         String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
@@ -194,12 +194,12 @@ public class MKTOFAdvParamsGW3Activity extends BaseActivity<ActivityMkAdvParamsK
     }
 
     private boolean isSlotParamsValid() {
-        String advIntervalStr = mBind.layoutAdvParams.etAdvInterval.getText().toString();
+        String advIntervalStr = mBind.etAdvInterval.getText().toString();
         if (TextUtils.isEmpty(advIntervalStr)) {
             return false;
         }
         int interval = Integer.parseInt(advIntervalStr);
-        if (interval < 1 || interval > 100)
+        if (interval < 1 || interval > 86400)
             return false;
         return true;
     }

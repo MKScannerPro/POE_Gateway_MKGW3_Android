@@ -10,10 +10,6 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import okhttp3.RequestBody;
-
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.elvishew.xlog.XLog;
 import com.google.gson.Gson;
@@ -25,31 +21,7 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
-import com.moko.lib.scanneriot.IoTDMConstants;
-import com.moko.lib.scanneriot.Urls;
-import com.moko.lib.scanneriot.activity.SyncDeviceActivity;
-import com.moko.lib.scanneriot.dialog.LoginDialog;
-import com.moko.lib.scanneriot.entity.CommonResp;
-import com.moko.lib.scanneriot.entity.SyncDevice;
-import com.moko.mkgw3.AppConstants;
-import com.moko.mkgw3.BuildConfig;
-import com.moko.mkgw3.R;
-import com.moko.mkgw3.activity.add.DeviceScannerKgw3Activity;
-import com.moko.mkgw3.activity.modify.ModifySettingsKgw3Activity;
-import com.moko.mkgw3.adapter.DeviceKgw3Adapter;
-import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.ActivityMainMkgw3Binding;
-import com.moko.mkgw3.db.MKgw3DBTools;
-import com.moko.lib.scannerui.dialog.AlertMessageDialog;
-import com.moko.mkgw3.entity.LoginEntity;
-import com.moko.mkgw3.entity.MQTTConfigKgw3;
-import com.moko.mkgw3.entity.MokoDeviceKgw3;
-import com.moko.mkgw3.utils.SPUtiles;
-import com.moko.lib.scannerui.utils.ToastUtils;
-import com.moko.mkgw3.utils.Utils;
-import com.moko.support.mkgw3.MQTTConstants;
 import com.moko.lib.mqtt.MQTTSupport;
-import com.moko.support.mkgw3.MokoSupport;
 import com.moko.lib.mqtt.entity.MsgNotify;
 import com.moko.lib.mqtt.event.DeviceDeletedEvent;
 import com.moko.lib.mqtt.event.DeviceModifyNameEvent;
@@ -60,6 +32,31 @@ import com.moko.lib.mqtt.event.MQTTConnectionLostEvent;
 import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
 import com.moko.lib.mqtt.event.MQTTUnSubscribeFailureEvent;
 import com.moko.lib.mqtt.event.MQTTUnSubscribeSuccessEvent;
+import com.moko.lib.scanneriot.IoTDMConstants;
+import com.moko.lib.scanneriot.Urls;
+import com.moko.lib.scanneriot.activity.SyncDeviceActivity;
+import com.moko.lib.scanneriot.dialog.LoginDialog;
+import com.moko.lib.scanneriot.entity.CommonResp;
+import com.moko.lib.scanneriot.entity.SyncDevice;
+import com.moko.lib.scanneriot.utils.IoTDMSPUtils;
+import com.moko.lib.scannerui.dialog.AlertMessageDialog;
+import com.moko.lib.scannerui.utils.ToastUtils;
+import com.moko.mkgw3.AppConstants;
+import com.moko.mkgw3.BuildConfig;
+import com.moko.mkgw3.R;
+import com.moko.mkgw3.activity.add.DeviceScannerKgw3Activity;
+import com.moko.mkgw3.activity.modify.ModifySettingsKgw3Activity;
+import com.moko.mkgw3.adapter.DeviceKgw3Adapter;
+import com.moko.mkgw3.base.BaseActivity;
+import com.moko.mkgw3.databinding.ActivityMainMkgw3Binding;
+import com.moko.mkgw3.db.MKgw3DBTools;
+import com.moko.mkgw3.entity.LoginEntity;
+import com.moko.mkgw3.entity.MQTTConfigKgw3;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
+import com.moko.mkgw3.utils.SPUtiles;
+import com.moko.mkgw3.utils.Utils;
+import com.moko.support.mkgw3.MQTTConstants;
+import com.moko.support.mkgw3.MokoSupport;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.EventBus;
@@ -74,6 +71,10 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import okhttp3.RequestBody;
+
 public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemLongClickListener {
     private ArrayList<MokoDeviceKgw3> devices;
     private DeviceKgw3Adapter adapter;
@@ -81,8 +82,6 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
     public String mAppMqttConfigStr;
     private MQTTConfigKgw3 mAppMqttConfig;
     public static String PATH_LOGCAT;
-
-    public static String mAccessToken;
 
     @Override
     protected void onCreate() {
@@ -336,9 +335,9 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
             return;
         }
         // 登录
-        String account = SPUtiles.getStringValue(this, IoTDMConstants.EXTRA_KEY_LOGIN_ACCOUNT, "");
-        String password = SPUtiles.getStringValue(this, IoTDMConstants.EXTRA_KEY_LOGIN_PASSWORD, "");
-        int env = SPUtiles.getIntValue(this, IoTDMConstants.EXTRA_KEY_LOGIN_ENV, 0);
+        String account = IoTDMSPUtils.getStringValue(this, IoTDMConstants.EXTRA_KEY_LOGIN_ACCOUNT, "");
+        String password = IoTDMSPUtils.getStringValue(this, IoTDMConstants.EXTRA_KEY_LOGIN_PASSWORD, "");
+        int env = IoTDMSPUtils.getIntValue(this, IoTDMConstants.EXTRA_KEY_LOGIN_ENV, 0);
         if (TextUtils.isEmpty(account) || TextUtils.isEmpty(password)) {
             LoginDialog dialog = new LoginDialog();
             dialog.setOnLoginClicked(this::login);
@@ -385,9 +384,9 @@ public class MKGW3MainActivity extends BaseActivity<ActivityMainMkgw3Binding> im
                         headers.put("Authorization", accessToken);
                         OkGo.getInstance().addCommonHeaders(headers);
 
-                        SPUtiles.setStringValue(MKGW3MainActivity.this, IoTDMConstants.EXTRA_KEY_LOGIN_ACCOUNT, account);
-                        SPUtiles.setStringValue(MKGW3MainActivity.this, IoTDMConstants.EXTRA_KEY_LOGIN_PASSWORD, password);
-                        SPUtiles.setIntValue(MKGW3MainActivity.this, IoTDMConstants.EXTRA_KEY_LOGIN_ENV, envValue);
+                        IoTDMSPUtils.setStringValue(MKGW3MainActivity.this, IoTDMConstants.EXTRA_KEY_LOGIN_ACCOUNT, account);
+                        IoTDMSPUtils.setStringValue(MKGW3MainActivity.this, IoTDMConstants.EXTRA_KEY_LOGIN_PASSWORD, password);
+                        IoTDMSPUtils.setIntValue(MKGW3MainActivity.this, IoTDMConstants.EXTRA_KEY_LOGIN_ENV, envValue);
                         Intent intent = new Intent(MKGW3MainActivity.this, SyncDeviceActivity.class);
                         ArrayList<SyncDevice> syncDevices = new ArrayList<>();
                         for (MokoDeviceKgw3 device : devices) {

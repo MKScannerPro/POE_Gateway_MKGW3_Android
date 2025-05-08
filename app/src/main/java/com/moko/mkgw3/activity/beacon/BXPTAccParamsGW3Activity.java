@@ -9,20 +9,20 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import com.moko.mkgw3.AppConstants;
-import com.moko.mkgw3.base.BaseActivity;
-import com.moko.mkgw3.databinding.ActivityBxpDAccParamsBinding;
-import com.moko.lib.scannerui.dialog.BottomDialog;
-import com.moko.mkgw3.entity.MQTTConfigKgw3;
-import com.moko.mkgw3.entity.MokoDeviceKgw3;
-import com.moko.mkgw3.utils.SPUtiles;
-import com.moko.lib.scannerui.utils.ToastUtils;
-import com.moko.support.mkgw3.MQTTConstants;
 import com.moko.lib.mqtt.MQTTSupport;
-import com.moko.support.mkgw3.entity.BeaconInfo;
 import com.moko.lib.mqtt.entity.MsgNotify;
 import com.moko.lib.mqtt.event.DeviceOnlineEvent;
 import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
+import com.moko.lib.scannerui.dialog.BottomDialog;
+import com.moko.lib.scannerui.utils.ToastUtils;
+import com.moko.mkgw3.AppConstants;
+import com.moko.mkgw3.base.BaseActivity;
+import com.moko.mkgw3.databinding.ActivityBxpTAccParamsBinding;
+import com.moko.mkgw3.entity.MQTTConfigKgw3;
+import com.moko.mkgw3.entity.MokoDeviceKgw3;
+import com.moko.mkgw3.utils.SPUtiles;
+import com.moko.support.mkgw3.MQTTConstants;
+import com.moko.support.mkgw3.entity.BeaconInfo;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.Subscribe;
@@ -31,7 +31,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class BXPTAccParamsGW3Activity extends BaseActivity<ActivityBxpDAccParamsBinding> {
+public class BXPTAccParamsGW3Activity extends BaseActivity<ActivityBxpTAccParamsBinding> {
     private MokoDeviceKgw3 mMokoDeviceKgw3;
     private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
@@ -97,8 +97,8 @@ public class BXPTAccParamsGW3Activity extends BaseActivity<ActivityBxpDAccParams
     }
 
     @Override
-    protected ActivityBxpDAccParamsBinding getViewBinding() {
-        return ActivityBxpDAccParamsBinding.inflate(getLayoutInflater());
+    protected ActivityBxpTAccParamsBinding getViewBinding() {
+        return ActivityBxpTAccParamsBinding.inflate(getLayoutInflater());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -61,7 +61,7 @@ android {
 
     if (isLibrary.toBoolean()) {
         libraryVariants.all { variant ->
-            if (variant.buildType.name == "release") {
+            if (variant.buildType.name == "debug") {
                 // 修改aar名称
                 variant.outputs.all { output ->
                     def formatDate = new Date().format("yyyyMMddHHmm")
@@ -101,11 +101,11 @@ dependencies {
         implementation project(path: ':mokosupport')
         implementation files('libs/poi-3.12-android-a.jar')
         implementation files('libs/poi-ooxml-schemas-3.12-20150511-a.jar')
-        implementation 'com.github.MOKO-Android-Base-Library:MKScannerIoTLib:1.0.4'
+        implementation 'com.github.MOKO-Android-Base-Library:MKScannerIoTLib:1.0.5'
         implementation 'com.github.MOKO-Android-Base-Library:MKMqttLib:1.0.0'
     } else {
         implementation files('libs/mokoSupport.jar')
-        compileOnly 'com.github.MOKO-Android-Base-Library:MKScannerIoTLib:1.0.4'
+        compileOnly 'com.github.MOKO-Android-Base-Library:MKScannerIoTLib:1.0.5'
         compileOnly 'com.github.MOKO-Android-Base-Library:MKMqttLib:1.0.0'
         compileOnly 'com.github.MOKO-Android-Base-Library:MKBleLib:1.0.1'
         compileOnly files('libs/poi-3.12-android-a.jar')
