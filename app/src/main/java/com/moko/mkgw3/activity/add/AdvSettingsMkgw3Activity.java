@@ -382,7 +382,7 @@ public class AdvSettingsMkgw3Activity extends BaseActivity<ActivityAdvSettingsKg
         jsonObject.addProperty("adv_interval", advInterval);
         jsonObject.addProperty("tx_power", mSelected);
         jsonObject.addProperty("rssi_1m", rssi1m);
-        jsonObject.addProperty("connectable", mBind.cbConnectable.isChecked() ? 0 : 1);
+        jsonObject.addProperty("connectable", mBind.cbConnectable.isChecked() ? 1 : 0);
         String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);

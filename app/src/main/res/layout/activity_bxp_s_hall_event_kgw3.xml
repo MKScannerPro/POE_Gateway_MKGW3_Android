@@ -50,6 +50,7 @@
             android:padding="10dp">
 
             <TextView
+                android:id="@+id/tvHallEventTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -58,7 +59,10 @@
                 android:textSize="17sp"
                 android:textStyle="bold"
                 app:layout_constraintBaseline_toBaselineOf="@id/tvHallEventClear"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/tvHallEventData" />
 
             <TextView
                 android:id="@+id/tvHallEventClear"
@@ -82,13 +86,13 @@
                 android:id="@+id/tvHallEventData"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:text="0"
                 android:textColor="@color/black_333333"
                 android:textSize="15sp"
                 app:layout_constraintBaseline_toBaselineOf="@id/tvHallEventClear"
-                app:layout_constraintHorizontal_bias="0.6"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintLeft_toRightOf="@id/tvHallEventTitle"
+                app:layout_constraintRight_toLeftOf="@id/tvHallEventClear" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

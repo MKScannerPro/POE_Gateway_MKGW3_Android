@@ -96,24 +96,41 @@ public class BeaconDFUKgw3v2Activity extends BaseActivity<ActivityBeaconDfuKgw3B
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
             if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             int percent = result.data.get("percent").getAsInt();
-            if (!isFinishing() && mLoadingMessageDialog != null && mLoadingMessageDialog.isResumed())
+            if (isFinishing()) return;
+            if (mLoadingMessageDialog != null && mLoadingMessageDialog.isResumed())
                 mLoadingMessageDialog.setMessage(String.format("Beacon DFU process: %d%%", percent));
+            else
+                showLoadingMessageDialog(String.format("Beacon DFU process: %d%%", percent), false);
+
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_DFU_RESULT_BATCH) {
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
             }.getType();
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
             if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
-            dismissLoadingMessageDialog();
             int status = result.data.get("status").getAsInt();
             if (status > 0) {
+                dismissLoadingMessageDialog();
                 ToastUtils.showToast(this,
-                        String.format("Beacon DFU successfully!", status == 1 ? "successfully" : "failed"));
+                        String.format("Beacon DFU %s!", status == 1 ? "successfully" : "failed"));
                 Intent intent = new Intent();
                 intent.putExtra("code", status);
                 setResult(RESULT_OK, intent);
                 finish();
             }
+        }
+        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_DFU_FAILED_BATCH) {
+            Type type = new TypeToken<MsgNotify<JsonObject>>() {
+            }.getType();
+            MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            dismissLoadingMessageDialog();
+            int resultCode = result.data.get("multi_dfu_result_code").getAsInt();
+            ToastUtils.showToast(this, "Beacon DFU failed!");
+            Intent intent = new Intent();
+            intent.putExtra("code", resultCode);
+            setResult(RESULT_OK, intent);
+            finish();
         }
         if (msg_id == MQTTConstants.CONFIG_MSG_ID_BLE_DFU_BATCH) {
             Type type = new TypeToken<MsgConfigResult>() {
@@ -172,6 +189,8 @@ public class BeaconDFUKgw3v2Activity extends BaseActivity<ActivityBeaconDfuKgw3B
         BleInfo bleInfo = new BleInfo();
         bleInfo.mac = mBeaconMac;
         bleInfo.passwd = "";
+        if (mBeaconType == 7 || mBeaconType == 8)
+            bleInfo.passwd = "MOKOMOKO";
         bleList.add(bleInfo);
         JsonElement element = new Gson().toJsonTree(bleList);
         int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_DFU_BATCH;

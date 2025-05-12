@@ -142,6 +142,8 @@ public class BXPTRemoteReminderGW3Activity extends BaseActivity<ActivityBxpTRemo
         String ledTimeStr = mBind.etBlinkingTime.getText().toString();
         String ledIntervalStr = mBind.etBlinkingInterval.getText().toString();
         int ledTime = Integer.parseInt(ledTimeStr) * 10;
+        if (mBeaconType == 5)
+            ledTime = Integer.parseInt(ledTimeStr);
         int ledInterval = Integer.parseInt(ledIntervalStr) * 100;
         String ledColor = mColorArray.get((int) mBind.tvLedReminderColor.getTag()).toLowerCase();
         int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_T_LED;

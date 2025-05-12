@@ -44,7 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="30dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/clSinglePress"
@@ -452,6 +453,20 @@
                     app:layout_constraintBaseline_toBaselineOf="@id/tvAbnormalInactivityAdvType"
                     app:layout_constraintLeft_toLeftOf="parent" />
 
+
+                <TextView
+                    android:id="@+id/tvAbnormalInactivityAdvType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="5dp"
+                    android:text="No data"
+                    android:textColor="@color/black_333333"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    app:layout_constraintLeft_toRightOf="@id/tvAbnormalInactivityTitle"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
                     android:id="@+id/tvAbnormalInactivityConfig"
                     android:layout_width="wrap_content"
@@ -469,19 +484,6 @@
                     android:visibility="gone"
                     app:layout_constraintBaseline_toBaselineOf="@id/tvAbnormalInactivityAdvType"
                     app:layout_constraintRight_toRightOf="parent" />
-
-                <TextView
-                    android:id="@+id/tvAbnormalInactivityAdvType"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginTop="5dp"
-                    android:text="No data"
-                    android:textColor="@color/black_333333"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toRightOf="@id/tvAbnormalInactivityTitle"
-                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/llAbnormalInactivityNormalAdv"

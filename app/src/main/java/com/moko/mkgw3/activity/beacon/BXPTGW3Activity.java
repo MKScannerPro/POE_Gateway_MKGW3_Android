@@ -125,10 +125,9 @@ public class BXPTGW3Activity extends BaseActivity<ActivityBxpTInfoKgw3Binding> {
 
     private void gotoAdvParams() {
         if (isWindowLocked()) return;
-        Intent intent = new Intent(this, BXPAdvParamsGW3Activity.class);
+        Intent intent = new Intent(this, BXPTAdvParamsGW3Activity.class);
         intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         intent.putExtra(AppConstants.EXTRA_KEY_MAC, mBeaconInfo.mac);
-        intent.putExtra(AppConstants.EXTRA_KEY_BEACON_TYPE, mBeaconInfo.type);
         startActivity(intent);
     }
 

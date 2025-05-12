@@ -359,37 +359,73 @@ public class BXPBAdvParamsGW3Activity extends BaseActivity<ActivityBxpBDAdvParam
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", mBeaconInfo.mac);
         jsonObject.addProperty("channel", channel);
+        LayoutAdvParamsBinding normalBinding = null;
+        if (channel == 0)
+            normalBinding = mBind.layoutSingleNormal;
+        if (channel == 1)
+            normalBinding = mBind.layoutDoubleNormal;
+        if (channel == 2)
+            normalBinding = mBind.layoutLongNormal;
+        if (channel == 3)
+            normalBinding = mBind.layoutAbnormalInactivityNormal;
         int channelType = (int) view.getTag();
-        if (channelType == 0) {
-            String advIntervalStr = mBind.layoutSingleNormal.etAdvInterval.getText().toString();
+        if (channelType == 0 && normalBinding != null) {
+            String advIntervalStr = normalBinding.etAdvInterval.getText().toString();
             int interval = Integer.parseInt(advIntervalStr) * 20;
-            int txPower = (int) mBind.layoutSingleNormal.tvTxPower.getTag();
+            int txPower = (int) normalBinding.tvTxPower.getTag();
             JsonObject object = new JsonObject();
             object.addProperty("adv_interval", interval);
             object.addProperty("tx_power", txPower);
             jsonObject.add("normal_adv", object);
         }
-        if (channelType == 1) {
-            String advIntervalStr = mBind.layoutSingleAfterAdv.etAdvInterval.getText().toString();
+        LayoutAdvParamsBinding afterAdvBinding = null;
+        if (channel == 0)
+            afterAdvBinding = mBind.layoutSingleAfterAdv;
+        if (channel == 1)
+            afterAdvBinding = mBind.layoutDoubleAfterAdv;
+        if (channel == 2)
+            afterAdvBinding = mBind.layoutLongAfterAdv;
+        if (channel == 3)
+            afterAdvBinding = mBind.layoutAbnormalInactivityAfterAdv;
+        if (channelType == 1 && afterAdvBinding != null) {
+            String advIntervalStr = afterAdvBinding.etAdvInterval.getText().toString();
             int interval = Integer.parseInt(advIntervalStr) * 20;
-            int txPower = (int) mBind.layoutSingleAfterAdv.tvTxPower.getTag();
+            int txPower = (int) afterAdvBinding.tvTxPower.getTag();
             JsonObject object = new JsonObject();
             object.addProperty("adv_interval", interval);
             object.addProperty("tx_power", txPower);
             jsonObject.add("trigger_after_adv", object);
         }
-        if (channelType == 2) {
-            String advIntervalStr = mBind.layoutSingleBeforeAdv.etAdvInterval.getText().toString();
+        LayoutAdvParamsBinding beforeAdvBinding = null;
+        if (channel == 0)
+            beforeAdvBinding = mBind.layoutSingleBeforeAdv;
+        if (channel == 1)
+            beforeAdvBinding = mBind.layoutDoubleBeforeAdv;
+        if (channel == 2)
+            beforeAdvBinding = mBind.layoutLongBeforeAdv;
+        if (channel == 3)
+            beforeAdvBinding = mBind.layoutAbnormalInactivityBeforeAdv;
+        LayoutAdvParamsBinding triggerAdvBinding = null;
+        if (channel == 0)
+            triggerAdvBinding = mBind.layoutSingleTriggerAdv;
+        if (channel == 1)
+            triggerAdvBinding = mBind.layoutDoubleTriggerAdv;
+        if (channel == 2)
+            triggerAdvBinding = mBind.layoutLongTriggerAdv;
+        if (channel == 3)
+            triggerAdvBinding = mBind.layoutAbnormalInactivityTriggerAdv;
+        if (channelType == 2 && beforeAdvBinding != null && triggerAdvBinding != null) {
+            String advIntervalStr = beforeAdvBinding.etAdvInterval.getText().toString();
             int interval = Integer.parseInt(advIntervalStr) * 20;
-            int txPower = (int) mBind.layoutSingleBeforeAdv.tvTxPower.getTag();
+            int txPower = (int) beforeAdvBinding.tvTxPower.getTag();
             JsonObject object = new JsonObject();
             object.addProperty("adv_interval", interval);
             object.addProperty("tx_power", txPower);
             jsonObject.add("trigger_before_adv", object);
 
-            String advIntervalTriggerStr = mBind.layoutSingleTriggerAdv.etAdvInterval.getText().toString();
+            String advIntervalTriggerStr = triggerAdvBinding.etAdvInterval.getText().toString();
             int intervalTrigger = Integer.parseInt(advIntervalTriggerStr) * 20;
-            int txPowerTrigger = (int) mBind.layoutSingleBeforeAdv.tvTxPower.getTag();
+            int txPowerTrigger = (int) triggerAdvBinding.tvTxPower.getTag();
             JsonObject objectTrigger = new JsonObject();
             objectTrigger.addProperty("adv_interval", intervalTrigger);
             objectTrigger.addProperty("tx_power", txPowerTrigger);
