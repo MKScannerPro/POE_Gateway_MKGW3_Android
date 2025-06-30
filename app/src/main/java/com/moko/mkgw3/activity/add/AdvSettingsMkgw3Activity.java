@@ -335,7 +335,7 @@ public class AdvSettingsMkgw3Activity extends BaseActivity<ActivityAdvSettingsKg
                     orderTasks.add(OrderTaskAssembler.setIBeaconUuid(uuid));
                     orderTasks.add(OrderTaskAssembler.setIBeaconAdInterval(interval));
                     orderTasks.add(OrderTaskAssembler.setIBeaconRssi1M(mBind.sbRssiFilter.getProgress() - 100));
-                    orderTasks.add(OrderTaskAssembler.setIBeaconConnectable(mBind.cbConnectable.isChecked() ? 0 : 1));
+                    orderTasks.add(OrderTaskAssembler.setIBeaconConnectable(mBind.cbConnectable.isChecked() ? 1 : 0));
                     orderTasks.add(OrderTaskAssembler.setIBeaconTxPower(mSelected));
                     MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[0]));
                 } else {
