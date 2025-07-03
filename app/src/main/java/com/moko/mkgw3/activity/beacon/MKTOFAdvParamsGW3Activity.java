@@ -100,6 +100,8 @@ public class MKTOFAdvParamsGW3Activity extends BaseActivity<ActivityMkTofAdvPara
             }
             int txPower = result.data.get("tx_power").getAsInt();
             int advInterval = result.data.get("adv_interval").getAsInt();
+            if (txPower == 8)
+                txPower = 7;
             mBind.tvTxPower.setText(mTxPowerArray.get(7 - txPower));
             mBind.tvTxPower.setTag(7 - txPower);
             mBind.etAdvInterval.setText(String.valueOf(advInterval));
@@ -184,7 +186,7 @@ public class MKTOFAdvParamsGW3Activity extends BaseActivity<ActivityMkTofAdvPara
         int interval = Integer.parseInt(advIntervalStr);
         int txPower = (int) mBind.tvTxPower.getTag();
         jsonObject.addProperty("adv_interval", interval);
-        jsonObject.addProperty("tx_power", txPower + 7);
+        jsonObject.addProperty("tx_power", 7 - txPower);
         String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);

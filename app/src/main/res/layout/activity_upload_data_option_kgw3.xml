@@ -69,23 +69,7 @@
             android:drawableRight="@drawable/selector_cb_btn"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
-            android:text="RAW Data-Advertising"
-            android:textColor="@color/black_333333"
-            android:textSize="15sp" />
-
-        <View style="@style/divider_line" />
-
-        <CheckBox
-            android:id="@+id/cb_raw_data_rsp"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/white_ffffff"
-            android:button="@null"
-            android:checked="false"
-            android:drawableRight="@drawable/selector_cb_btn"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:text="RAW Data-Response"
+            android:text="RAW Data"
             android:textColor="@color/black_333333"
             android:textSize="15sp" />
     </LinearLayout>

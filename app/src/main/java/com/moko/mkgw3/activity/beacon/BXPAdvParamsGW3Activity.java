@@ -101,8 +101,7 @@ public class BXPAdvParamsGW3Activity extends BaseActivity<ActivityBxpCAdvParamsK
             return;
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_C_ADV_PARAMS_READ
-                || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_D_ADV_PARAMS_READ
-                || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_T_ADV_PARAMS_READ) {
+                || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_D_ADV_PARAMS_READ) {
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             Type type = new TypeToken<MsgNotify<AdvParamInfo>>() {
@@ -217,8 +216,7 @@ public class BXPAdvParamsGW3Activity extends BaseActivity<ActivityBxpCAdvParamsK
             finish();
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_C_ADV_PARAMS_WRITE
-                || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_D_ADV_PARAMS_WRITE
-                || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_T_ADV_PARAMS_WRITE) {
+                || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_D_ADV_PARAMS_WRITE) {
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             Type type = new TypeToken<MsgNotify<BeaconInfo>>() {

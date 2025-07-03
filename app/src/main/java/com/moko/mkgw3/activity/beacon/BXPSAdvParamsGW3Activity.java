@@ -10,24 +10,24 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.moko.lib.mqtt.MQTTSupport;
+import com.moko.lib.mqtt.entity.MsgNotify;
+import com.moko.lib.mqtt.event.DeviceOnlineEvent;
+import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
+import com.moko.lib.scannerui.dialog.BottomDialog;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityBxpSAdvParamsKgw3Binding;
 import com.moko.mkgw3.databinding.LayoutAdvParamsBinding;
-import com.moko.lib.scannerui.dialog.BottomDialog;
 import com.moko.mkgw3.entity.AdvChannelS;
 import com.moko.mkgw3.entity.AdvChannelSInfo;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
-import com.moko.mkgw3.entity.TxPowerEnum;
+import com.moko.mkgw3.entity.TxPowerTagEnum;
 import com.moko.mkgw3.utils.SPUtiles;
-import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
-import com.moko.lib.mqtt.MQTTSupport;
 import com.moko.support.mkgw3.entity.BeaconInfo;
-import com.moko.lib.mqtt.entity.MsgNotify;
-import com.moko.lib.mqtt.event.DeviceOnlineEvent;
-import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,7 +53,6 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
         mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
         mMac = getIntent().getStringExtra(AppConstants.EXTRA_KEY_MAC);
         mTxPowerArray = new ArrayList<>();
-        mTxPowerArray.add("-40 dBm");
         mTxPowerArray.add("-20 dBm");
         mTxPowerArray.add("-16 dBm");
         mTxPowerArray.add("-12 dBm");
@@ -62,6 +61,7 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
         mTxPowerArray.add("0 dBm");
         mTxPowerArray.add("3 dBm");
         mTxPowerArray.add("4 dBm");
+        mTxPowerArray.add("6 dBm");
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.postDelayed(() -> {
             dismissLoadingProgressDialog();
@@ -369,7 +369,7 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
     }
 
     private void getAdvParams() {
-        int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_S_ADV_PARAMS_READ;;
+        int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_S_ADV_PARAMS_READ;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", mMac);
         String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
@@ -438,14 +438,14 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
     public void onTxPower(View view) {
         if (isWindowLocked()) return;
         int txPower = (int) view.getTag();
-        TxPowerEnum txPowerEnum = TxPowerEnum.fromTxPower(txPower);
+        TxPowerTagEnum txPowerEnum = TxPowerTagEnum.fromTxPower(txPower);
         if (txPowerEnum == null) return;
         int selected = txPowerEnum.ordinal();
         BottomDialog dialog = new BottomDialog();
         dialog.setDatas(mTxPowerArray, selected);
         dialog.setListener(value -> {
             ((TextView) view).setText(mTxPowerArray.get(value));
-            int txPowerValue = TxPowerEnum.fromOrdinal(value).getTxPower();
+            int txPowerValue = TxPowerTagEnum.fromOrdinal(value).getTxPower();
             view.setTag(txPowerValue);
         });
         dialog.show(getSupportFragmentManager());
