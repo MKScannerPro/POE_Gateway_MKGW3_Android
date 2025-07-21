@@ -914,7 +914,7 @@ public class ParamsTask extends OrderTask {
         }
         remainPack = packetCount - 1;
         packetIndex = 0;
-        delayTime = DEFAULT_DELAY_TIME + 500 * packetCount;
+        delayTime = DEFAULT_DELAY_TIME + 500L * packetCount;
         if (packetCount > 1) {
             data = new byte[DATA_LENGTH_MAX + 6];
             data[0] = (byte) 0xEE;
