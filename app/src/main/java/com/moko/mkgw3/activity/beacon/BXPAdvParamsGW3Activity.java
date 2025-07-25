@@ -231,8 +231,6 @@ public class BXPAdvParamsGW3Activity extends BaseActivity<ActivityBxpCAdvParamsK
         int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_C_ADV_PARAMS_READ;
         if (mBeaconType == 4)
             msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_D_ADV_PARAMS_READ;
-        if (mBeaconType == 5)
-            msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_T_ADV_PARAMS_READ;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", mMac);
         String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);

@@ -106,8 +106,7 @@ public class BXPDAccParamsGW3Activity extends BaseActivity<ActivityBxpDAccParams
         // 更新所有设备的网络状态
         final String topic = event.getTopic();
         final String message = event.getMessage();
-        if (TextUtils.isEmpty(message))
-            return;
+        if (TextUtils.isEmpty(message)) return;
         int msg_id;
         try {
             JsonObject object = new Gson().fromJson(message, JsonObject.class);
@@ -141,6 +140,10 @@ public class BXPDAccParamsGW3Activity extends BaseActivity<ActivityBxpDAccParams
             mBind.tvFullScale.setText(mFullScaleArray.get(fullScale));
             int sensitivity = result.data.get("sensitivity").getAsInt();
             mBind.etSensitivity.setText(String.valueOf(sensitivity));
+            if (fullScale == 0) mBind.etSensitivity.setHint("1-20");
+            else if (fullScale == 1) mBind.etSensitivity.setHint("1-40");
+            else if (fullScale == 2) mBind.etSensitivity.setHint("1-80");
+            else if (fullScale == 3) mBind.etSensitivity.setHint("1-160");
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_DISCONNECT) {
             dismissLoadingProgressDialog();
@@ -148,8 +151,7 @@ public class BXPDAccParamsGW3Activity extends BaseActivity<ActivityBxpDAccParams
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
             }.getType();
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             finish();
         }
     }
@@ -157,8 +159,7 @@ public class BXPDAccParamsGW3Activity extends BaseActivity<ActivityBxpDAccParams
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceOnlineEvent(DeviceOnlineEvent event) {
         String mac = event.getMac();
-        if (!mMokoDeviceKgw3.mac.equals(mac))
-            return;
+        if (!mMokoDeviceKgw3.mac.equals(mac)) return;
         boolean online = event.isOnline();
         if (!online) {
             ToastUtils.showToast(this, "device is off-line");
@@ -212,13 +213,16 @@ public class BXPDAccParamsGW3Activity extends BaseActivity<ActivityBxpDAccParams
     }
 
     private boolean isValid() {
+        int fullScale = (int) mBind.tvFullScale.getTag();
         String sensitivityStr = mBind.etSensitivity.getText().toString();
         if (TextUtils.isEmpty(sensitivityStr)) {
             return false;
         }
         int sensitivity = Integer.parseInt(sensitivityStr);
-        if (sensitivity < 1 || sensitivity > 40)
-            return false;
+        if (fullScale == 0 && (sensitivity < 1 || sensitivity > 20)) return false;
+        else if (fullScale == 1 && (sensitivity < 1 || sensitivity > 40)) return false;
+        else if (fullScale == 2 && (sensitivity < 1 || sensitivity > 80)) return false;
+        else if (fullScale == 3 && (sensitivity < 1 || sensitivity > 160)) return false;
         return true;
     }
 
