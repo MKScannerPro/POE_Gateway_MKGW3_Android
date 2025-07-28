@@ -81,7 +81,7 @@ public class BXPTMotionEventGW3Activity extends BaseActivity<ActivityBxpTMotionE
             MsgNotify<BeaconInfo> result = new Gson().fromJson(message, type);
             if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             ToastUtils.showToast(this, result.data.result_code == 0 ? "Setup succeed!" : "Setup failed");
-            mBind.tvMotionEventClear.setText(String.valueOf(0));
+            mBind.tvMotionEventData.setText(String.valueOf(0));
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_T_MOTION_EVENT) {
             dismissLoadingProgressDialog();

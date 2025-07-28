@@ -90,6 +90,10 @@ public class BXPTAccParamsGW3Activity extends BaseActivity<ActivityBxpTAccParams
         BottomDialog dialog = new BottomDialog();
         dialog.setDatas(mFullScaleArray, selected);
         dialog.setListener(value -> {
+            if (value == 0) mBind.tvSensitivityUnit.setText("x 3.91mg");
+            else if (value == 1) mBind.tvSensitivityUnit.setText("x 7.81mg");
+            else if (value == 2) mBind.tvSensitivityUnit.setText("x 15.63mg");
+            else if (value == 3) mBind.tvSensitivityUnit.setText("x 31.25mg");
             mBind.tvFullScale.setText(mFullScaleArray.get(value));
             v.setTag(value);
         });
@@ -106,8 +110,7 @@ public class BXPTAccParamsGW3Activity extends BaseActivity<ActivityBxpTAccParams
         // 更新所有设备的网络状态
         final String topic = event.getTopic();
         final String message = event.getMessage();
-        if (TextUtils.isEmpty(message))
-            return;
+        if (TextUtils.isEmpty(message)) return;
         int msg_id;
         try {
             JsonObject object = new Gson().fromJson(message, JsonObject.class);
@@ -148,8 +151,7 @@ public class BXPTAccParamsGW3Activity extends BaseActivity<ActivityBxpTAccParams
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
             }.getType();
             MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
-            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac))
-                return;
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             finish();
         }
     }
@@ -157,8 +159,7 @@ public class BXPTAccParamsGW3Activity extends BaseActivity<ActivityBxpTAccParams
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceOnlineEvent(DeviceOnlineEvent event) {
         String mac = event.getMac();
-        if (!mMokoDeviceKgw3.mac.equals(mac))
-            return;
+        if (!mMokoDeviceKgw3.mac.equals(mac)) return;
         boolean online = event.isOnline();
         if (!online) {
             ToastUtils.showToast(this, "device is off-line");
@@ -217,8 +218,7 @@ public class BXPTAccParamsGW3Activity extends BaseActivity<ActivityBxpTAccParams
             return false;
         }
         int sensitivity = Integer.parseInt(sensitivityStr);
-        if (sensitivity < 1 || sensitivity > 255)
-            return false;
+        if (sensitivity < 1 || sensitivity > 255) return false;
         return true;
     }
 

@@ -105,7 +105,7 @@
 
                     <include
                         android:id="@+id/layoutSlot1Normal"
-                        layout="@layout/layout_adv_params" />
+                        layout="@layout/layout_slot_adv_params" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -128,7 +128,7 @@
 
                     <include
                         android:id="@+id/layoutSlot1AfterAdv"
-                        layout="@layout/layout_adv_params" />
+                        layout="@layout/layout_slot_adv_params" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -151,7 +151,7 @@
 
                     <include
                         android:id="@+id/layoutSlot1BeforeAdv"
-                        layout="@layout/layout_adv_params" />
+                        layout="@layout/layout_slot_adv_params" />
 
                     <TextView
                         android:id="@+id/tvSlot1TriggerAdvType"
@@ -163,7 +163,7 @@
 
                     <include
                         android:id="@+id/layoutSlot1TriggerAdv"
-                        layout="@layout/layout_adv_params" />
+                        layout="@layout/layout_slot_adv_params" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -226,7 +226,7 @@
 
                     <include
                         android:id="@+id/layoutSlot2Normal"
-                        layout="@layout/layout_adv_params" />
+                        layout="@layout/layout_slot_adv_params" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -249,7 +249,7 @@
 
                     <include
                         android:id="@+id/layoutSlot2AfterAdv"
-                        layout="@layout/layout_adv_params" />
+                        layout="@layout/layout_slot_adv_params" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -272,7 +272,7 @@
 
                     <include
                         android:id="@+id/layoutSlot2BeforeAdv"
-                        layout="@layout/layout_adv_params" />
+                        layout="@layout/layout_slot_adv_params" />
 
                     <TextView
                         android:id="@+id/tvSlot2TriggerAdvType"
@@ -284,7 +284,7 @@
 
                     <include
                         android:id="@+id/layoutSlot2TriggerAdv"
-                        layout="@layout/layout_adv_params" />
+                        layout="@layout/layout_slot_adv_params" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -347,7 +347,7 @@
 
                     <include
                         android:id="@+id/layoutSlot3Normal"
-                        layout="@layout/layout_adv_params" />
+                        layout="@layout/layout_slot_adv_params" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -370,7 +370,7 @@
 
                     <include
                         android:id="@+id/layoutSlot3AfterAdv"
-                        layout="@layout/layout_adv_params" />
+                        layout="@layout/layout_slot_adv_params" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -393,7 +393,7 @@
 
                     <include
                         android:id="@+id/layoutSlot3BeforeAdv"
-                        layout="@layout/layout_adv_params" />
+                        layout="@layout/layout_slot_adv_params" />
 
                     <TextView
                         android:id="@+id/tvSlot3TriggerAdvType"
@@ -405,7 +405,7 @@
 
                     <include
                         android:id="@+id/layoutSlot3TriggerAdv"
-                        layout="@layout/layout_adv_params" />
+                        layout="@layout/layout_slot_adv_params" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

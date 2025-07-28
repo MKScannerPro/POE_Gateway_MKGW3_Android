@@ -20,6 +20,7 @@ import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityBxpSAdvParamsKgw3Binding;
 import com.moko.mkgw3.databinding.LayoutAdvParamsBinding;
+import com.moko.mkgw3.databinding.LayoutSlotAdvParamsBinding;
 import com.moko.mkgw3.entity.AdvChannelS;
 import com.moko.mkgw3.entity.AdvChannelSInfo;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
@@ -114,18 +115,18 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
                         if (advChannel.normal_adv.adv_type == 0x00)
                             mBind.tvSlot1NormalAdvType.append("UID");
                         else if (advChannel.normal_adv.adv_type == 0x10)
-                            mBind.tvSlot1NormalAdvType.setText("URL");
+                            mBind.tvSlot1NormalAdvType.append("URL");
                         else if (advChannel.normal_adv.adv_type == 0x20)
-                            mBind.tvSlot1NormalAdvType.setText("TLM");
+                            mBind.tvSlot1NormalAdvType.append("TLM");
                         else if (advChannel.normal_adv.adv_type == 0x50)
-                            mBind.tvSlot1NormalAdvType.setText("iBeacon");
+                            mBind.tvSlot1NormalAdvType.append("iBeacon");
                         else if (advChannel.normal_adv.adv_type == 0x70)
-                            mBind.tvSlot1NormalAdvType.setText("TH Info");
+                            mBind.tvSlot1NormalAdvType.append("TH Info");
                         else if (advChannel.normal_adv.adv_type == 0x80)
-                            mBind.tvSlot1NormalAdvType.setText("Sensor info");
+                            mBind.tvSlot1NormalAdvType.append("Sensor info");
                         else if (advChannel.normal_adv.adv_type == 0x90)
-                            mBind.tvSlot1NormalAdvType.setText("No Data");
-                        mBind.layoutSlot1Normal.etAdvInterval.setText(String.valueOf(advChannel.normal_adv.adv_interval / 20));
+                            mBind.tvSlot1NormalAdvType.append("No Data");
+                        mBind.layoutSlot1Normal.etAdvInterval.setText(String.valueOf(advChannel.normal_adv.adv_interval / 100));
                         mBind.layoutSlot1Normal.tvTxPower.setText(String.format(Locale.getDefault(), "%d dBm", advChannel.normal_adv.tx_power));
                         mBind.layoutSlot1Normal.tvTxPower.setTag(advChannel.normal_adv.tx_power);
                     } else if (advChannel.channel_type == 1) {
@@ -133,18 +134,18 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
                         if (advChannel.trigger_after_adv.adv_type == 0x00)
                             mBind.tvSlot1AfterAdvType.append("UID");
                         else if (advChannel.trigger_after_adv.adv_type == 0x10)
-                            mBind.tvSlot1AfterAdvType.setText("URL");
+                            mBind.tvSlot1AfterAdvType.append("URL");
                         else if (advChannel.trigger_after_adv.adv_type == 0x20)
-                            mBind.tvSlot1AfterAdvType.setText("TLM");
+                            mBind.tvSlot1AfterAdvType.append("TLM");
                         else if (advChannel.trigger_after_adv.adv_type == 0x50)
-                            mBind.tvSlot1AfterAdvType.setText("iBeacon");
+                            mBind.tvSlot1AfterAdvType.append("iBeacon");
                         else if (advChannel.trigger_after_adv.adv_type == 0x70)
-                            mBind.tvSlot1AfterAdvType.setText("TH Info");
+                            mBind.tvSlot1AfterAdvType.append("TH Info");
                         else if (advChannel.trigger_after_adv.adv_type == 0x80)
-                            mBind.tvSlot1AfterAdvType.setText("Sensor info");
+                            mBind.tvSlot1AfterAdvType.append("Sensor info");
                         else if (advChannel.trigger_after_adv.adv_type == 0x90)
-                            mBind.tvSlot1AfterAdvType.setText("No Data");
-                        mBind.layoutSlot1AfterAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_after_adv.adv_interval / 20));
+                            mBind.tvSlot1AfterAdvType.append("No Data");
+                        mBind.layoutSlot1AfterAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_after_adv.adv_interval / 100));
                         mBind.layoutSlot1AfterAdv.tvTxPower.setText(String.format(Locale.getDefault(), "%d dBm", advChannel.trigger_after_adv.tx_power));
                         mBind.layoutSlot1AfterAdv.tvTxPower.setTag(advChannel.trigger_after_adv.tx_power);
                     } else if (advChannel.channel_type == 2) {
@@ -152,35 +153,35 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
                         if (advChannel.trigger_before_adv.adv_type == 0x00)
                             mBind.tvSlot1BeforeAdvType.append("UID");
                         else if (advChannel.trigger_before_adv.adv_type == 0x10)
-                            mBind.tvSlot1BeforeAdvType.setText("URL");
+                            mBind.tvSlot1BeforeAdvType.append("URL");
                         else if (advChannel.trigger_before_adv.adv_type == 0x20)
-                            mBind.tvSlot1BeforeAdvType.setText("TLM");
+                            mBind.tvSlot1BeforeAdvType.append("TLM");
                         else if (advChannel.trigger_before_adv.adv_type == 0x50)
-                            mBind.tvSlot1BeforeAdvType.setText("iBeacon");
+                            mBind.tvSlot1BeforeAdvType.append("iBeacon");
                         else if (advChannel.trigger_before_adv.adv_type == 0x70)
-                            mBind.tvSlot1BeforeAdvType.setText("TH Info");
+                            mBind.tvSlot1BeforeAdvType.append("TH Info");
                         else if (advChannel.trigger_before_adv.adv_type == 0x80)
-                            mBind.tvSlot1BeforeAdvType.setText("Sensor info");
+                            mBind.tvSlot1BeforeAdvType.append("Sensor info");
                         else if (advChannel.trigger_before_adv.adv_type == 0x90)
-                            mBind.tvSlot1BeforeAdvType.setText("No Data");
+                            mBind.tvSlot1BeforeAdvType.append("No Data");
                         if (advChannel.trigger_after_adv.adv_type == 0x00)
                             mBind.tvSlot1TriggerAdvType.append("UID");
                         else if (advChannel.trigger_after_adv.adv_type == 0x10)
-                            mBind.tvSlot1TriggerAdvType.setText("URL");
+                            mBind.tvSlot1TriggerAdvType.append("URL");
                         else if (advChannel.trigger_after_adv.adv_type == 0x20)
-                            mBind.tvSlot1TriggerAdvType.setText("TLM");
+                            mBind.tvSlot1TriggerAdvType.append("TLM");
                         else if (advChannel.trigger_after_adv.adv_type == 0x50)
-                            mBind.tvSlot1TriggerAdvType.setText("iBeacon");
+                            mBind.tvSlot1TriggerAdvType.append("iBeacon");
                         else if (advChannel.trigger_after_adv.adv_type == 0x70)
-                            mBind.tvSlot1TriggerAdvType.setText("TH Info");
+                            mBind.tvSlot1TriggerAdvType.append("TH Info");
                         else if (advChannel.trigger_after_adv.adv_type == 0x80)
-                            mBind.tvSlot1TriggerAdvType.setText("Sensor info");
+                            mBind.tvSlot1TriggerAdvType.append("Sensor info");
                         else if (advChannel.trigger_after_adv.adv_type == 0x90)
-                            mBind.tvSlot1TriggerAdvType.setText("No Data");
-                        mBind.layoutSlot1BeforeAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_before_adv.adv_interval / 20));
+                            mBind.tvSlot1TriggerAdvType.append("No Data");
+                        mBind.layoutSlot1BeforeAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_before_adv.adv_interval / 100));
                         mBind.layoutSlot1BeforeAdv.tvTxPower.setText(String.format(Locale.getDefault(), "%d dBm", advChannel.trigger_before_adv.tx_power));
                         mBind.layoutSlot1BeforeAdv.tvTxPower.setTag(advChannel.trigger_before_adv.tx_power);
-                        mBind.layoutSlot1TriggerAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_after_adv.adv_interval / 20));
+                        mBind.layoutSlot1TriggerAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_after_adv.adv_interval / 100));
                         mBind.layoutSlot1TriggerAdv.tvTxPower.setText(String.format(Locale.getDefault(), "%d dBm", advChannel.trigger_after_adv.tx_power));
                         mBind.layoutSlot1TriggerAdv.tvTxPower.setTag(advChannel.trigger_after_adv.tx_power);
                     }
@@ -194,18 +195,18 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
                         if (advChannel.normal_adv.adv_type == 0x00)
                             mBind.tvSlot2NormalAdvType.append("UID");
                         else if (advChannel.normal_adv.adv_type == 0x10)
-                            mBind.tvSlot2NormalAdvType.setText("URL");
+                            mBind.tvSlot2NormalAdvType.append("URL");
                         else if (advChannel.normal_adv.adv_type == 0x20)
-                            mBind.tvSlot2NormalAdvType.setText("TLM");
+                            mBind.tvSlot2NormalAdvType.append("TLM");
                         else if (advChannel.normal_adv.adv_type == 0x50)
-                            mBind.tvSlot2NormalAdvType.setText("iBeacon");
+                            mBind.tvSlot2NormalAdvType.append("iBeacon");
                         else if (advChannel.normal_adv.adv_type == 0x70)
-                            mBind.tvSlot2NormalAdvType.setText("TH Info");
+                            mBind.tvSlot2NormalAdvType.append("TH Info");
                         else if (advChannel.normal_adv.adv_type == 0x80)
-                            mBind.tvSlot2NormalAdvType.setText("Sensor info");
+                            mBind.tvSlot2NormalAdvType.append("Sensor info");
                         else if (advChannel.normal_adv.adv_type == 0x90)
-                            mBind.tvSlot2NormalAdvType.setText("No Data");
-                        mBind.layoutSlot2Normal.etAdvInterval.setText(String.valueOf(advChannel.normal_adv.adv_interval / 20));
+                            mBind.tvSlot2NormalAdvType.append("No Data");
+                        mBind.layoutSlot2Normal.etAdvInterval.setText(String.valueOf(advChannel.normal_adv.adv_interval / 100));
                         mBind.layoutSlot2Normal.tvTxPower.setText(String.format(Locale.getDefault(), "%d dBm", advChannel.normal_adv.tx_power));
                         mBind.layoutSlot2Normal.tvTxPower.setTag(advChannel.normal_adv.tx_power);
                     } else if (advChannel.channel_type == 1) {
@@ -213,18 +214,18 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
                         if (advChannel.trigger_after_adv.adv_type == 0x00)
                             mBind.tvSlot2AfterAdvType.append("UID");
                         else if (advChannel.trigger_after_adv.adv_type == 0x10)
-                            mBind.tvSlot2AfterAdvType.setText("URL");
+                            mBind.tvSlot2AfterAdvType.append("URL");
                         else if (advChannel.trigger_after_adv.adv_type == 0x20)
-                            mBind.tvSlot2AfterAdvType.setText("TLM");
+                            mBind.tvSlot2AfterAdvType.append("TLM");
                         else if (advChannel.trigger_after_adv.adv_type == 0x50)
-                            mBind.tvSlot2AfterAdvType.setText("iBeacon");
+                            mBind.tvSlot2AfterAdvType.append("iBeacon");
                         else if (advChannel.trigger_after_adv.adv_type == 0x70)
-                            mBind.tvSlot2AfterAdvType.setText("TH Info");
+                            mBind.tvSlot2AfterAdvType.append("TH Info");
                         else if (advChannel.trigger_after_adv.adv_type == 0x80)
-                            mBind.tvSlot2AfterAdvType.setText("Sensor info");
+                            mBind.tvSlot2AfterAdvType.append("Sensor info");
                         else if (advChannel.trigger_after_adv.adv_type == 0x90)
-                            mBind.tvSlot2AfterAdvType.setText("No Data");
-                        mBind.layoutSlot2AfterAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_after_adv.adv_interval / 20));
+                            mBind.tvSlot2AfterAdvType.append("No Data");
+                        mBind.layoutSlot2AfterAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_after_adv.adv_interval / 100));
                         mBind.layoutSlot2AfterAdv.tvTxPower.setText(String.format(Locale.getDefault(), "%d dBm", advChannel.trigger_after_adv.tx_power));
                         mBind.layoutSlot2AfterAdv.tvTxPower.setTag(advChannel.trigger_after_adv.tx_power);
                     } else if (advChannel.channel_type == 2) {
@@ -232,35 +233,35 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
                         if (advChannel.trigger_before_adv.adv_type == 0x00)
                             mBind.tvSlot2BeforeAdvType.append("UID");
                         else if (advChannel.trigger_before_adv.adv_type == 0x10)
-                            mBind.tvSlot2BeforeAdvType.setText("URL");
+                            mBind.tvSlot2BeforeAdvType.append("URL");
                         else if (advChannel.trigger_before_adv.adv_type == 0x20)
-                            mBind.tvSlot2BeforeAdvType.setText("TLM");
+                            mBind.tvSlot2BeforeAdvType.append("TLM");
                         else if (advChannel.trigger_before_adv.adv_type == 0x50)
-                            mBind.tvSlot2BeforeAdvType.setText("iBeacon");
+                            mBind.tvSlot2BeforeAdvType.append("iBeacon");
                         else if (advChannel.trigger_before_adv.adv_type == 0x70)
-                            mBind.tvSlot2BeforeAdvType.setText("TH Info");
+                            mBind.tvSlot2BeforeAdvType.append("TH Info");
                         else if (advChannel.trigger_before_adv.adv_type == 0x80)
-                            mBind.tvSlot2BeforeAdvType.setText("Sensor info");
+                            mBind.tvSlot2BeforeAdvType.append("Sensor info");
                         else if (advChannel.trigger_before_adv.adv_type == 0x90)
-                            mBind.tvSlot2BeforeAdvType.setText("No Data");
+                            mBind.tvSlot2BeforeAdvType.append("No Data");
                         if (advChannel.trigger_after_adv.adv_type == 0x00)
                             mBind.tvSlot2TriggerAdvType.append("UID");
                         else if (advChannel.trigger_after_adv.adv_type == 0x10)
-                            mBind.tvSlot2TriggerAdvType.setText("URL");
+                            mBind.tvSlot2TriggerAdvType.append("URL");
                         else if (advChannel.trigger_after_adv.adv_type == 0x20)
-                            mBind.tvSlot2TriggerAdvType.setText("TLM");
+                            mBind.tvSlot2TriggerAdvType.append("TLM");
                         else if (advChannel.trigger_after_adv.adv_type == 0x50)
-                            mBind.tvSlot2TriggerAdvType.setText("iBeacon");
+                            mBind.tvSlot2TriggerAdvType.append("iBeacon");
                         else if (advChannel.trigger_after_adv.adv_type == 0x70)
-                            mBind.tvSlot2TriggerAdvType.setText("TH Info");
+                            mBind.tvSlot2TriggerAdvType.append("TH Info");
                         else if (advChannel.trigger_after_adv.adv_type == 0x80)
-                            mBind.tvSlot2TriggerAdvType.setText("Sensor info");
+                            mBind.tvSlot2TriggerAdvType.append("Sensor info");
                         else if (advChannel.trigger_after_adv.adv_type == 0x90)
-                            mBind.tvSlot2TriggerAdvType.setText("No Data");
-                        mBind.layoutSlot2BeforeAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_before_adv.adv_interval / 20));
+                            mBind.tvSlot2TriggerAdvType.append("No Data");
+                        mBind.layoutSlot2BeforeAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_before_adv.adv_interval / 100));
                         mBind.layoutSlot2BeforeAdv.tvTxPower.setText(String.format(Locale.getDefault(), "%d dBm", advChannel.trigger_before_adv.tx_power));
                         mBind.layoutSlot2BeforeAdv.tvTxPower.setTag(advChannel.trigger_before_adv.tx_power);
-                        mBind.layoutSlot2TriggerAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_after_adv.adv_interval / 20));
+                        mBind.layoutSlot2TriggerAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_after_adv.adv_interval / 100));
                         mBind.layoutSlot2TriggerAdv.tvTxPower.setText(String.format(Locale.getDefault(), "%d dBm", advChannel.trigger_after_adv.tx_power));
                         mBind.layoutSlot2TriggerAdv.tvTxPower.setTag(advChannel.trigger_after_adv.tx_power);
                     }
@@ -274,18 +275,18 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
                         if (advChannel.normal_adv.adv_type == 0x00)
                             mBind.tvSlot3NormalAdvType.append("UID");
                         else if (advChannel.normal_adv.adv_type == 0x10)
-                            mBind.tvSlot3NormalAdvType.setText("URL");
+                            mBind.tvSlot3NormalAdvType.append("URL");
                         else if (advChannel.normal_adv.adv_type == 0x20)
-                            mBind.tvSlot3NormalAdvType.setText("TLM");
+                            mBind.tvSlot3NormalAdvType.append("TLM");
                         else if (advChannel.normal_adv.adv_type == 0x50)
-                            mBind.tvSlot3NormalAdvType.setText("iBeacon");
+                            mBind.tvSlot3NormalAdvType.append("iBeacon");
                         else if (advChannel.normal_adv.adv_type == 0x70)
-                            mBind.tvSlot3NormalAdvType.setText("TH Info");
+                            mBind.tvSlot3NormalAdvType.append("TH Info");
                         else if (advChannel.normal_adv.adv_type == 0x80)
-                            mBind.tvSlot3NormalAdvType.setText("Sensor info");
+                            mBind.tvSlot3NormalAdvType.append("Sensor info");
                         else if (advChannel.normal_adv.adv_type == 0x90)
-                            mBind.tvSlot3NormalAdvType.setText("No Data");
-                        mBind.layoutSlot3Normal.etAdvInterval.setText(String.valueOf(advChannel.normal_adv.adv_interval / 20));
+                            mBind.tvSlot3NormalAdvType.append("No Data");
+                        mBind.layoutSlot3Normal.etAdvInterval.setText(String.valueOf(advChannel.normal_adv.adv_interval / 100));
                         mBind.layoutSlot3Normal.tvTxPower.setText(String.format(Locale.getDefault(), "%d dBm", advChannel.normal_adv.tx_power));
                         mBind.layoutSlot3Normal.tvTxPower.setTag(advChannel.normal_adv.tx_power);
                     } else if (advChannel.channel_type == 1) {
@@ -293,18 +294,18 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
                         if (advChannel.trigger_after_adv.adv_type == 0x00)
                             mBind.tvSlot3AfterAdvType.append("UID");
                         else if (advChannel.trigger_after_adv.adv_type == 0x10)
-                            mBind.tvSlot3AfterAdvType.setText("URL");
+                            mBind.tvSlot3AfterAdvType.append("URL");
                         else if (advChannel.trigger_after_adv.adv_type == 0x20)
-                            mBind.tvSlot3AfterAdvType.setText("TLM");
+                            mBind.tvSlot3AfterAdvType.append("TLM");
                         else if (advChannel.trigger_after_adv.adv_type == 0x50)
-                            mBind.tvSlot3AfterAdvType.setText("iBeacon");
+                            mBind.tvSlot3AfterAdvType.append("iBeacon");
                         else if (advChannel.trigger_after_adv.adv_type == 0x70)
-                            mBind.tvSlot3AfterAdvType.setText("TH Info");
+                            mBind.tvSlot3AfterAdvType.append("TH Info");
                         else if (advChannel.trigger_after_adv.adv_type == 0x80)
-                            mBind.tvSlot3AfterAdvType.setText("Sensor info");
+                            mBind.tvSlot3AfterAdvType.append("Sensor info");
                         else if (advChannel.trigger_after_adv.adv_type == 0x90)
-                            mBind.tvSlot3AfterAdvType.setText("No Data");
-                        mBind.layoutSlot3AfterAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_after_adv.adv_interval / 20));
+                            mBind.tvSlot3AfterAdvType.append("No Data");
+                        mBind.layoutSlot3AfterAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_after_adv.adv_interval / 100));
                         mBind.layoutSlot3AfterAdv.tvTxPower.setText(String.format(Locale.getDefault(), "%d dBm", advChannel.trigger_after_adv.tx_power));
                         mBind.layoutSlot3AfterAdv.tvTxPower.setTag(advChannel.trigger_after_adv.tx_power);
                     } else if (advChannel.channel_type == 2) {
@@ -312,35 +313,35 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
                         if (advChannel.trigger_before_adv.adv_type == 0x00)
                             mBind.tvSlot3BeforeAdvType.append("UID");
                         else if (advChannel.trigger_before_adv.adv_type == 0x10)
-                            mBind.tvSlot3BeforeAdvType.setText("URL");
+                            mBind.tvSlot3BeforeAdvType.append("URL");
                         else if (advChannel.trigger_before_adv.adv_type == 0x20)
-                            mBind.tvSlot3BeforeAdvType.setText("TLM");
+                            mBind.tvSlot3BeforeAdvType.append("TLM");
                         else if (advChannel.trigger_before_adv.adv_type == 0x50)
-                            mBind.tvSlot3BeforeAdvType.setText("iBeacon");
+                            mBind.tvSlot3BeforeAdvType.append("iBeacon");
                         else if (advChannel.trigger_before_adv.adv_type == 0x70)
-                            mBind.tvSlot3BeforeAdvType.setText("TH Info");
+                            mBind.tvSlot3BeforeAdvType.append("TH Info");
                         else if (advChannel.trigger_before_adv.adv_type == 0x80)
-                            mBind.tvSlot3BeforeAdvType.setText("Sensor info");
+                            mBind.tvSlot3BeforeAdvType.append("Sensor info");
                         else if (advChannel.trigger_before_adv.adv_type == 0x90)
-                            mBind.tvSlot3BeforeAdvType.setText("No Data");
+                            mBind.tvSlot3BeforeAdvType.append("No Data");
                         if (advChannel.trigger_after_adv.adv_type == 0x00)
                             mBind.tvSlot3TriggerAdvType.append("UID");
                         else if (advChannel.trigger_after_adv.adv_type == 0x10)
-                            mBind.tvSlot3TriggerAdvType.setText("URL");
+                            mBind.tvSlot3TriggerAdvType.append("URL");
                         else if (advChannel.trigger_after_adv.adv_type == 0x20)
-                            mBind.tvSlot3TriggerAdvType.setText("TLM");
+                            mBind.tvSlot3TriggerAdvType.append("TLM");
                         else if (advChannel.trigger_after_adv.adv_type == 0x50)
-                            mBind.tvSlot3TriggerAdvType.setText("iBeacon");
+                            mBind.tvSlot3TriggerAdvType.append("iBeacon");
                         else if (advChannel.trigger_after_adv.adv_type == 0x70)
-                            mBind.tvSlot3TriggerAdvType.setText("TH Info");
+                            mBind.tvSlot3TriggerAdvType.append("TH Info");
                         else if (advChannel.trigger_after_adv.adv_type == 0x80)
-                            mBind.tvSlot3TriggerAdvType.setText("Sensor info");
+                            mBind.tvSlot3TriggerAdvType.append("Sensor info");
                         else if (advChannel.trigger_after_adv.adv_type == 0x90)
-                            mBind.tvSlot3TriggerAdvType.setText("No Data");
-                        mBind.layoutSlot3BeforeAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_before_adv.adv_interval / 20));
+                            mBind.tvSlot3TriggerAdvType.append("No Data");
+                        mBind.layoutSlot3BeforeAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_before_adv.adv_interval / 100));
                         mBind.layoutSlot3BeforeAdv.tvTxPower.setText(String.format(Locale.getDefault(), "%d dBm", advChannel.trigger_before_adv.tx_power));
                         mBind.layoutSlot3BeforeAdv.tvTxPower.setTag(advChannel.trigger_before_adv.tx_power);
-                        mBind.layoutSlot3TriggerAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_after_adv.adv_interval / 20));
+                        mBind.layoutSlot3TriggerAdv.etAdvInterval.setText(String.valueOf(advChannel.trigger_after_adv.adv_interval / 100));
                         mBind.layoutSlot3TriggerAdv.tvTxPower.setText(String.format(Locale.getDefault(), "%d dBm", advChannel.trigger_after_adv.tx_power));
                         mBind.layoutSlot3TriggerAdv.tvTxPower.setTag(advChannel.trigger_after_adv.tx_power);
                     }
@@ -459,7 +460,7 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
         int channelType = (int) view.getTag();
         if (channelType == 0) {
             String advIntervalStr = mBind.layoutSlot1Normal.etAdvInterval.getText().toString();
-            int interval = Integer.parseInt(advIntervalStr) * 20;
+            int interval = Integer.parseInt(advIntervalStr) * 100;
             int txPower = (int) mBind.layoutSlot1Normal.tvTxPower.getTag();
             JsonObject object = new JsonObject();
             object.addProperty("adv_interval", interval);
@@ -468,7 +469,7 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
         }
         if (channelType == 1) {
             String advIntervalStr = mBind.layoutSlot1AfterAdv.etAdvInterval.getText().toString();
-            int interval = Integer.parseInt(advIntervalStr) * 20;
+            int interval = Integer.parseInt(advIntervalStr) * 100;
             int txPower = (int) mBind.layoutSlot1AfterAdv.tvTxPower.getTag();
             JsonObject object = new JsonObject();
             object.addProperty("adv_interval", interval);
@@ -477,7 +478,7 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
         }
         if (channelType == 2) {
             String advIntervalStr = mBind.layoutSlot1BeforeAdv.etAdvInterval.getText().toString();
-            int interval = Integer.parseInt(advIntervalStr) * 20;
+            int interval = Integer.parseInt(advIntervalStr) * 100;
             int txPower = (int) mBind.layoutSlot1BeforeAdv.tvTxPower.getTag();
             JsonObject object = new JsonObject();
             object.addProperty("adv_interval", interval);
@@ -485,7 +486,7 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
             jsonObject.add("trigger_before_adv", object);
 
             String advIntervalTriggerStr = mBind.layoutSlot1TriggerAdv.etAdvInterval.getText().toString();
-            int intervalTrigger = Integer.parseInt(advIntervalTriggerStr) * 20;
+            int intervalTrigger = Integer.parseInt(advIntervalTriggerStr) * 100;
             int txPowerTrigger = (int) mBind.layoutSlot1BeforeAdv.tvTxPower.getTag();
             JsonObject objectTrigger = new JsonObject();
             objectTrigger.addProperty("adv_interval", intervalTrigger);
@@ -502,7 +503,7 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
 
     private boolean isSlot1ParamsValid(View view, int channel) {
         int channelType = (int) view.getTag();
-        ArrayList<LayoutAdvParamsBinding> layoutBindings = new ArrayList<>();
+        ArrayList<LayoutSlotAdvParamsBinding> layoutBindings = new ArrayList<>();
         if (channel == 0) {
             if (channelType == 0)
                 layoutBindings.add(mBind.layoutSlot1Normal);
@@ -536,7 +537,7 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
             }
 
         }
-        for (LayoutAdvParamsBinding binding : layoutBindings) {
+        for (LayoutSlotAdvParamsBinding binding : layoutBindings) {
             String advIntervalStr = binding.etAdvInterval.getText().toString();
             if (TextUtils.isEmpty(advIntervalStr)) {
                 return false;

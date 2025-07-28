@@ -82,12 +82,12 @@
                 android:id="@+id/tvMotionEventData"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
                 android:text="0"
                 android:textColor="@color/black_333333"
                 android:textSize="15sp"
                 app:layout_constraintBaseline_toBaselineOf="@id/tvMotionEventClear"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toLeftOf="@id/tvMotionEventClear" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
