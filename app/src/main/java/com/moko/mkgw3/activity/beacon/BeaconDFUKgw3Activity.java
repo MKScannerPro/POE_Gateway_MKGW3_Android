@@ -99,6 +99,7 @@ public class BeaconDFUKgw3Activity extends BaseActivity<ActivityBeaconDfuKgw3Bin
             int resultCode = result.data.get("result_code").getAsInt();
             ToastUtils.showToast(this,
                     String.format("Beacon DFU %s!", resultCode == 0 ? "successfully" : "failed"));
+            if (resultCode != 0) return;
             Intent intent = new Intent();
             intent.putExtra("code", resultCode);
             setResult(RESULT_OK, intent);

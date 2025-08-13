@@ -91,6 +91,10 @@ public class BXPDAccParamsGW3Activity extends BaseActivity<ActivityBxpDAccParams
         dialog.setDatas(mFullScaleArray, selected);
         dialog.setListener(value -> {
             mBind.tvFullScale.setText(mFullScaleArray.get(value));
+            if (value == 0) mBind.etSensitivity.setHint("1-20");
+            else if (value == 1) mBind.etSensitivity.setHint("1-40");
+            else if (value == 2) mBind.etSensitivity.setHint("1-80");
+            else if (value == 3) mBind.etSensitivity.setHint("1-160");
             v.setTag(value);
         });
         dialog.show(getSupportFragmentManager());

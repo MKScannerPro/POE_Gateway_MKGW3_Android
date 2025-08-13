@@ -458,36 +458,59 @@ public class BXPSAdvParamsGW3Activity extends BaseActivity<ActivityBxpSAdvParams
         jsonObject.addProperty("mac", mMac);
         jsonObject.addProperty("channel", channel);
         int channelType = (int) view.getTag();
+        LayoutSlotAdvParamsBinding normalLayoutBinding = null;
+        LayoutSlotAdvParamsBinding afterLayoutBinding = null;
+        LayoutSlotAdvParamsBinding beforeLayoutBinding = null;
+        LayoutSlotAdvParamsBinding triggerLayoutBinding = null;
+        if (channel == 0) {
+            normalLayoutBinding = mBind.layoutSlot1Normal;
+            afterLayoutBinding = mBind.layoutSlot1AfterAdv;
+            beforeLayoutBinding = mBind.layoutSlot1BeforeAdv;
+            triggerLayoutBinding = mBind.layoutSlot1TriggerAdv;
+        } else if (channel == 1) {
+            normalLayoutBinding = mBind.layoutSlot2Normal;
+            afterLayoutBinding = mBind.layoutSlot2AfterAdv;
+            beforeLayoutBinding = mBind.layoutSlot2BeforeAdv;
+            triggerLayoutBinding = mBind.layoutSlot2TriggerAdv;
+        } else if (channel == 2) {
+            normalLayoutBinding = mBind.layoutSlot3Normal;
+            afterLayoutBinding = mBind.layoutSlot3AfterAdv;
+            beforeLayoutBinding = mBind.layoutSlot3BeforeAdv;
+            triggerLayoutBinding = mBind.layoutSlot3TriggerAdv;
+        }
         if (channelType == 0) {
-            String advIntervalStr = mBind.layoutSlot1Normal.etAdvInterval.getText().toString();
+            assert normalLayoutBinding != null;
+            String advIntervalStr = normalLayoutBinding.etAdvInterval.getText().toString();
             int interval = Integer.parseInt(advIntervalStr) * 100;
-            int txPower = (int) mBind.layoutSlot1Normal.tvTxPower.getTag();
+            int txPower = (int) normalLayoutBinding.tvTxPower.getTag();
             JsonObject object = new JsonObject();
             object.addProperty("adv_interval", interval);
             object.addProperty("tx_power", txPower);
             jsonObject.add("normal_adv", object);
         }
         if (channelType == 1) {
-            String advIntervalStr = mBind.layoutSlot1AfterAdv.etAdvInterval.getText().toString();
+            assert afterLayoutBinding != null;
+            String advIntervalStr = afterLayoutBinding.etAdvInterval.getText().toString();
             int interval = Integer.parseInt(advIntervalStr) * 100;
-            int txPower = (int) mBind.layoutSlot1AfterAdv.tvTxPower.getTag();
+            int txPower = (int) afterLayoutBinding.tvTxPower.getTag();
             JsonObject object = new JsonObject();
             object.addProperty("adv_interval", interval);
             object.addProperty("tx_power", txPower);
             jsonObject.add("trigger_after_adv", object);
         }
         if (channelType == 2) {
-            String advIntervalStr = mBind.layoutSlot1BeforeAdv.etAdvInterval.getText().toString();
+            assert beforeLayoutBinding != null;
+            String advIntervalStr = beforeLayoutBinding.etAdvInterval.getText().toString();
             int interval = Integer.parseInt(advIntervalStr) * 100;
-            int txPower = (int) mBind.layoutSlot1BeforeAdv.tvTxPower.getTag();
+            int txPower = (int) beforeLayoutBinding.tvTxPower.getTag();
             JsonObject object = new JsonObject();
             object.addProperty("adv_interval", interval);
             object.addProperty("tx_power", txPower);
             jsonObject.add("trigger_before_adv", object);
 
-            String advIntervalTriggerStr = mBind.layoutSlot1TriggerAdv.etAdvInterval.getText().toString();
+            String advIntervalTriggerStr = triggerLayoutBinding.etAdvInterval.getText().toString();
             int intervalTrigger = Integer.parseInt(advIntervalTriggerStr) * 100;
-            int txPowerTrigger = (int) mBind.layoutSlot1BeforeAdv.tvTxPower.getTag();
+            int txPowerTrigger = (int) triggerLayoutBinding.tvTxPower.getTag();
             JsonObject objectTrigger = new JsonObject();
             objectTrigger.addProperty("adv_interval", intervalTrigger);
             objectTrigger.addProperty("tx_power", txPowerTrigger);

@@ -183,6 +183,8 @@ public class DeviceDetailKgw3Activity extends BaseActivity<ActivityDetailKgw3Bin
                 }
             } else {
                 Intent intent = new Intent(this, BleManagerKgw3Activity.class);
+                if (mMokoDeviceKgw3.deviceType == 1)
+                    intent = new Intent(this, BleManagerKgw3V2Activity.class);
                 intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
                 startActivity(intent);
             }

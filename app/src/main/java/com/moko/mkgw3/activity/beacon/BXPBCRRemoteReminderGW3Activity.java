@@ -182,8 +182,8 @@ public class BXPBCRRemoteReminderGW3Activity extends BaseActivity<ActivityBxpBCr
     }
 
     private void setVibrationNotifyRemind() {
-        String vibrationTimeStr = mBind.etRingingTime.getText().toString();
-        String vibrationIntervalStr = mBind.etRingingInterval.getText().toString();
+        String vibrationTimeStr = mBind.etVibrationTime.getText().toString();
+        String vibrationIntervalStr = mBind.etVibrationInterval.getText().toString();
         int vibrationTime = Integer.parseInt(vibrationTimeStr);
         int vibrationInterval = Integer.parseInt(vibrationIntervalStr);
         int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_B_CR_VIBRATION;

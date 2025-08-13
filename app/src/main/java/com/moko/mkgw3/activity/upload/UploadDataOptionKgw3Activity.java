@@ -43,6 +43,10 @@ public class UploadDataOptionKgw3Activity extends BaseActivity<ActivityUploadDat
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
         appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
         mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
+        
+        mBind.cbRawDataAdv.setText(mMokoDeviceKgw3.deviceType == 0 ? "RAW Data-Advertising" : "RAW Data");
+        mBind.llRawDataRsp.setVisibility(mMokoDeviceKgw3.deviceType == 0 ? View.VISIBLE : View.GONE);
+        
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.postDelayed(() -> {
             dismissLoadingProgressDialog();
@@ -83,6 +87,8 @@ public class UploadDataOptionKgw3Activity extends BaseActivity<ActivityUploadDat
             mHandler.removeMessages(0);
             mBind.cbTimestamp.setChecked(result.data.get("timestamp").getAsInt() == 1);
             mBind.cbRawDataAdv.setChecked(result.data.get("adv_data").getAsInt() == 1);
+            if (mMokoDeviceKgw3.deviceType == 0)
+                mBind.cbRawDataRsp.setChecked(result.data.get("rsp_data").getAsInt() == 1);
         }
         if (msg_id == MQTTConstants.CONFIG_MSG_ID_UPLOAD_DATA_OPTION) {
             Type type = new TypeToken<MsgConfigResult>() {
@@ -114,6 +120,8 @@ public class UploadDataOptionKgw3Activity extends BaseActivity<ActivityUploadDat
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("timestamp", mBind.cbTimestamp.isChecked() ? 1 : 0);
         jsonObject.addProperty("adv_data", mBind.cbRawDataAdv.isChecked() ? 1 : 0);
+        if (mMokoDeviceKgw3.deviceType == 0)
+            jsonObject.addProperty("rsp_data", mBind.cbRawDataRsp.isChecked() ? 1 : 0);
         String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);

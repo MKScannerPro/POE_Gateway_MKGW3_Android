@@ -113,10 +113,11 @@ public class BeaconDFUKgw3v2Activity extends BaseActivity<ActivityBeaconDfuKgw3B
                 dismissLoadingMessageDialog();
                 ToastUtils.showToast(this,
                         String.format("Beacon DFU %s!", status == 1 ? "successfully" : "failed"));
-                Intent intent = new Intent();
-                intent.putExtra("code", status);
-                setResult(RESULT_OK, intent);
-                finish();
+                if (status == 1) {
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
             }
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_DFU_FAILED_BATCH) {
@@ -126,11 +127,8 @@ public class BeaconDFUKgw3v2Activity extends BaseActivity<ActivityBeaconDfuKgw3B
             if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
             dismissLoadingMessageDialog();
             int resultCode = result.data.get("multi_dfu_result_code").getAsInt();
-            ToastUtils.showToast(this, "Beacon DFU failed!");
-            Intent intent = new Intent();
-            intent.putExtra("code", resultCode);
-            setResult(RESULT_OK, intent);
-            finish();
+            if (resultCode == 0)
+                ToastUtils.showToast(this, "Beacon DFU failed!");
         }
         if (msg_id == MQTTConstants.CONFIG_MSG_ID_BLE_DFU_BATCH) {
             Type type = new TypeToken<MsgConfigResult>() {

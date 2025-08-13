@@ -161,6 +161,35 @@ public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw
         if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
             dismissLoadingProgressDialog();
         }
+        if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
+            OrderTaskResponse response = event.getResponse();
+            OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
+            byte[] value = response.responseValue;
+            if (orderCHAR == OrderCHAR.CHAR_PARAMS) {
+                int header = value[0] & 0xFF;// 0xEE
+                int cmd = value[2] & 0xFF;
+                if (header == 0xEE) {
+                    ParamsLongKeyEnum configKeyEnum = ParamsLongKeyEnum.fromParamKey(cmd);
+                    if (configKeyEnum == null) return;
+                    // write
+                    switch (configKeyEnum) {
+                        case KEY_MQTT_USERNAME:
+                        case KEY_MQTT_PASSWORD:
+                            mSavedParamsError = true;
+                            break;
+                        case KEY_MQTT_CA:
+                        case KEY_MQTT_CLIENT_CERT:
+                        case KEY_MQTT_CLIENT_KEY:
+                            ToastUtils.showToast(this, "Setup failed！");
+                            break;
+                    }
+                } else if (header == 0xED) {
+                    ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
+                    if (configKeyEnum == null) return;
+                    mSavedParamsError = true;
+                }
+            }
+        }
         if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
             OrderTaskResponse response = event.getResponse();
             OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
@@ -183,13 +212,43 @@ public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw
                                 switch (configKeyEnum) {
                                     case KEY_MQTT_USERNAME:
                                     case KEY_MQTT_PASSWORD:
-                                    case KEY_MQTT_CLIENT_KEY:
-                                    case KEY_MQTT_CLIENT_CERT:
                                         if (result != 1) {
                                             mSavedParamsError = true;
                                         }
                                         break;
                                     case KEY_MQTT_CA:
+                                        if (result != 1) mSavedParamsError = true;
+                                        if (mqttDeviceConfig.connectMode == 2) {
+                                            if (mSavedParamsError) {
+                                                ToastUtils.showToast(this, "Setup failed！");
+                                            } else {
+                                                mIsSaved = true;
+                                                ToastUtils.showToast(this, "Setup succeed！");
+                                            }
+                                            return;
+                                        }
+                                        mBind.title.postDelayed(() -> {
+                                            showLoadingProgressDialog();
+                                            try {
+                                                MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setClientKey(new File(mqttDeviceConfig.clientKeyPath)));
+                                            } catch (Exception e) {
+                                                ToastUtils.showToast(MqttSettingsKgw3Activity.this, "File is missing");
+                                            }
+                                        }, 300);
+                                        break;
+                                    case KEY_MQTT_CLIENT_KEY:
+                                        if (result != 1) mSavedParamsError = true;
+                                        mBind.title.postDelayed(() -> {
+                                            showLoadingProgressDialog();
+                                            try {
+                                                MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setClientCert(new File(mqttDeviceConfig.clientCertPath)));
+                                            } catch (Exception e) {
+                                                ToastUtils.showToast(MqttSettingsKgw3Activity.this, "File is missing");
+                                            }
+                                        }, 300);
+                                        break;
+                                    case KEY_MQTT_CLIENT_CERT:
+                                        if (result != 1) mSavedParamsError = true;
                                         if (mSavedParamsError) {
                                             ToastUtils.showToast(this, "Setup failed！");
                                         } else {
@@ -242,21 +301,29 @@ public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw
                                         }
                                         break;
                                     case KEY_MQTT_CONNECT_MODE:
-                                        if (result != 1) {
-                                            mSavedParamsError = true;
-                                        }
+                                        if (result != 1) mSavedParamsError = true;
                                         if (mSavedParamsError) {
                                             ToastUtils.showToast(this, "Setup failed！");
                                         } else {
-                                            mIsSaved = true;
-                                            ToastUtils.showToast(this, "Setup succeed！");
+                                            if (mqttDeviceConfig.connectMode < 2) {
+                                                mIsSaved = true;
+                                                ToastUtils.showToast(this, "Setup succeed！");
+                                            } else {
+                                                mBind.title.postDelayed(() -> {
+                                                    showLoadingProgressDialog();
+                                                    try {
+                                                        MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setCA(new File(mqttDeviceConfig.caPath)));
+                                                    } catch (Exception e) {
+                                                        ToastUtils.showToast(MqttSettingsKgw3Activity.this, "File is missing");
+                                                    }
+                                                }, 300);
+                                            }
+                                            break;
                                         }
-                                        break;
                                 }
                             }
                             if (flag == 0x00) {
-                                if (length == 0)
-                                    return;
+                                if (length == 0) return;
                                 // read
                                 switch (configKeyEnum) {
                                     case KEY_MQTT_CONNECT_MODE:
@@ -489,17 +556,6 @@ public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw
             orderTasks.add(OrderTaskAssembler.setMqttUserName(mqttDeviceConfig.username));
             orderTasks.add(OrderTaskAssembler.setMqttPassword(mqttDeviceConfig.password));
             orderTasks.add(OrderTaskAssembler.setMqttConnectMode(mqttDeviceConfig.connectMode));
-            if (mqttDeviceConfig.connectMode == 2) {
-                File file = new File(mqttDeviceConfig.caPath);
-                orderTasks.add(OrderTaskAssembler.setCA(file));
-            } else if (mqttDeviceConfig.connectMode == 3) {
-                File clientKeyFile = new File(mqttDeviceConfig.clientKeyPath);
-                orderTasks.add(OrderTaskAssembler.setClientKey(clientKeyFile));
-                File clientCertFile = new File(mqttDeviceConfig.clientCertPath);
-                orderTasks.add(OrderTaskAssembler.setClientCert(clientCertFile));
-                File caFile = new File(mqttDeviceConfig.caPath);
-                orderTasks.add(OrderTaskAssembler.setCA(caFile));
-            }
             MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         } catch (Exception e) {
             ToastUtils.showToast(this, "File is missing");
@@ -507,26 +563,22 @@ public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw
     }
 
     public void selectCertificate(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         sslFragment.selectCertificate();
     }
 
     public void selectCAFile(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         sslFragment.selectCAFile();
     }
 
     public void selectKeyFile(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         sslFragment.selectKeyFile();
     }
 
     public void selectCertFile(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         sslFragment.selectCertFile();
     }
 
@@ -708,8 +760,7 @@ public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw
     }
 
     public void onImportSettings(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
         intent.addCategory(Intent.CATEGORY_OPENABLE);

@@ -276,11 +276,8 @@ public class BXPBCRGW3Activity extends BaseActivity<ActivityBxpBCrInfoKgw3Bindin
 
     private final ActivityResultLauncher<Intent> startBeaconDFU = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == RESULT_OK && null != result.getData()) {
-            int code = result.getData().getIntExtra("code", 1);
-            if (code != 1) {
-                ToastUtils.showToast(this, "Bluetooth disconnect");
-                finish();
-            }
+            ToastUtils.showToast(this, "Bluetooth disconnect");
+            finish();
         }
     });
 

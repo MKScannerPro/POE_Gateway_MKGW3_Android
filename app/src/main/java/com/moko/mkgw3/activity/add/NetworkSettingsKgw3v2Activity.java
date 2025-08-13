@@ -182,6 +182,27 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
         if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
             dismissLoadingProgressDialog();
         }
+        if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
+            OrderTaskResponse response = event.getResponse();
+            OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
+            byte[] value = response.responseValue;
+            if (orderCHAR == OrderCHAR.CHAR_PARAMS) {
+                int header = value[0] & 0xFF;// 0xEE
+                int cmd = value[2] & 0xFF;
+                if (header == 0xEE) {
+                    ParamsLongKeyEnum configKeyEnum = ParamsLongKeyEnum.fromParamKey(cmd);
+                    if (configKeyEnum == null) return;
+                    // write
+                    switch (configKeyEnum) {
+                        case KEY_WIFI_CA:
+                        case KEY_WIFI_CLIENT_CERT:
+                        case KEY_WIFI_CLIENT_KEY:
+                            ToastUtils.showToast(this, "Setup failed！");
+                            break;
+                    }
+                }
+            }
+        }
         if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
             OrderTaskResponse response = event.getResponse();
             OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
@@ -199,10 +220,45 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
                             // write
                             int result = value[4] & 0xFF;
                             switch (configKeyEnum) {
-                                case KEY_WIFI_CLIENT_KEY:
-                                case KEY_WIFI_CLIENT_CERT:
                                 case KEY_WIFI_CA:
                                     if (result != 1) mSavedParamsError = true;
+                                    if (mEAPTypeSelected != 2 && mBind.cbVerifyServer.isChecked()) {
+                                        if (mSavedParamsError) {
+                                            ToastUtils.showToast(this, "Setup failed！");
+                                        } else {
+                                            mIsSaved = true;
+                                            ToastUtils.showToast(this, "Setup succeed！");
+                                        }
+                                        return;
+                                    }
+                                    mBind.tvTitle.postDelayed(() -> {
+                                        showLoadingProgressDialog();
+                                        try {
+                                            MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setWifiClientCert(new File(mCertPath)));
+                                        } catch (Exception e) {
+                                            ToastUtils.showToast(NetworkSettingsKgw3v2Activity.this, "File is missing");
+                                        }
+                                    }, 300);
+                                    break;
+                                case KEY_WIFI_CLIENT_CERT:
+                                    if (result != 1) mSavedParamsError = true;
+                                    mBind.tvTitle.postDelayed(() -> {
+                                        showLoadingProgressDialog();
+                                        try {
+                                            MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setWifiClientKey(new File(mKeyPath)));
+                                        } catch (Exception e) {
+                                            ToastUtils.showToast(NetworkSettingsKgw3v2Activity.this, "File is missing");
+                                        }
+                                    }, 300);
+                                    break;
+                                case KEY_WIFI_CLIENT_KEY:
+                                    if (result != 1) mSavedParamsError = true;
+                                    if (mSavedParamsError) {
+                                        ToastUtils.showToast(this, "Setup failed！");
+                                    } else {
+                                        mIsSaved = true;
+                                        ToastUtils.showToast(this, "Setup succeed！");
+                                    }
                                     break;
                             }
                         }
@@ -220,17 +276,26 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
                                 case KEY_WIFI_EAP_USERNAME:
                                 case KEY_WIFI_EAP_PASSWORD:
                                 case KEY_WIFI_EAP_DOMAIN_ID:
-                                case KEY_WIFI_EAP_VERIFY_SERVICE_ENABLE:
-                                case KEY_WIFI_PASSWORD:
                                 case KEY_WIFI_EAP_TYPE:
                                 case KEY_WIFI_DHCP:
                                 case KEY_WIFI_IP_INFO:
-                                case KEY_ETHERNET_DHCP:
                                 case KEY_ETHERNET_IP_INFO:
+                                case KEY_NETWORK_TYPE:
                                     if (result != 1) mSavedParamsError = true;
                                     break;
-
-                                case KEY_NETWORK_TYPE:
+                                case KEY_WIFI_EAP_VERIFY_SERVICE_ENABLE:
+                                    if (result != 1) mSavedParamsError = true;
+                                    if (mEAPTypeSelected != 2 && !mBind.cbVerifyServer.isChecked()) {
+                                        if (mSavedParamsError) {
+                                            ToastUtils.showToast(this, "Setup failed！");
+                                        } else {
+                                            mIsSaved = true;
+                                            ToastUtils.showToast(this, "Setup succeed！");
+                                        }
+                                    }
+                                    break;
+                                case KEY_WIFI_PASSWORD:
+                                case KEY_ETHERNET_DHCP:
                                     if (result != 1) mSavedParamsError = true;
                                     if (mSavedParamsError) {
                                         ToastUtils.showToast(this, "Setup failed！");
@@ -283,8 +348,7 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
                                     } else {
                                         if (mEAPTypeSelected != 2)
                                             mBind.llCa.setVisibility(mBind.cbVerifyServer.isChecked() ? View.VISIBLE : View.GONE);
-                                        else
-                                            mBind.llCa.setVisibility(View.VISIBLE);
+                                        else mBind.llCa.setVisibility(View.VISIBLE);
                                         mBind.clUsername.setVisibility(mEAPTypeSelected == 2 ? View.GONE : View.VISIBLE);
                                         mBind.clEapPassword.setVisibility(mEAPTypeSelected == 2 ? View.GONE : View.VISIBLE);
                                         mBind.cbVerifyServer.setVisibility(mEAPTypeSelected == 2 ? View.INVISIBLE : View.VISIBLE);
@@ -337,14 +401,10 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
 
                                 case KEY_WIFI_IP_INFO:
                                     if (length == 16) {
-                                        wifiIp = String.format(Locale.getDefault(), "%d.%d.%d.%d",
-                                                value[4] & 0xFF, value[5] & 0xFF, value[6] & 0xFF, value[7] & 0xFF);
-                                        wifiMask = String.format(Locale.getDefault(), "%d.%d.%d.%d",
-                                                value[8] & 0xFF, value[9] & 0xFF, value[10] & 0xFF, value[11] & 0xFF);
-                                        wifiGateway = String.format(Locale.getDefault(), "%d.%d.%d.%d",
-                                                value[12] & 0xFF, value[13] & 0xFF, value[14] & 0xFF, value[15] & 0xFF);
-                                        wifiDns = String.format(Locale.getDefault(), "%d.%d.%d.%d",
-                                                value[16] & 0xFF, value[17] & 0xFF, value[18] & 0xFF, value[19] & 0xFF);
+                                        wifiIp = String.format(Locale.getDefault(), "%d.%d.%d.%d", value[4] & 0xFF, value[5] & 0xFF, value[6] & 0xFF, value[7] & 0xFF);
+                                        wifiMask = String.format(Locale.getDefault(), "%d.%d.%d.%d", value[8] & 0xFF, value[9] & 0xFF, value[10] & 0xFF, value[11] & 0xFF);
+                                        wifiGateway = String.format(Locale.getDefault(), "%d.%d.%d.%d", value[12] & 0xFF, value[13] & 0xFF, value[14] & 0xFF, value[15] & 0xFF);
+                                        wifiDns = String.format(Locale.getDefault(), "%d.%d.%d.%d", value[16] & 0xFF, value[17] & 0xFF, value[18] & 0xFF, value[19] & 0xFF);
                                     }
                                     if (selectedNetworkType != 0) setIpInfo(mBind.wifiDhcp);
                                     break;
@@ -357,14 +417,10 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
 
                                 case KEY_ETHERNET_IP_INFO:
                                     if (length == 16) {
-                                        ethernetIp = String.format(Locale.getDefault(), "%d.%d.%d.%d",
-                                                value[4] & 0xFF, value[5] & 0xFF, value[6] & 0xFF, value[7] & 0xFF);
-                                        ethernetMask = String.format(Locale.getDefault(), "%d.%d.%d.%d",
-                                                value[8] & 0xFF, value[9] & 0xFF, value[10] & 0xFF, value[11] & 0xFF);
-                                        ethernetGateway = String.format(Locale.getDefault(), "%d.%d.%d.%d",
-                                                value[12] & 0xFF, value[13] & 0xFF, value[14] & 0xFF, value[15] & 0xFF);
-                                        ethernetDns = String.format(Locale.getDefault(), "%d.%d.%d.%d",
-                                                value[16] & 0xFF, value[17] & 0xFF, value[18] & 0xFF, value[19] & 0xFF);
+                                        ethernetIp = String.format(Locale.getDefault(), "%d.%d.%d.%d", value[4] & 0xFF, value[5] & 0xFF, value[6] & 0xFF, value[7] & 0xFF);
+                                        ethernetMask = String.format(Locale.getDefault(), "%d.%d.%d.%d", value[8] & 0xFF, value[9] & 0xFF, value[10] & 0xFF, value[11] & 0xFF);
+                                        ethernetGateway = String.format(Locale.getDefault(), "%d.%d.%d.%d", value[12] & 0xFF, value[13] & 0xFF, value[14] & 0xFF, value[15] & 0xFF);
+                                        ethernetDns = String.format(Locale.getDefault(), "%d.%d.%d.%d", value[16] & 0xFF, value[17] & 0xFF, value[18] & 0xFF, value[19] & 0xFF);
                                     }
                                     if (selectedNetworkType != 1) setIpInfo(mBind.ethDhcp);
                                     break;
@@ -428,8 +484,7 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
             } else {
                 if (mEAPTypeSelected != 2)
                     mBind.llCa.setVisibility(mBind.cbVerifyServer.isChecked() ? View.VISIBLE : View.GONE);
-                else
-                    mBind.llCa.setVisibility(View.VISIBLE);
+                else mBind.llCa.setVisibility(View.VISIBLE);
                 mBind.clUsername.setVisibility(mEAPTypeSelected == 2 ? View.GONE : View.VISIBLE);
                 mBind.clEapPassword.setVisibility(mEAPTypeSelected == 2 ? View.GONE : View.VISIBLE);
                 mBind.cbVerifyServer.setVisibility(mEAPTypeSelected == 2 ? View.INVISIBLE : View.VISIBLE);
@@ -454,8 +509,7 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
             mBind.clDomainId.setVisibility(mEAPTypeSelected == 2 ? View.VISIBLE : View.GONE);
             if (mEAPTypeSelected != 2)
                 mBind.llCa.setVisibility(mBind.cbVerifyServer.isChecked() ? View.VISIBLE : View.GONE);
-            else
-                mBind.llCa.setVisibility(View.VISIBLE);
+            else mBind.llCa.setVisibility(View.VISIBLE);
             mBind.llCert.setVisibility(mEAPTypeSelected == 2 ? View.VISIBLE : View.GONE);
             mBind.llKey.setVisibility(mEAPTypeSelected == 2 ? View.VISIBLE : View.GONE);
         });
@@ -468,8 +522,7 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
         intent.setType("*/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         try {
-            startActivityForResult(Intent.createChooser(intent, "select file first!"),
-                    AppConstants.REQUEST_CODE_SELECT_CA);
+            startActivityForResult(Intent.createChooser(intent, "select file first!"), AppConstants.REQUEST_CODE_SELECT_CA);
         } catch (ActivityNotFoundException ex) {
             ToastUtils.showToast(this, "install file manager app");
         }
@@ -481,8 +534,7 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
         intent.setType("*/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         try {
-            startActivityForResult(Intent.createChooser(intent, "select file first!"),
-                    AppConstants.REQUEST_CODE_SELECT_CLIENT_CERT);
+            startActivityForResult(Intent.createChooser(intent, "select file first!"), AppConstants.REQUEST_CODE_SELECT_CLIENT_CERT);
         } catch (ActivityNotFoundException ex) {
             ToastUtils.showToast(this, "install file manager app");
         }
@@ -494,8 +546,7 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
         intent.setType("*/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         try {
-            startActivityForResult(Intent.createChooser(intent, "select file first!"),
-                    AppConstants.REQUEST_CODE_SELECT_CLIENT_KEY);
+            startActivityForResult(Intent.createChooser(intent, "select file first!"), AppConstants.REQUEST_CODE_SELECT_CLIENT_KEY);
         } catch (ActivityNotFoundException ex) {
             ToastUtils.showToast(this, "install file manager app");
         }
@@ -533,10 +584,7 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
                 Matcher matcherMask = pattern.matcher(mask);
                 Matcher matcherGateway = pattern.matcher(gateway);
                 Matcher matcherDns = pattern.matcher(dns);
-                if (!matcherIp.matches()
-                        || !matcherMask.matches()
-                        || !matcherGateway.matches()
-                        || !matcherDns.matches())
+                if (!matcherIp.matches() || !matcherMask.matches() || !matcherGateway.matches() || !matcherDns.matches())
                     return true;
                 ethernetIp = ip;
                 ethernetMask = mask;
@@ -555,10 +603,7 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
                 Matcher matcherMask = pattern.matcher(mask);
                 Matcher matcherGateway = pattern.matcher(gateway);
                 Matcher matcherDns = pattern.matcher(dns);
-                if (!matcherIp.matches()
-                        || !matcherMask.matches()
-                        || !matcherGateway.matches()
-                        || !matcherDns.matches())
+                if (!matcherIp.matches() || !matcherMask.matches() || !matcherGateway.matches() || !matcherDns.matches())
                     return true;
                 wifiIp = ip;
                 wifiMask = mask;
@@ -579,8 +624,23 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
             String domainId = mBind.etDomainId.getText().toString();
             showLoadingProgressDialog();
             List<OrderTask> orderTasks = new ArrayList<>();
+            orderTasks.add(OrderTaskAssembler.setNetworkType(selectedNetworkType));
             if (selectedNetworkType > 0) {
+                // WIFI
                 orderTasks.add(OrderTaskAssembler.setWifiSecurityType(mSecuritySelected));
+                if (!wifiDhcpEnable) {
+                    String[] ipInfo = getDHCPInfo(mBind.wifiDhcp);
+                    orderTasks.add(OrderTaskAssembler.setWifiIPInfo(ipInfo[0], ipInfo[1], ipInfo[2], ipInfo[3]));
+                }
+                orderTasks.add(OrderTaskAssembler.setWifiDHCP(wifiDhcpEnable ? 1 : 0));
+                orderTasks.add(OrderTaskAssembler.setWifiEapType(mEAPTypeSelected));
+                if (selectedNetworkType > 1) {
+                    if (!ethernetDhcpEnable) {
+                        String[] ipInfo = getDHCPInfo(mBind.ethDhcp);
+                        orderTasks.add(OrderTaskAssembler.setEthernetIPInfo(ipInfo[0], ipInfo[1], ipInfo[2], ipInfo[3]));
+                    }
+                    orderTasks.add(OrderTaskAssembler.setEthernetDHCP(ethernetDhcpEnable ? 1 : 0));
+                }
                 if (mSecuritySelected == 0) {
                     orderTasks.add(OrderTaskAssembler.setWifiSSID(ssid));
                     orderTasks.add(OrderTaskAssembler.setWifiPassword(password));
@@ -597,31 +657,18 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
                         orderTasks.add(OrderTaskAssembler.setWifiEapDomainId(domainId));
                         orderTasks.add(OrderTaskAssembler.getWifiEapVerifyServiceEnable());
                         orderTasks.add(OrderTaskAssembler.setWifiCA(new File(mCaPath)));
-                        orderTasks.add(OrderTaskAssembler.setWifiClientCert(new File(mCertPath)));
-                        orderTasks.add(OrderTaskAssembler.setWifiClientKey(new File(mKeyPath)));
-                    }
-                }
-                if (!wifiDhcpEnable) {
-                    String[] ipInfo = getDHCPInfo(mBind.wifiDhcp);
-                    orderTasks.add(OrderTaskAssembler.setWifiIPInfo(ipInfo[0], ipInfo[1], ipInfo[2], ipInfo[3]));
-                }
-                orderTasks.add(OrderTaskAssembler.setWifiDHCP(wifiDhcpEnable ? 1 : 0));
-                orderTasks.add(OrderTaskAssembler.setWifiEapType(mEAPTypeSelected));
-                if (selectedNetworkType > 1) {
-                    orderTasks.add(OrderTaskAssembler.setEthernetDHCP(ethernetDhcpEnable ? 1 : 0));
-                    if (!ethernetDhcpEnable) {
-                        String[] ipInfo = getDHCPInfo(mBind.ethDhcp);
-                        orderTasks.add(OrderTaskAssembler.setEthernetIPInfo(ipInfo[0], ipInfo[1], ipInfo[2], ipInfo[3]));
+//                        orderTasks.add(OrderTaskAssembler.setWifiClientCert(new File(mCertPath)));
+//                        orderTasks.add(OrderTaskAssembler.setWifiClientKey(new File(mKeyPath)));
                     }
                 }
             } else {
-                orderTasks.add(OrderTaskAssembler.setEthernetDHCP(ethernetDhcpEnable ? 1 : 0));
+                // ETH
                 if (!ethernetDhcpEnable) {
                     String[] ipInfo = getDHCPInfo(mBind.ethDhcp);
                     orderTasks.add(OrderTaskAssembler.setEthernetIPInfo(ipInfo[0], ipInfo[1], ipInfo[2], ipInfo[3]));
                 }
+                orderTasks.add(OrderTaskAssembler.setEthernetDHCP(ethernetDhcpEnable ? 1 : 0));
             }
-            orderTasks.add(OrderTaskAssembler.setNetworkType(selectedNetworkType));
             MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         } catch (Exception e) {
             ToastUtils.showToast(this, "File is missing");
@@ -634,29 +681,13 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
         String gateway = binding.etGateway.getText().toString();
         String dns = binding.etDns.getText().toString();
         String[] ipArray = ip.split("\\.");
-        String ipHex = String.format("%s%s%s%s",
-                MokoUtils.int2HexString(Integer.parseInt(ipArray[0])),
-                MokoUtils.int2HexString(Integer.parseInt(ipArray[1])),
-                MokoUtils.int2HexString(Integer.parseInt(ipArray[2])),
-                MokoUtils.int2HexString(Integer.parseInt(ipArray[3])));
+        String ipHex = String.format("%s%s%s%s", MokoUtils.int2HexString(Integer.parseInt(ipArray[0])), MokoUtils.int2HexString(Integer.parseInt(ipArray[1])), MokoUtils.int2HexString(Integer.parseInt(ipArray[2])), MokoUtils.int2HexString(Integer.parseInt(ipArray[3])));
         String[] maskArray = mask.split("\\.");
-        String maskHex = String.format("%s%s%s%s",
-                MokoUtils.int2HexString(Integer.parseInt(maskArray[0])),
-                MokoUtils.int2HexString(Integer.parseInt(maskArray[1])),
-                MokoUtils.int2HexString(Integer.parseInt(maskArray[2])),
-                MokoUtils.int2HexString(Integer.parseInt(maskArray[3])));
+        String maskHex = String.format("%s%s%s%s", MokoUtils.int2HexString(Integer.parseInt(maskArray[0])), MokoUtils.int2HexString(Integer.parseInt(maskArray[1])), MokoUtils.int2HexString(Integer.parseInt(maskArray[2])), MokoUtils.int2HexString(Integer.parseInt(maskArray[3])));
         String[] gatewayArray = gateway.split("\\.");
-        String gatewayHex = String.format("%s%s%s%s",
-                MokoUtils.int2HexString(Integer.parseInt(gatewayArray[0])),
-                MokoUtils.int2HexString(Integer.parseInt(gatewayArray[1])),
-                MokoUtils.int2HexString(Integer.parseInt(gatewayArray[2])),
-                MokoUtils.int2HexString(Integer.parseInt(gatewayArray[3])));
+        String gatewayHex = String.format("%s%s%s%s", MokoUtils.int2HexString(Integer.parseInt(gatewayArray[0])), MokoUtils.int2HexString(Integer.parseInt(gatewayArray[1])), MokoUtils.int2HexString(Integer.parseInt(gatewayArray[2])), MokoUtils.int2HexString(Integer.parseInt(gatewayArray[3])));
         String[] dnsArray = dns.split("\\.");
-        String dnsHex = String.format("%s%s%s%s",
-                MokoUtils.int2HexString(Integer.parseInt(dnsArray[0])),
-                MokoUtils.int2HexString(Integer.parseInt(dnsArray[1])),
-                MokoUtils.int2HexString(Integer.parseInt(dnsArray[2])),
-                MokoUtils.int2HexString(Integer.parseInt(dnsArray[3])));
+        String dnsHex = String.format("%s%s%s%s", MokoUtils.int2HexString(Integer.parseInt(dnsArray[0])), MokoUtils.int2HexString(Integer.parseInt(dnsArray[1])), MokoUtils.int2HexString(Integer.parseInt(dnsArray[2])), MokoUtils.int2HexString(Integer.parseInt(dnsArray[3])));
         return new String[]{ipHex, maskHex, gatewayHex, dnsHex};
     }
 
@@ -683,9 +714,7 @@ public class NetworkSettingsKgw3v2Activity extends BaseActivity<ActivityNetworkS
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK || (requestCode != AppConstants.REQUEST_CODE_SELECT_CA
-                && requestCode != AppConstants.REQUEST_CODE_SELECT_CLIENT_CERT
-                && requestCode != AppConstants.REQUEST_CODE_SELECT_CLIENT_KEY))
+        if (resultCode != RESULT_OK || (requestCode != AppConstants.REQUEST_CODE_SELECT_CA && requestCode != AppConstants.REQUEST_CODE_SELECT_CLIENT_CERT && requestCode != AppConstants.REQUEST_CODE_SELECT_CLIENT_KEY))
             return;
         //得到uri，后面就是将uri转化成file的过程。
         Uri uri = data.getData();

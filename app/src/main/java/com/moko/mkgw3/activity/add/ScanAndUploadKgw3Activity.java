@@ -140,7 +140,6 @@ public class ScanAndUploadKgw3Activity extends BaseActivity<ActivityScanAndUploa
                                 int result = value[4] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_FILTER_MAC_RULES:
-                                    case KEY_FILTER_RELATIONSHIP:
                                     case KEY_REPORT_INTERVAL:
                                         if (result != 1) {
                                             mSavedParamsError = true;
@@ -205,7 +204,6 @@ public class ScanAndUploadKgw3Activity extends BaseActivity<ActivityScanAndUploa
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setFilterNameRules(filterAdvName));
         orderTasks.add(OrderTaskAssembler.setFilterMacRules(filterMacAddress));
-        orderTasks.add(OrderTaskAssembler.setFilterRelationship(7));
         orderTasks.add(OrderTaskAssembler.setReportInterval(interval));
         orderTasks.add(OrderTaskAssembler.setFilterRSSI(rssi));
         MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));

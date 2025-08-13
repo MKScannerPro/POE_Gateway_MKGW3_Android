@@ -21,12 +21,21 @@ import com.moko.lib.scannerui.dialog.PasswordBleDialog;
 import com.moko.lib.scannerui.dialog.ScanFilterDialog;
 import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.mkgw3.AppConstants;
+import com.moko.mkgw3.activity.beacon.BXPBCRGW3Activity;
+import com.moko.mkgw3.activity.beacon.BXPBDGW3Activity;
 import com.moko.mkgw3.activity.beacon.BXPButtonInfoKgw3Activity;
+import com.moko.mkgw3.activity.beacon.BXPCGW3Activity;
+import com.moko.mkgw3.activity.beacon.BXPDGW3Activity;
+import com.moko.mkgw3.activity.beacon.BXPSGW3Activity;
+import com.moko.mkgw3.activity.beacon.BXPTGW3Activity;
 import com.moko.mkgw3.activity.beacon.BleOtherInfoKgw3Activity;
+import com.moko.mkgw3.activity.beacon.MKPIRGW3Activity;
+import com.moko.mkgw3.activity.beacon.MKTOFGW3Activity;
 import com.moko.mkgw3.adapter.BleDeviceKgw3Adapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityBleDevicesKgw3Binding;
 import com.moko.mkgw3.db.MKgw3DBTools;
+import com.moko.mkgw3.dialog.BeaconTypeDialogKgw3;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
@@ -43,14 +52,13 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3Binding> implements BaseQuickAdapter.OnItemChildClickListener {
+public class BleManagerKgw3V2Activity extends BaseActivity<ActivityBleDevicesKgw3Binding> implements BaseQuickAdapter.OnItemChildClickListener {
     private MokoDeviceKgw3 mMokoDeviceKgw3;
     private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
@@ -59,11 +67,14 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
     private ArrayList<BleDevice> mBleDevices;
     private ConcurrentHashMap<String, BleDevice> mBleDevicesMap;
     private Handler mHandler;
-    private int mIndex;
+    //    private int mIndex;
+//    private int from;
+    private int mSelectedType;
 
     @Override
     protected void onCreate() {
         mMokoDeviceKgw3 = (MokoDeviceKgw3) getIntent().getSerializableExtra(AppConstants.EXTRA_KEY_DEVICE);
+//        from = getIntent().getIntExtra("from", 0);
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
         appMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
         mAppTopic = TextUtils.isEmpty(appMqttConfig.topicPublish) ? mMokoDeviceKgw3.topicSubscribe : appMqttConfig.topicPublish;
@@ -129,7 +140,7 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
                 for (BleDevice device : bleDevices) {
                     if (device.rssi < filterRssi) continue;
                     if (!mBleDevicesMap.containsKey(device.mac)) {
-                        device.index = mIndex++;
+//                        device.index = mIndex++;
                         mBleDevicesMap.put(device.mac, device);
                     } else {
                         BleDevice existDevice = mBleDevicesMap.get(device.mac);
@@ -141,7 +152,14 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
                 }
             });
         }
-        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_B_D_CONNECT_RESULT) {
+        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_B_D_CONNECT_RESULT
+                || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_B_CR_CONNECT_RESULT
+                || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_C_CONNECT_RESULT
+                || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_D_CONNECT_RESULT
+                || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_T_CONNECT_RESULT
+                || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_S_CONNECT_RESULT
+                || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_MK_PIR_CONNECT_RESULT
+                || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_MK_TOF_CONNECT_RESULT) {
             runOnUiThread(() -> {
                 dismissLoadingProgressDialog();
                 mHandler.removeMessages(0);
@@ -155,12 +173,51 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
                     ToastUtils.showToast(this, beaconInfo.result_msg);
                     return;
                 }
-                Intent intent = new Intent(this, BXPButtonInfoKgw3Activity.class);
+                beaconInfo.type = mSelectedType;
+                Intent intent;
+                if (mSelectedType == 2) {
+                    intent = new Intent(this, BXPBCRGW3Activity.class);
+                } else if (mSelectedType == 3) {
+                    intent = new Intent(this, BXPCGW3Activity.class);
+                } else if (mSelectedType == 4) {
+                    intent = new Intent(this, BXPDGW3Activity.class);
+                } else if (mSelectedType == 5) {
+                    intent = new Intent(this, BXPTGW3Activity.class);
+                } else if (mSelectedType == 6) {
+                    intent = new Intent(this, BXPSGW3Activity.class);
+                } else if (mSelectedType == 7) {
+                    intent = new Intent(this, MKPIRGW3Activity.class);
+                } else if (mSelectedType == 8) {
+                    intent = new Intent(this, MKTOFGW3Activity.class);
+                } else {
+                    intent = new Intent(this, BXPButtonInfoKgw3Activity.class);
+                    if (mMokoDeviceKgw3.deviceType == 1)
+                        intent = new Intent(this, BXPBDGW3Activity.class);
+                }
                 intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
                 intent.putExtra(AppConstants.EXTRA_KEY_BEACON_INFO, beaconInfo);
                 startActivity(intent);
             });
         }
+//        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_C_CONNECT_RESULT) {
+//            runOnUiThread(() -> {
+//                dismissLoadingProgressDialog();
+//                mHandler.removeMessages(0);
+//                Type type = new TypeToken<MsgNotify<BxpCInfo>>() {
+//                }.getType();
+//                MsgNotify<BxpCInfo> result = new Gson().fromJson(message, type);
+//                if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
+//                BxpCInfo bxpInfo = result.data;
+//                if (bxpInfo.result_code != 0) {
+//                    ToastUtils.showToast(this, bxpInfo.result_msg);
+//                    return;
+//                }
+//                Intent intent = new Intent(this, BXPCGW3Activity.class);
+//                intent.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
+//                intent.putExtra(AppConstants.EXTRA_KEY_BEACON_INFO, bxpInfo);
+//                startActivity(intent);
+//            });
+//        }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_OTHER_CONNECT_RESULT) {
             runOnUiThread(() -> {
                 dismissLoadingProgressDialog();
@@ -185,7 +242,7 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceModifyNameEvent(DeviceModifyNameEvent event) {
         // 修改了设备名称
-        MokoDeviceKgw3 device = MKgw3DBTools.getInstance(BleManagerKgw3Activity.this).selectDevice(mMokoDeviceKgw3.mac);
+        MokoDeviceKgw3 device = MKgw3DBTools.getInstance(BleManagerKgw3V2Activity.this).selectDevice(mMokoDeviceKgw3.mac);
         mMokoDeviceKgw3.name = device.name;
         mBind.tvDeviceName.setText(mMokoDeviceKgw3.name);
     }
@@ -240,15 +297,15 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
         } else {
             mBleDevices.addAll(mBleDevicesMap.values());
         }
-        System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
-        Collections.sort(mBleDevices, (lhs, rhs) -> {
-            if (lhs.index > rhs.index) {
-                return 1;
-            } else if (lhs.index < rhs.index) {
-                return -1;
-            }
-            return 0;
-        });
+//        System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
+//        Collections.sort(mBleDevices, (lhs, rhs) -> {
+//            if (lhs.index > rhs.index) {
+//                return 1;
+//            } else if (lhs.index < rhs.index) {
+//                return -1;
+//            }
+//            return 0;
+//        });
     }
 
     public void onFilter(View view) {
@@ -259,9 +316,9 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
         scanFilterDialog.setFilterMac(filterMac);
         scanFilterDialog.setFilterRssi(filterRssi);
         scanFilterDialog.setOnScanFilterListener((filterName, filterMac, filterRssi) -> {
-            BleManagerKgw3Activity.this.filterName = filterName;
-            BleManagerKgw3Activity.this.filterMac = filterMac;
-            BleManagerKgw3Activity.this.filterRssi = filterRssi;
+            BleManagerKgw3V2Activity.this.filterName = filterName;
+            BleManagerKgw3V2Activity.this.filterMac = filterMac;
+            BleManagerKgw3V2Activity.this.filterRssi = filterRssi;
             if (!TextUtils.isEmpty(filterName)
                     || !TextUtils.isEmpty(filterMac)
                     || filterRssi != -127) {
@@ -286,7 +343,7 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
                 mBind.tvEditFilter.setVisibility(View.VISIBLE);
             }
             mBleDevicesMap.clear();
-            mIndex = 0;
+//            mIndex = 0;
         });
         scanFilterDialog.show(getSupportFragmentManager());
     }
@@ -300,7 +357,7 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
         filterMac = "";
         filterRssi = -127;
         mBleDevicesMap.clear();
-        mIndex = 0;
+//        mIndex = 0;
     }
 
     @Override
@@ -308,37 +365,54 @@ public class BleManagerKgw3Activity extends BaseActivity<ActivityBleDevicesKgw3B
         if (isWindowLocked()) return;
         BleDevice bleDevice = (BleDevice) adapter.getItem(position);
         if (bleDevice == null) return;
-        if (bleDevice.type_code == 7) {
-            // BXP-Button
-            // show password
-            final PasswordBleDialog dialog = new PasswordBleDialog();
-            dialog.setOnPasswordClicked(password -> {
-                if (!MokoSupport.getInstance().isBluetoothOpen()) {
-                    MokoSupport.getInstance().enableBluetooth();
-                    return;
-                }
-                XLog.i(password);
+        BeaconTypeDialogKgw3 dialogKgw3 = new BeaconTypeDialogKgw3();
+        dialogKgw3.setBeaconTypeListener(type -> {
+            mSelectedType = type;
+            if (type == 0) {
+                // Other
                 mHandler.postDelayed(() -> {
                     dismissLoadingProgressDialog();
-                    ToastUtils.showToast(BleManagerKgw3Activity.this, "Setup failed");
+                    ToastUtils.showToast(this, "Setup failed");
                 }, 50 * 1000);
                 showLoadingProgressDialog();
-                getBleDeviceInfo(bleDevice, password);
-            });
-            dialog.show(getSupportFragmentManager());
-        } else {
-            // Other
-            mHandler.postDelayed(() -> {
-                dismissLoadingProgressDialog();
-                ToastUtils.showToast(this, "Setup failed");
-            }, 50 * 1000);
-            showLoadingProgressDialog();
-            getBleDeviceInfo(bleDevice);
-        }
+                getBleDeviceInfo(bleDevice);
+            } else {
+                final PasswordBleDialog dialog = new PasswordBleDialog();
+                dialog.setOnPasswordClicked(password -> {
+                    if (!MokoSupport.getInstance().isBluetoothOpen()) {
+                        MokoSupport.getInstance().enableBluetooth();
+                        return;
+                    }
+                    XLog.i(password);
+                    mHandler.postDelayed(() -> {
+                        dismissLoadingProgressDialog();
+                        ToastUtils.showToast(BleManagerKgw3V2Activity.this, "Setup failed");
+                    }, 50 * 1000);
+                    showLoadingProgressDialog();
+                    getBleDeviceInfo(bleDevice, password, type);
+                });
+                dialog.show(getSupportFragmentManager());
+            }
+        });
+        dialogKgw3.show(getSupportFragmentManager());
     }
 
-    private void getBleDeviceInfo(BleDevice bleDevice, String password) {
+    private void getBleDeviceInfo(BleDevice bleDevice, String password, int type) {
         int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_B_D_CONNECT;
+        if (type == 2)
+            msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_B_CR_CONNECT;
+        if (type == 3)
+            msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_C_CONNECT;
+        if (type == 4)
+            msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_D_CONNECT;
+        if (type == 5)
+            msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_T_CONNECT;
+        if (type == 6)
+            msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_S_CONNECT;
+        if (type == 7)
+            msgId = MQTTConstants.CONFIG_MSG_ID_BLE_MK_PIR_CONNECT;
+        if (type == 8)
+            msgId = MQTTConstants.CONFIG_MSG_ID_BLE_MK_TOF_CONNECT;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", bleDevice.mac);
         jsonObject.addProperty("passwd", password);

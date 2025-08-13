@@ -1,7 +1,10 @@
 package com.moko.support.mkgw3.task;
 
+import android.text.TextUtils;
+
 import androidx.annotation.IntRange;
 
+import com.elvishew.xlog.XLog;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.support.mkgw3.MokoSupport;
@@ -13,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class ParamsTask extends OrderTask {
     public byte[] data;
@@ -841,6 +845,8 @@ public class ParamsTask extends OrderTask {
                 data[i + 6] = dataBytes[i];
             }
         }
+        inputSteam.close();
+        response.responseValue = data;
     }
 
 
@@ -938,6 +944,7 @@ public class ParamsTask extends OrderTask {
                 data[i + 6] = dataBytes[i];
             }
         }
+        response.responseValue = data;
     }
 
     private int packetCount;
@@ -1041,5 +1048,32 @@ public class ParamsTask extends OrderTask {
             }
         }
         MokoSupport.getInstance().sendDirectOrder(this);
+    }
+
+    private int retryCount = 0;
+
+    @Override
+    public boolean timeoutPreTask() {
+        retryCount++;
+        if (retryCount < 3) {
+            if (data != null && data.length > 4) {
+                String keyCmd = "";
+                if ((data[0] & 0xFF) == 0xED) {
+                    ParamsKeyEnum keyEnum = ParamsKeyEnum.fromParamKey(data[2] & 0xFF);
+                    keyCmd = keyEnum != null ? keyEnum.name() : "";
+                }
+                if ((data[0] & 0xFF) == 0xEE) {
+                    ParamsLongKeyEnum keyEnum = ParamsLongKeyEnum.fromParamKey(data[2] & 0xFF);
+                    keyCmd = keyEnum != null ? keyEnum.name() : "";
+                }
+                if (!TextUtils.isEmpty(keyCmd)) {
+                    XLog.i(String.format(Locale.getDefault(), "%s Timeout,Retry index----%d", keyCmd, retryCount));
+                    MokoSupport.getInstance().executeTask();
+                    return false;
+                }
+            }
+        }
+        retryCount = 0;
+        return super.timeoutPreTask();
     }
 }

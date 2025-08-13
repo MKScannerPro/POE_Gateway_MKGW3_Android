@@ -123,7 +123,7 @@
                         android:id="@+id/tvSlot1AfterAdvType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ADV after trigger"
+                        android:text="ADV after trigger:"
                         android:textStyle="bold" />
 
                     <include
@@ -146,7 +146,7 @@
                         android:id="@+id/tvSlot1BeforeAdvType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ADV before trigger"
+                        android:text="ADV before trigger:"
                         android:textStyle="bold" />
 
                     <include
@@ -158,7 +158,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="ADV after trigger"
+                        android:text="ADV after trigger:"
                         android:textStyle="bold" />
 
                     <include
@@ -221,7 +221,7 @@
                         android:id="@+id/tvSlot2NormalAdvType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Normal ADV"
+                        android:text="Normal ADV:"
                         android:textStyle="bold" />
 
                     <include
@@ -244,7 +244,7 @@
                         android:id="@+id/tvSlot2AfterAdvType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ADV after trigger"
+                        android:text="ADV after trigger:"
                         android:textStyle="bold" />
 
                     <include
@@ -267,7 +267,7 @@
                         android:id="@+id/tvSlot2BeforeAdvType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ADV before trigger"
+                        android:text="ADV before trigger:"
                         android:textStyle="bold" />
 
                     <include
@@ -279,7 +279,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="ADV after trigger"
+                        android:text="ADV after trigger:"
                         android:textStyle="bold" />
 
                     <include
@@ -342,7 +342,7 @@
                         android:id="@+id/tvSlot3NormalAdvType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Normal ADV"
+                        android:text="Normal ADV:"
                         android:textStyle="bold" />
 
                     <include
@@ -365,7 +365,7 @@
                         android:id="@+id/tvSlot3AfterAdvType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ADV after trigger"
+                        android:text="ADV after trigger:"
                         android:textStyle="bold" />
 
                     <include
@@ -388,7 +388,7 @@
                         android:id="@+id/tvSlot3BeforeAdvType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ADV before trigger"
+                        android:text="ADV before trigger:"
                         android:textStyle="bold" />
 
                     <include
@@ -400,7 +400,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="ADV after trigger"
+                        android:text="ADV after trigger:"
                         android:textStyle="bold" />
 
                     <include
