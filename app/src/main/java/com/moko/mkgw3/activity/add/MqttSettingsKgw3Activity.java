@@ -193,7 +193,6 @@ public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw
         if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
             OrderTaskResponse response = event.getResponse();
             OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
-            int responseType = response.responseType;
             byte[] value = response.responseValue;
             switch (orderCHAR) {
                 case CHAR_PARAMS:

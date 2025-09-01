@@ -36,7 +36,6 @@ public class BXPTAccParamsGW3Activity extends BaseActivity<ActivityBxpTAccParams
     private MQTTConfigKgw3 appMqttConfig;
     private String mAppTopic;
     private String mMac;
-    private String mBeaconType;
     private Handler mHandler;
     private ArrayList<String> mFullScaleArray;
     private ArrayList<String> mSampleRateArray;
@@ -63,7 +62,6 @@ public class BXPTAccParamsGW3Activity extends BaseActivity<ActivityBxpTAccParams
         mBind.tvFullScale.setOnClickListener(v -> openFullScaleDialog(v));
 
         mMac = getIntent().getStringExtra(AppConstants.EXTRA_KEY_MAC);
-        mBeaconType = getIntent().getStringExtra(AppConstants.EXTRA_KEY_BEACON_TYPE);
 
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.postDelayed(() -> {
