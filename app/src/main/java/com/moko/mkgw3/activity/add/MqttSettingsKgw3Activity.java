@@ -8,30 +8,26 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.RadioGroup;
 
-import androidx.annotation.IdRes;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager2.widget.ViewPager2;
-
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
+import com.moko.lib.scannerui.dialog.AlertMessageDialog;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.activity.MKGW3MainActivity;
 import com.moko.mkgw3.adapter.MQTTFragmentAdapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityMqttDeviceKgw3Binding;
-import com.moko.lib.scannerui.dialog.AlertMessageDialog;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.fragment.GeneralDeviceKgw3Fragment;
 import com.moko.mkgw3.fragment.LWTKgw3Fragment;
 import com.moko.mkgw3.fragment.SSLDeviceKgw3Fragment;
 import com.moko.mkgw3.fragment.UserDeviceKgw3Fragment;
 import com.moko.mkgw3.utils.FileUtils;
-import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.mkgw3.utils.Utils;
 import com.moko.support.mkgw3.MokoSupport;
 import com.moko.support.mkgw3.OrderTaskAssembler;
@@ -56,6 +52,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
+
+import androidx.annotation.IdRes;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw3Binding> implements RadioGroup.OnCheckedChangeListener {
     private final String FILTER_ASCII = "[ -~]*";

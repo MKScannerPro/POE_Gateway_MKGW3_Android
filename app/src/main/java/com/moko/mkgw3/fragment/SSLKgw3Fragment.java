@@ -10,18 +10,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
+import com.moko.lib.scannerui.dialog.BottomDialog;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.FragmentSslAppKgw3Binding;
-import com.moko.lib.scannerui.dialog.BottomDialog;
 import com.moko.mkgw3.utils.FileUtils;
-import com.moko.lib.scannerui.utils.ToastUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 public class SSLKgw3Fragment extends Fragment {
     public static final int REQUEST_CODE_SELECT_CA = 0x10;

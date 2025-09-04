@@ -124,7 +124,7 @@ public class DeviceInformationKgw3Activity extends BaseActivity<ActivityDeviceIn
                                         break;
                                     case KEY_BLE_FIRMWARE_VERSION:
                                         byte[] bleFirmwareVersionBytes = Arrays.copyOfRange(value, 4, 4 + length);
-                                        mBind.tvBleFirmwareVersion.setText(MokoUtils.bytesToHexString(bleFirmwareVersionBytes));
+                                        mBind.tvBleFirmwareVersion.setText(new String(bleFirmwareVersionBytes));
                                         break;
 
                                 }

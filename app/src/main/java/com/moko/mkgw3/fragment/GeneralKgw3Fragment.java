@@ -7,11 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.fragment.app.Fragment;
-
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.FragmentGeneralAppKgw3Binding;
-import com.moko.lib.scannerui.utils.ToastUtils;
+
+import androidx.fragment.app.Fragment;
 
 public class GeneralKgw3Fragment extends Fragment {
 

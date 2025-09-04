@@ -7,13 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.fragment.app.Fragment;
-
+import com.moko.lib.scannerui.dialog.BottomDialog;
 import com.moko.mkgw3.activity.modify.ModifyMQTTSettingsKgw3Activity;
 import com.moko.mkgw3.databinding.FragmentSslDeviceUrlKgw3Binding;
-import com.moko.lib.scannerui.dialog.BottomDialog;
 
 import java.util.ArrayList;
+
+import androidx.fragment.app.Fragment;
 
 public class SSLDeviceUrlKgw3Fragment extends Fragment {
 

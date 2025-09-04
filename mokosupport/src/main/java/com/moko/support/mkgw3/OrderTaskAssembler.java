@@ -1,7 +1,5 @@
 package com.moko.support.mkgw3;
 
-import androidx.annotation.IntRange;
-
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.support.mkgw3.entity.ParamsKeyEnum;
 import com.moko.support.mkgw3.entity.ParamsLongKeyEnum;
@@ -15,6 +13,8 @@ import com.moko.support.mkgw3.task.SetPasswordTask;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import androidx.annotation.IntRange;
 
 public class OrderTaskAssembler {
     ///////////////////////////////////////////////////////////////////////////

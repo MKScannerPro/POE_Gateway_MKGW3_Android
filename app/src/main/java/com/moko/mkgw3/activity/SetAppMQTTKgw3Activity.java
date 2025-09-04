@@ -8,29 +8,25 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.RadioGroup;
 
-import androidx.annotation.IdRes;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager2.widget.ViewPager2;
-
 import com.elvishew.xlog.XLog;
 import com.google.gson.Gson;
+import com.moko.lib.mqtt.MQTTSupport;
+import com.moko.lib.mqtt.event.MQTTConnectionCompleteEvent;
+import com.moko.lib.mqtt.event.MQTTConnectionFailureEvent;
+import com.moko.lib.scannerui.dialog.AlertMessageDialog;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.adapter.MQTTFragmentAdapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityMqttAppKgw3Binding;
-import com.moko.lib.scannerui.dialog.AlertMessageDialog;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.fragment.GeneralKgw3Fragment;
 import com.moko.mkgw3.fragment.SSLKgw3Fragment;
 import com.moko.mkgw3.fragment.UserKgw3Fragment;
 import com.moko.mkgw3.utils.FileUtils;
 import com.moko.mkgw3.utils.SPUtiles;
-import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.mkgw3.utils.Utils;
-import com.moko.lib.mqtt.MQTTSupport;
-import com.moko.lib.mqtt.event.MQTTConnectionCompleteEvent;
-import com.moko.lib.mqtt.event.MQTTConnectionFailureEvent;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -51,6 +47,10 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.UUID;
+
+import androidx.annotation.IdRes;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 public class SetAppMQTTKgw3Activity extends BaseActivity<ActivityMqttAppKgw3Binding> implements RadioGroup.OnCheckedChangeListener {
     private final String FILTER_ASCII = "[ -~]*";

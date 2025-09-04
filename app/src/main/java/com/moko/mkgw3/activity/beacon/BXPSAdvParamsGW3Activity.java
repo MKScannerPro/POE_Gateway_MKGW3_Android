@@ -19,7 +19,6 @@ import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityBxpSAdvParamsKgw3Binding;
-import com.moko.mkgw3.databinding.LayoutAdvParamsBinding;
 import com.moko.mkgw3.databinding.LayoutSlotAdvParamsBinding;
 import com.moko.mkgw3.entity.AdvChannelS;
 import com.moko.mkgw3.entity.AdvChannelSInfo;

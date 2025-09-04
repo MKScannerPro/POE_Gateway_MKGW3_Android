@@ -14,9 +14,6 @@ import com.elvishew.xlog.printer.AndroidPrinter;
 import com.elvishew.xlog.printer.Printer;
 import com.elvishew.xlog.printer.file.FilePrinter;
 import com.elvishew.xlog.printer.file.naming.ChangelessFileNameGenerator;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
-import com.lzy.okgo.model.HttpHeaders;
 import com.moko.ble.lib.log.ClearLogBackStrategy;
 import com.moko.lib.scanneriot.IoTDMSupport;
 import com.moko.mkgw3.utils.IOUtils;
@@ -25,10 +22,6 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-
-import okhttp3.OkHttpClient;
 
 public class BaseApplication extends Application {
 

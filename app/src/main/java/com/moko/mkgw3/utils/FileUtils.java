@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
 
+import com.moko.mkgw3.activity.MKGW3MainActivity;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -25,8 +26,6 @@ import java.io.OutputStream;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-
-import com.moko.mkgw3.activity.MKGW3MainActivity;
 
 public class FileUtils {
     /**

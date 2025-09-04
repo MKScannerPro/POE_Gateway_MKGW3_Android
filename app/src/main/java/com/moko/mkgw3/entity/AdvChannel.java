@@ -1,7 +1,6 @@
 package com.moko.mkgw3.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class AdvChannel implements Serializable {
     public int channel;

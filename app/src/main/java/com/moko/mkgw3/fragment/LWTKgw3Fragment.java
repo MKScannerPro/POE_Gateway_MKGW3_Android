@@ -8,11 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.fragment.app.Fragment;
-
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.FragmentLwtKgw3Binding;
-import com.moko.lib.scannerui.utils.ToastUtils;
+
+import androidx.fragment.app.Fragment;
 
 public class LWTKgw3Fragment extends Fragment {
     private static final String TAG = LWTKgw3Fragment.class.getSimpleName();

@@ -15,13 +15,13 @@ import com.moko.lib.mqtt.entity.MsgNotify;
 import com.moko.lib.mqtt.event.DeviceOnlineEvent;
 import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
 import com.moko.lib.scannerui.dialog.BottomDialog;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityMkAdvParamsKgw3Binding;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
-import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.mkgw3.MQTTConstants;
 import com.moko.support.mkgw3.entity.BeaconInfo;
 

@@ -6,7 +6,6 @@ import com.moko.mkgw3.R;
 import com.moko.support.mkgw3.entity.THData;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 

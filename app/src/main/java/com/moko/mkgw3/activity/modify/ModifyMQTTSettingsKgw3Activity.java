@@ -11,21 +11,25 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.RadioGroup;
 
-import androidx.fragment.app.Fragment;
-import androidx.viewpager2.widget.ViewPager2;
-
 import com.elvishew.xlog.XLog;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.moko.lib.mqtt.MQTTSupport;
+import com.moko.lib.mqtt.entity.MsgConfigResult;
+import com.moko.lib.mqtt.entity.MsgNotify;
+import com.moko.lib.mqtt.entity.MsgReadResult;
+import com.moko.lib.mqtt.event.DeviceOnlineEvent;
+import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
+import com.moko.lib.scannerui.dialog.AlertMessageDialog;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.activity.MKGW3MainActivity;
 import com.moko.mkgw3.adapter.MQTTFragmentAdapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityMqttDeviceModifyKgw3Binding;
-import com.moko.lib.scannerui.dialog.AlertMessageDialog;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.fragment.GeneralDeviceKgw3Fragment;
@@ -34,15 +38,8 @@ import com.moko.mkgw3.fragment.SSLDeviceUrlKgw3Fragment;
 import com.moko.mkgw3.fragment.UserDeviceKgw3Fragment;
 import com.moko.mkgw3.utils.FileUtils;
 import com.moko.mkgw3.utils.SPUtiles;
-import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.mkgw3.utils.Utils;
 import com.moko.support.mkgw3.MQTTConstants;
-import com.moko.lib.mqtt.MQTTSupport;
-import com.moko.lib.mqtt.entity.MsgConfigResult;
-import com.moko.lib.mqtt.entity.MsgNotify;
-import com.moko.lib.mqtt.entity.MsgReadResult;
-import com.moko.lib.mqtt.event.DeviceOnlineEvent;
-import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -62,6 +59,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 public class ModifyMQTTSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceModifyKgw3Binding> implements RadioGroup.OnCheckedChangeListener {
     public static String TAG = ModifyMQTTSettingsKgw3Activity.class.getSimpleName();

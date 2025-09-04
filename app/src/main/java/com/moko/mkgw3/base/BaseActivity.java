@@ -4,21 +4,25 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.view.DisplayCutout;
 
 import com.elvishew.xlog.XLog;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.moko.mkgw3.activity.GuideActivity;
-import com.moko.lib.scannerui.dialog.LoadingDialog;
-import com.moko.lib.scannerui.dialog.LoadingMessageDialog;
 import com.moko.lib.mqtt.entity.MsgConfigReq;
 import com.moko.lib.mqtt.entity.MsgDeviceInfo;
 import com.moko.lib.mqtt.entity.MsgReadReq;
 import com.moko.lib.mqtt.event.DeviceOnlineEvent;
+import com.moko.lib.scannerui.dialog.LoadingDialog;
+import com.moko.lib.scannerui.dialog.LoadingMessageDialog;
+import com.moko.mkgw3.activity.GuideActivity;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -36,6 +40,17 @@ public abstract class BaseActivity<VM extends ViewBinding> extends FragmentActiv
             startActivity(intent);
             return;
         }
+        getWindow().getDecorView().setOnApplyWindowInsetsListener((v, insets) -> {
+            DisplayCutout cutout = insets.getDisplayCutout();
+            if (cutout != null) {
+                List<Rect> rects = cutout.getBoundingRects();
+                if (rects.size() != 0) {
+                    getWindow().getDecorView().setPadding(cutout.getSafeInsetLeft(), cutout.getSafeInsetTop(),
+                            cutout.getSafeInsetRight(), cutout.getSafeInsetBottom());
+                }
+            }
+            return insets;
+        });
         mBind = getViewBinding();
         setContentView(mBind.getRoot());
         onCreate();

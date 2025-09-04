@@ -1,11 +1,11 @@
 package com.moko.mkgw3.adapter;
 
-import androidx.core.content.ContextCompat;
-
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.moko.mkgw3.R;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
+
+import androidx.core.content.ContextCompat;
 
 public class DeviceKgw3Adapter extends BaseQuickAdapter<MokoDeviceKgw3, BaseViewHolder> {
 
