@@ -21,6 +21,7 @@ public class BleDevice implements Serializable {
     //9：pir
     //10：other
     //11:tof
+    //12:nano
     public int type_code;
     //值类型：number
     //0/1

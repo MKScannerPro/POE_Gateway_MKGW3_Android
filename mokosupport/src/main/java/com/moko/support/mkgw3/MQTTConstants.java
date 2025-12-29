@@ -45,6 +45,7 @@ public class MQTTConstants {
     public static final int CONFIG_MSG_ID_BEACON_PARAMS = 1061;
     public static final int CONFIG_MSG_ID_FILTER_TOF = 1062;
     public static final int CONFIG_MSG_ID_UPLOAD_DATA_INTERVAL = 1063;
+    public static final int CONFIG_MSG_ID_FILTER_NANO = 1064;
     public static final int CONFIG_MSG_ID_BLE_CONNECT_TIMEOUT = 1209;
     // BXP-B-D
     //    public static final int CONFIG_MSG_ID_BLE_BXP_BUTTON_CONNECT = 1100;
@@ -204,6 +205,7 @@ public class MQTTConstants {
     public static final int READ_MSG_ID_BEACON_PARAMS = 2061;
     public static final int READ_MSG_ID_FILTER_TOF = 2062;
     public static final int READ_MSG_ID_UPLOAD_DATA_INTERVAL = 2063;
+    public static final int READ_MSG_ID_FILTER_NANO = 2064;
     public static final int READ_MSG_ID_BLE_CONNECTED_LIST = 2201;
     public static final int READ_MSG_ID_BLE_CONNECT_TIMEOUT = 2209;
     ///////////////////////////////////////////////////////////////////////////

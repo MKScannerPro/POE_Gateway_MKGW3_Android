@@ -111,6 +111,7 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
             mBind.tvFilterByBxpTag.setText(result.data.get("bxp_tag").getAsInt() == 1 ? "ON" : "OFF");
             if (mMokoDeviceKgw3.deviceType != 0) {
                 mBind.tvFilterByMKTOF.setText(result.data.get("mk_tof").getAsInt() == 1 ? "ON" : "OFF");
+                mBind.tvFilterByNano.setText(result.data.get("nano_beacon_info").getAsInt() == 1 ? "ON" : "OFF");
             }
         }
         if (msg_id == MQTTConstants.CONFIG_MSG_ID_FILTER_BXP_DEVICE_INFO
@@ -315,6 +316,18 @@ public class FilterRawDataSwitchKgw3Activity extends BaseActivity<ActivityFilter
             return;
         }
         Intent i = new Intent(this, FilterMKTOFActivity.class);
+        i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
+        startFilterDetail.launch(i);
+    }
+
+    public void onFilterByNano(View view) {
+        if (isWindowLocked())
+            return;
+        if (!MQTTSupport.getInstance().isConnected()) {
+            ToastUtils.showToast(this, R.string.network_error);
+            return;
+        }
+        Intent i = new Intent(this, FilterNanoKgw3Activity.class);
         i.putExtra(AppConstants.EXTRA_KEY_DEVICE, mMokoDeviceKgw3);
         startFilterDetail.launch(i);
     }
