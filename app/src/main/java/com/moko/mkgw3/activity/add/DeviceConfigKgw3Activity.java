@@ -68,7 +68,8 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
         mSelectedDeviceType = getIntent().getIntExtra(AppConstants.EXTRA_KEY_SELECTED_DEVICE_TYPE, -1);
         mIsFirstConfig = getIntent().getBooleanExtra(AppConstants.EXTRA_KEY_FIRST_CONFIG, false);
         String mqttConfigAppStr = SPUtiles.getStringValue(this, AppConstants.SP_KEY_MQTT_CONFIG_APP, "");
-        mAppMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
+        if (!TextUtils.isEmpty(mqttConfigAppStr))
+            mAppMqttConfig = new Gson().fromJson(mqttConfigAppStr, MQTTConfigKgw3.class);
         mHandler = new Handler(Looper.getMainLooper());
         mBind.tvScannerFilter.setVisibility(mSelectedDeviceType == 0 ? View.VISIBLE : View.GONE);
         mBind.tvScanAndUpload.setVisibility(mSelectedDeviceType == 0 ? View.GONE : View.VISIBLE);
@@ -85,8 +86,7 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
     public void onConnectStatusEvent(ConnectStatusEvent event) {
         String action = event.getAction();
         EventBus.getDefault().cancelEventDelivery(event);
-        if (isSettingSuccess)
-            return;
+        if (isSettingSuccess) return;
         if (MokoConstants.ACTION_DISCONNECTED.equals(action)) {
             runOnUiThread(() -> {
                 Intent intent = new Intent();
@@ -124,6 +124,18 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
                                 if (result != 1) {
                                     ToastUtils.showToast(this, "Setup failed！");
                                 } else {
+                                    if (!MQTTSupport.getInstance().isConnected()) {
+                                        isSettingSuccess = true;
+                                        AlertMessageDialog dialog = new AlertMessageDialog();
+                                        dialog.setMessage("Configurations are successfully sent to gateway.");
+                                        dialog.setCancelGone();
+                                        dialog.setOnAlertConfirmListener(() -> {
+                                            Intent modifyIntent = new Intent(DeviceConfigKgw3Activity.this, MKGW3MainActivity .class);
+                                            startActivity(modifyIntent);
+                                        });
+                                        dialog.show(getSupportFragmentManager());
+                                        return;
+                                    }
                                     if (!mIsFirstConfig) {
                                         if (mIsMQTTConfigFinished)
                                             subscribeTopic();
@@ -315,6 +327,10 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
 
     public void onConnect(View view) {
         if (isWindowLocked()) return;
+        if (!MQTTSupport.getInstance().isConnected()) {
+            showExitConfigModeDialog();
+            return;
+        }
         if (!mIsFirstConfig) {
             AlertMessageDialog dialog = new AlertMessageDialog();
             dialog.setMessage("New settings are applying to device, device is connecting to network and MQTT");
@@ -333,6 +349,22 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
         }
         showLoadingProgressDialog();
         MokoSupport.getInstance().sendOrder(OrderTaskAssembler.exitConfigMode());
+    }
+
+    private void showExitConfigModeDialog() {
+        AlertMessageDialog dialog = new AlertMessageDialog();
+        dialog.setMessage("APP connects to the MQTT broker failed,do you need continue to send configurations to gateway?");
+        dialog.setConfirm("YES");
+        dialog.setCancel("NO");
+        dialog.setOnAlertConfirmListener(() -> {
+            if (!mIsNetworkConfigFinished || !mIsMQTTConfigFinished) {
+                ToastUtils.showToast(this, "Please configure WIFI and MQTT settings first!");
+                return;
+            }
+            showLoadingProgressDialog();
+            MokoSupport.getInstance().sendOrder(OrderTaskAssembler.exitConfigMode());
+        });
+        dialog.show(getSupportFragmentManager());
     }
 
     private final ActivityResultLauncher<Intent> starNetworkSettings = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -378,10 +410,22 @@ public class DeviceConfigKgw3Activity extends BaseActivity<ActivityDeviceConfigK
                 isDeviceConnectSuccess = true;
                 isSettingSuccess = false;
                 dismissConnMqttDialog();
-                ToastUtils.showToast(DeviceConfigKgw3Activity.this, getString(R.string.mqtt_connecting_timeout));
-                finish();
+//                ToastUtils.showToast(DeviceConfigActivity.this, getString(R.string.mqtt_connecting_timeout));
+//                finish();
+                showReceiveFailedDialog();
             }
         }, 90 * 1000);
+    }
+
+    private void showReceiveFailedDialog() {
+        AlertMessageDialog dialog = new AlertMessageDialog();
+        dialog.setMessage("The APP is unable to subscribe messages from the gateway. This may be caused by the failure connection with MQTT broker of the gateway or an incorrect subscription topic set for the APP.");
+        dialog.setConfirm("OK");
+        dialog.setCancelGone();
+        dialog.setOnAlertConfirmListener(() -> {
+            finish();
+        });
+        dialog.show(getSupportFragmentManager());
     }
 
     private void dismissConnMqttDialog() {
