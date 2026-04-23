@@ -166,7 +166,7 @@ public class OTAKgw3Activity extends BaseActivity<ActivityOtaKgw3Binding> {
         mHandler.postDelayed(() -> {
             dismissLoadingProgressDialog();
             ToastUtils.showToast(this, "Set up failed");
-        }, 50 * 1000);
+        }, 90 * 1000);
         showLoadingProgressDialog();
         getDeviceStatus();
     }

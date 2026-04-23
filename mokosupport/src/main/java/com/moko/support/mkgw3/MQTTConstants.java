@@ -46,6 +46,8 @@ public class MQTTConstants {
     public static final int CONFIG_MSG_ID_FILTER_TOF = 1062;
     public static final int CONFIG_MSG_ID_UPLOAD_DATA_INTERVAL = 1063;
     public static final int CONFIG_MSG_ID_FILTER_NANO = 1064;
+    public static final int CONFIG_MSG_ID_DATA_PARSING = 1065;
+    public static final int CONFIG_MSG_ID_SCAN_MODE = 1066;
     public static final int CONFIG_MSG_ID_BLE_CONNECT_TIMEOUT = 1209;
     // BXP-B-D
     //    public static final int CONFIG_MSG_ID_BLE_BXP_BUTTON_CONNECT = 1100;
@@ -62,6 +64,8 @@ public class MQTTConstants {
     public static final int CONFIG_MSG_ID_BLE_BXP_B_D_ACC_REALTIME_ENABLE = 1115;
     public static final int CONFIG_MSG_ID_BLE_BXP_B_D_ADV_PARAMS_READ = 1120;
     public static final int CONFIG_MSG_ID_BLE_BXP_B_D_ADV_PARAMS_WRITE = 1122;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_D_BATTERY_MODE_READ = 1124;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_D_BATTERY_MODE_WRITE = 1126;
     // BXP-B-CR
     public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_CONNECT = 1150;
     public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_INFO = 1152;
@@ -76,6 +80,8 @@ public class MQTTConstants {
     public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_ALARM_EVENT_ENABLE = 1171;
     public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_ADV_PARAMS_READ = 1174;
     public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_ADV_PARAMS_WRITE = 1176;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_BATTERY_MODE_READ = 1178;
+    public static final int CONFIG_MSG_ID_BLE_BXP_B_CR_BATTERY_MODE_WRITE = 1180;
     // BXP-C
     public static final int CONFIG_MSG_ID_BLE_BXP_C_CONNECT = 1350;
     public static final int CONFIG_MSG_ID_BLE_BXP_C_INFO = 1352;
@@ -130,6 +136,9 @@ public class MQTTConstants {
     public static final int CONFIG_MSG_ID_BLE_BXP_S_POWER_OFF = 1527;
     public static final int CONFIG_MSG_ID_BLE_BXP_S_ADV_PARAMS_READ = 1529;
     public static final int CONFIG_MSG_ID_BLE_BXP_S_ADV_PARAMS_WRITE = 1531;
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_BUZZER = 1533;
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_BATTERY_MODE_READ = 1535;
+    public static final int CONFIG_MSG_ID_BLE_BXP_S_BATTERY_MODE_WRITE = 1537;
     // PIR
     public static final int CONFIG_MSG_ID_BLE_MK_PIR_CONNECT = 1550;
     public static final int CONFIG_MSG_ID_BLE_MK_PIR_INFO = 1552;
@@ -206,6 +215,8 @@ public class MQTTConstants {
     public static final int READ_MSG_ID_FILTER_TOF = 2062;
     public static final int READ_MSG_ID_UPLOAD_DATA_INTERVAL = 2063;
     public static final int READ_MSG_ID_FILTER_NANO = 2064;
+    public static final int READ_MSG_ID_DATA_PARSING = 2065;
+    public static final int READ_MSG_ID_SCAN_MODE = 2066;
     public static final int READ_MSG_ID_BLE_CONNECTED_LIST = 2201;
     public static final int READ_MSG_ID_BLE_CONNECT_TIMEOUT = 2209;
     ///////////////////////////////////////////////////////////////////////////
@@ -234,6 +245,8 @@ public class MQTTConstants {
     public static final int NOTIFY_MSG_ID_BLE_BXP_B_D_POWER_OFF = 3119;
     public static final int NOTIFY_MSG_ID_BLE_BXP_B_D_ADV_PARAMS_READ = 3121;
     public static final int NOTIFY_MSG_ID_BLE_BXP_B_D_ADV_PARAMS_WRITE = 3123;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_D_BATTERY_MODE_READ = 3125;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_D_BATTERY_MODE_WRITE = 3127;
     // BXP-B-CR
     public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_INFO = 3153;
     public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_CONNECT_RESULT = 3151;
@@ -250,6 +263,8 @@ public class MQTTConstants {
     public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_ALARM_EVENT_DATA = 3173;
     public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_ADV_PARAMS_READ = 3175;
     public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_ADV_PARAMS_WRITE = 3177;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_BATTERY_MODE_READ = 3179;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_B_CR_BATTERY_MODE_WRITE = 3181;
     // BXP-C
     public static final int NOTIFY_MSG_ID_BLE_BXP_C_CONNECT_RESULT = 3351;
     public static final int NOTIFY_MSG_ID_BLE_BXP_C_INFO = 3353;
@@ -312,6 +327,9 @@ public class MQTTConstants {
     public static final int NOTIFY_MSG_ID_BLE_BXP_S_POWER_OFF = 3528;
     public static final int NOTIFY_MSG_ID_BLE_BXP_S_ADV_PARAMS_READ = 3530;
     public static final int NOTIFY_MSG_ID_BLE_BXP_S_ADV_PARAMS_WRITE = 3532;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_BUZZER = 3534;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_BATTERY_MODE_READ = 3536;
+    public static final int NOTIFY_MSG_ID_BLE_BXP_S_BATTERY_MODE_WRITE = 3538;
     // PIR
     public static final int NOTIFY_MSG_ID_BLE_MK_PIR_CONNECT_RESULT = 3551;
     public static final int NOTIFY_MSG_ID_BLE_MK_PIR_INFO = 3553;

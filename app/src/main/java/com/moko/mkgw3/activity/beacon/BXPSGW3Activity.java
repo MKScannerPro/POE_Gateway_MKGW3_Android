@@ -17,6 +17,7 @@ import com.moko.lib.mqtt.event.DeviceModifyNameEvent;
 import com.moko.lib.mqtt.event.DeviceOnlineEvent;
 import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
 import com.moko.lib.scannerui.dialog.AlertMessageDialog;
+import com.moko.lib.scannerui.dialog.BottomDialog;
 import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
@@ -36,6 +37,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -46,6 +49,8 @@ public class BXPSGW3Activity extends BaseActivity<ActivityBxpSInfoKgw3Binding> {
     private String mAppTopic;
     private BeaconInfo mBeaconInfo;
     private Handler mHandler;
+    private String[] mAdvMode = {"Battery voltage", "Battery percentage"};
+
 
     @Override
     protected ActivityBxpSInfoKgw3Binding getViewBinding() {
@@ -89,6 +94,29 @@ public class BXPSGW3Activity extends BaseActivity<ActivityBxpSInfoKgw3Binding> {
         mBind.tvThSampleRate.setOnClickListener(v -> gotoTHSampleRate());
         mBind.tvAdvParams.setOnClickListener(v -> gotoAdvParams());
         mBind.tvRemoteReminder.setOnClickListener(v -> gotoRemoteReminder());
+        mBind.llBatteryAdvMode.setVisibility(mMokoDeviceKgw3.deviceType != 0 ? View.VISIBLE : View.GONE);
+        if (Integer.parseInt(mBeaconInfo.firmware_version.substring(1, 2)) > 1) {
+            mBind.tvBattery.setText("Battery voltage/level");
+            mBind.tvBatteryVoltage.setText(String.format("%dmv/%d%%", mBeaconInfo.battery_v, mBeaconInfo.battery_level));
+            getBatteryMode();
+        }
+    }
+
+    private void getBatteryMode() {
+        mHandler.postDelayed(() -> {
+            dismissLoadingProgressDialog();
+            ToastUtils.showToast(this, "Setup failed");
+        }, 30 * 1000);
+        showLoadingProgressDialog();
+        int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_S_BATTERY_MODE_READ;
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("mac", mBeaconInfo.mac);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
+        try {
+            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     private void startActivity(Class<?> clazz, String flag) {
@@ -184,6 +212,17 @@ public class BXPSGW3Activity extends BaseActivity<ActivityBxpSInfoKgw3Binding> {
             e.printStackTrace();
             return;
         }
+        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_S_BATTERY_MODE_READ) {
+            dismissLoadingProgressDialog();
+            mHandler.removeMessages(0);
+            Type type = new TypeToken<MsgNotify<JsonObject>>() {
+            }.getType();
+            MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            int mode = result.data.get("batt_adv_mode").getAsInt();
+            mBind.tvAdvMode.setTag(mode);
+            mBind.tvAdvMode.setText(mAdvMode[mode]);
+        }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_S_POWER_OFF) {
             //关机结果通知
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
@@ -200,6 +239,16 @@ public class BXPSGW3Activity extends BaseActivity<ActivityBxpSInfoKgw3Binding> {
                 startActivity(intent);
                 finish();
             }
+        }
+        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_S_BATTERY_MODE_WRITE) {
+            Type type = new TypeToken<MsgNotify<JsonObject>>() {
+            }.getType();
+            MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            dismissLoadingProgressDialog();
+            mHandler.removeMessages(0);
+            int code = result.data.get("result_code").getAsInt();
+            ToastUtils.showToast(this, code == 0 ? "Setup succeed！" : "setup failed");
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_DISCONNECT
                 || msg_id == MQTTConstants.CONFIG_MSG_ID_BLE_DISCONNECT) {
@@ -276,6 +325,37 @@ public class BXPSGW3Activity extends BaseActivity<ActivityBxpSInfoKgw3Binding> {
         int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_DISCONNECT;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", mBeaconInfo.mac);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
+        try {
+            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onBatteryAdvMode(View view) {
+        if (isWindowLocked()) return;
+        int selected = (int) view.getTag();
+        BottomDialog dialog = new BottomDialog();
+        dialog.setDatas(new ArrayList<>(Arrays.asList(mAdvMode)), selected);
+        dialog.setListener(value -> {
+            view.setTag(value);
+            mBind.tvAdvMode.setText(mAdvMode[value]);
+            mHandler.postDelayed(() -> {
+                dismissLoadingProgressDialog();
+                ToastUtils.showToast(this, "Setup failed");
+            }, 30 * 1000);
+            showLoadingProgressDialog();
+            setAdvMode(value);
+        });
+        dialog.show(getSupportFragmentManager());
+    }
+
+    private void setAdvMode(int value) {
+        int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_S_BATTERY_MODE_WRITE;
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("mac", mBeaconInfo.mac);
+        jsonObject.addProperty("batt_adv_mode", value);
         String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);

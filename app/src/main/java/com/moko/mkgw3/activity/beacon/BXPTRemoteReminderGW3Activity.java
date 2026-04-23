@@ -54,7 +54,8 @@ public class BXPTRemoteReminderGW3Activity extends BaseActivity<ActivityBxpTRemo
         mColorArray.add("Green");
         mColorArray.add("Blue");
         mColorArray.add("Red");
-        mBind.tvLedReminderColor.setTag(0);
+        mBind.tvLedReminderColor.setTag(0); 
+        mBind.clBuzzerNotify.setVisibility(mBeaconType == 6 && mMokoDeviceKgw3.deviceType != 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -90,6 +91,15 @@ public class BXPTRemoteReminderGW3Activity extends BaseActivity<ActivityBxpTRemo
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_T_LED
                 || msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_S_LED) {
+            dismissLoadingProgressDialog();
+            mHandler.removeMessages(0);
+            Type type = new TypeToken<MsgNotify<BeaconInfo>>() {
+            }.getType();
+            MsgNotify<BeaconInfo> result = new Gson().fromJson(message, type);
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            ToastUtils.showToast(this, result.data.result_code == 0 ? "Setup succeed!" : "Setup failed");
+        }
+        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_S_BUZZER) {
             dismissLoadingProgressDialog();
             mHandler.removeMessages(0);
             Type type = new TypeToken<MsgNotify<BeaconInfo>>() {
@@ -173,6 +183,53 @@ public class BXPTRemoteReminderGW3Activity extends BaseActivity<ActivityBxpTRemo
             return false;
         int ledInterval = Integer.parseInt(ledIntervalStr);
         if (ledInterval < 1 || ledInterval > 100)
+            return false;
+        return true;
+    }
+
+    public void onBuzzerNotifyRemind(View view) {
+        if (isWindowLocked()) return;
+        if (isBuzzerValid()) {
+            mHandler.postDelayed(() -> {
+                dismissLoadingProgressDialog();
+                ToastUtils.showToast(this, "Setup failed");
+            }, 30 * 1000);
+            showLoadingProgressDialog();
+            setBuzzerNotifyRemind();
+        } else {
+            ToastUtils.showToast(this, "Para Error");
+        }
+    }
+
+    private void setBuzzerNotifyRemind() {
+        String buzzerTimeStr = mBind.etRingingTime.getText().toString();
+        String buzzerIntervalStr = mBind.etRingingInterval.getText().toString();
+        int buzzerTime = Integer.parseInt(buzzerTimeStr) * 10;
+        int buzzerInterval = Integer.parseInt(buzzerIntervalStr) * 100;
+        int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_S_BUZZER;
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("mac", mMac);
+        jsonObject.addProperty("ring_time", buzzerTime);
+        jsonObject.addProperty("ring_interval", buzzerInterval);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
+        try {
+            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean isBuzzerValid() {
+        String buzzerTimeStr = mBind.etRingingTime.getText().toString();
+        String buzzerIntervalStr = mBind.etRingingInterval.getText().toString();
+        if (TextUtils.isEmpty(buzzerTimeStr) || TextUtils.isEmpty(buzzerIntervalStr)) {
+            return false;
+        }
+        int buzzerTime = Integer.parseInt(buzzerTimeStr);
+        if (buzzerTime < 1 || buzzerTime > 600)
+            return false;
+        int buzzerInterval = Integer.parseInt(buzzerIntervalStr);
+        if (buzzerInterval < 1 || buzzerInterval > 100)
             return false;
         return true;
     }

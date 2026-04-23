@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:background="@color/blue_0188cc">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:onClick="onBack"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Data Parsing Setting"
+            android:textColor="@color/white_ffffff"
+            android:textSize="17sp" />
+
+        <ImageView
+            android:id="@+id/iv_save"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:onClick="onSave"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:src="@drawable/ic_save" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey_f2f2f2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/cbIBeacon"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/white_ffffff"
+                android:button="@null"
+                android:drawableRight="@drawable/selector_cb_btn"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="iBeacon" />
+
+
+            <CheckBox
+                android:id="@+id/cbEddystoneUID"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white_ffffff"
+                android:button="@null"
+                android:drawableRight="@drawable/selector_cb_btn"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="Eddystone-UID" />
+
+
+            <CheckBox
+                android:id="@+id/cbEddystoneURL"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white_ffffff"
+                android:button="@null"
+                android:drawableRight="@drawable/selector_cb_btn"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="Eddystone-URL" />
+
+
+            <CheckBox
+                android:id="@+id/cbEddystoneTLM"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white_ffffff"
+                android:button="@null"
+                android:drawableRight="@drawable/selector_cb_btn"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="Eddystone-TLM" />
+
+
+            <CheckBox
+                android:id="@+id/cbBXPDeviceInfo"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white_ffffff"
+                android:button="@null"
+                android:drawableRight="@drawable/selector_cb_btn"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="BXP-Device info" />
+
+            <CheckBox
+                android:id="@+id/cbBXPACC"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white_ffffff"
+                android:button="@null"
+                android:drawableRight="@drawable/selector_cb_btn"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="BXP-ACC" />
+
+            <CheckBox
+                android:id="@+id/cbBXPTH"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white_ffffff"
+                android:button="@null"
+                android:drawableRight="@drawable/selector_cb_btn"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="BXP-T&amp;H" />
+
+            <CheckBox
+                android:id="@+id/cbBXPButton"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white_ffffff"
+                android:button="@null"
+                android:drawableRight="@drawable/selector_cb_btn"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="BXP-Button" />
+
+            <CheckBox
+                android:id="@+id/cbBXPTag"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white_ffffff"
+                android:button="@null"
+                android:drawableRight="@drawable/selector_cb_btn"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="BXP-Tag/Sensor" />
+
+            <CheckBox
+                android:id="@+id/cbPIR"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white_ffffff"
+                android:button="@null"
+                android:drawableRight="@drawable/selector_cb_btn"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="PIR Presence" />
+
+            <CheckBox
+                android:id="@+id/cbMKTof"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white_ffffff"
+                android:button="@null"
+                android:drawableRight="@drawable/selector_cb_btn"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="MK TOF" />
+
+            <CheckBox
+                android:id="@+id/cbNano"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white_ffffff"
+                android:button="@null"
+                android:drawableRight="@drawable/selector_cb_btn"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="NanoBeacon info" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

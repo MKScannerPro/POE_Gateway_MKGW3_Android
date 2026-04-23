@@ -74,6 +74,9 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_I_BEACON_TX_POWER(0x75),
     KEY_I_BEACON_RSSI1M(0x76),
     KEY_I_BEACON_CONNECTABLE(0x77),
+
+    // 设备模式
+    KEY_DEVICE_MODE(0xC0)
     ;
 
     private final int paramsKey;

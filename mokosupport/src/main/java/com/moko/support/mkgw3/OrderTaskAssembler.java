@@ -482,6 +482,12 @@ public class OrderTaskAssembler {
         return task;
     }
 
+    public static OrderTask getDeviceMode() {
+        ParamsTask task = new ParamsTask();
+        task.setData(ParamsKeyEnum.KEY_DEVICE_MODE);
+        return task;
+    }
+
     public static OrderTask setProductModel(String productModel) {
         ParamsTask task = new ParamsTask();
         task.setProductModel(productModel);

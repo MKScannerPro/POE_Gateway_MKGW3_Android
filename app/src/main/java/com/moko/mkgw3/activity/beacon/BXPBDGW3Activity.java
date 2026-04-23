@@ -15,6 +15,7 @@ import com.moko.lib.mqtt.entity.MsgNotify;
 import com.moko.lib.mqtt.event.DeviceOnlineEvent;
 import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
 import com.moko.lib.scannerui.dialog.AlertMessageDialog;
+import com.moko.lib.scannerui.dialog.BottomDialog;
 import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.mkgw3.AppConstants;
 import com.moko.mkgw3.R;
@@ -33,6 +34,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -43,6 +46,7 @@ public class BXPBDGW3Activity extends BaseActivity<ActivityBxpBDInfoKgw3Binding>
     private String mAppTopic;
     private BeaconInfo mBeaconInfo;
     private Handler mHandler;
+    private String[] mAdvMode = {"Battery voltage", "Battery percentage"};
 
     @Override
     protected void onCreate() {
@@ -86,6 +90,29 @@ public class BXPBDGW3Activity extends BaseActivity<ActivityBxpBDInfoKgw3Binding>
         mBind.tvAccData.setOnClickListener(v -> gotoAccData());
         mBind.tvAdvParams.setOnClickListener(v -> gotoAdvParams());
         mBind.tvPowerOff.setOnClickListener(v -> showPowerOffDialog());
+        mBind.llBatteryAdvMode.setVisibility(mMokoDeviceKgw3.deviceType != 0 ? View.VISIBLE : View.GONE);
+        if (Integer.parseInt(mBeaconInfo.firmware_version.substring(1, 2)) > 1) {
+            mBind.tvBattery.setText("Battery voltage/level");
+            mBind.tvBatteryVoltage.setText(String.format("%dmv/%d%%", mBeaconInfo.battery_v, mBeaconInfo.battery_level));
+            getBatteryMode();
+        }
+    }
+
+    private void getBatteryMode() {
+        mHandler.postDelayed(() -> {
+            dismissLoadingProgressDialog();
+            ToastUtils.showToast(this, "Setup failed");
+        }, 30 * 1000);
+        showLoadingProgressDialog();
+        int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_B_D_BATTERY_MODE_READ;
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("mac", mBeaconInfo.mac);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
+        try {
+            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     private void gotoRemoteReminder() {
@@ -155,6 +182,17 @@ public class BXPBDGW3Activity extends BaseActivity<ActivityBxpBDInfoKgw3Binding>
             e.printStackTrace();
             return;
         }
+        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_B_D_BATTERY_MODE_READ) {
+            dismissLoadingProgressDialog();
+            mHandler.removeMessages(0);
+            Type type = new TypeToken<MsgNotify<JsonObject>>() {
+            }.getType();
+            MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
+            if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            int mode = result.data.get("batt_adv_mode").getAsInt();
+            mBind.tvAdvMode.setTag(mode);
+            mBind.tvAdvMode.setText(mAdvMode[mode]);
+        }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_B_D_STATUS) {
             EventBus.getDefault().cancelEventDelivery(event);
             runOnUiThread(() -> {
@@ -193,6 +231,10 @@ public class BXPBDGW3Activity extends BaseActivity<ActivityBxpBDInfoKgw3Binding>
                     alarmStatusStr = String.format("Mode %s triggered", mode);
                 }
                 mBind.tvAlarmStatus.setText(alarmStatusStr);
+                if (Integer.parseInt(mBeaconInfo.firmware_version.substring(1, 2)) > 1) {
+                    mBind.tvBattery.setText("Battery voltage/level");
+                    mBind.tvBatteryVoltage.setText(String.format("%dmv/%d%%", bxpButtonInfo.battery_v, bxpButtonInfo.battery_level));
+                }
             });
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_B_D_CLEAR_PRESS_EVENT) {
@@ -256,6 +298,18 @@ public class BXPBDGW3Activity extends BaseActivity<ActivityBxpBDInfoKgw3Binding>
                     return;
                 }
                 ToastUtils.showToast(this, "Setup succeed!");
+            });
+        }
+        if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_B_D_BATTERY_MODE_WRITE) {
+            runOnUiThread(() -> {
+                Type type = new TypeToken<MsgNotify<JsonObject>>() {
+                }.getType();
+                MsgNotify<JsonObject> result = new Gson().fromJson(message, type);
+                if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
+                dismissLoadingProgressDialog();
+                mHandler.removeMessages(0);
+                int code = result.data.get("result_code").getAsInt();
+                ToastUtils.showToast(this, code == 0 ? "Setup succeed！" : "setup failed");
             });
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_DISCONNECT
@@ -354,6 +408,37 @@ public class BXPBDGW3Activity extends BaseActivity<ActivityBxpBDInfoKgw3Binding>
             disconnectDevice();
         });
         dialog.show(getSupportFragmentManager());
+    }
+
+    public void onBatteryAdvMode(View view) {
+        if (isWindowLocked()) return;
+        int selected = (int) view.getTag();
+        BottomDialog dialog = new BottomDialog();
+        dialog.setDatas(new ArrayList<>(Arrays.asList(mAdvMode)), selected);
+        dialog.setListener(value -> {
+            view.setTag(value);
+            mBind.tvAdvMode.setText(mAdvMode[value]);
+            mHandler.postDelayed(() -> {
+                dismissLoadingProgressDialog();
+                ToastUtils.showToast(this, "Setup failed");
+            }, 30 * 1000);
+            showLoadingProgressDialog();
+            setAdvMode(value);
+        });
+        dialog.show(getSupportFragmentManager());
+    }
+
+    private void setAdvMode(int value) {
+        int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_B_D_BATTERY_MODE_WRITE;
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("mac", mBeaconInfo.mac);
+        jsonObject.addProperty("batt_adv_mode", value);
+        String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
+        try {
+            MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     private void clearPressEvent(int type) {
