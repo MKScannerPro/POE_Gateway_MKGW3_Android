@@ -31,6 +31,7 @@ import com.moko.support.mkgw3.callback.MokoScanDeviceCallback;
 import com.moko.support.mkgw3.entity.DeviceInfo;
 import com.moko.support.mkgw3.entity.OrderCHAR;
 import com.moko.support.mkgw3.entity.OrderServices;
+import com.moko.support.mkgw3.entity.ParamsKeyEnum;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -39,11 +40,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 import no.nordicsemi.android.support.v18.scanner.ScanRecord;
 import no.nordicsemi.android.support.v18.scanner.ScanResult;
 
@@ -129,7 +132,8 @@ public class DeviceScannerKgw3Activity extends BaseActivity<ActivityScannerKgw3B
         }
         deviceInfo.deviceType = data[0] & 0xFF;
         deviceInfo.isFirstConfig = isFirstConfig;
-        if (deviceInfo.deviceType > 1) return;
+        // 过滤 v1 和 v2
+        if (deviceInfo.deviceType != 0 && deviceInfo.deviceType != 1) return;
         mDeviceMap.put(deviceInfo.mac, deviceInfo);
     }
 
@@ -276,36 +280,64 @@ public class DeviceScannerKgw3Activity extends BaseActivity<ActivityScannerKgw3B
             OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
             int responseType = response.responseType;
             byte[] value = response.responseValue;
-            switch (orderCHAR) {
-                case CHAR_PASSWORD:
-                    dismissLoadingMessageDialog();
-                    if (value.length == 5) {
-                        int header = value[0] & 0xFF;// 0xED
-                        int flag = value[1] & 0xFF;// read or write
-                        int cmd = value[2] & 0xFF;
-                        if (header != 0xED)
+            if (Objects.requireNonNull(orderCHAR) == OrderCHAR.CHAR_PASSWORD) {
+                dismissLoadingMessageDialog();
+                if (value.length == 5) {
+                    int header = value[0] & 0xFF;// 0xED
+                    int flag = value[1] & 0xFF;// read or write
+                    int cmd = value[2] & 0xFF;
+                    if (header != 0xED)
+                        return;
+                    int length = value[3] & 0xFF;
+                    if (flag == 0x01 && cmd == 0x01 && length == 0x01) {
+                        int result = value[4] & 0xFF;
+                        if (1 == result) {
+                            mSavedPassword = mPassword;
+                            SPUtiles.setStringValue(this, AppConstants.SP_KEY_PASSWORD, mSavedPassword);
+                            XLog.i("Success");
+                            if (mSelectedDeviceType == 0 || mSelectedDeviceType == 1) {
+                                // 跳转配置页面
+                                Intent intent = new Intent(this, DeviceConfigKgw3Activity.class);
+                                intent.putExtra(AppConstants.EXTRA_KEY_SELECTED_DEVICE_TYPE, mSelectedDeviceType);
+                                intent.putExtra(AppConstants.EXTRA_KEY_FIRST_CONFIG, mIsFirstConfig);
+                                startLauncher.launch(intent);
+                            } else {
+                                showLoadingProgressDialog();
+                                MokoSupport.getInstance().sendOrder(OrderTaskAssembler.getDeviceMode());
+                            }
+                        }
+                        if (0 == result) {
+                            isPasswordError = true;
+                            ToastUtils.showToast(this, "Password Error");
+                            MokoSupport.getInstance().disConnectBle();
+                        }
+                    }
+                }
+            } else if (orderCHAR == OrderCHAR.CHAR_PARAMS) {
+                dismissLoadingProgressDialog();
+                if (value.length >= 4) {
+                    int header = value[0] & 0xFF;// 0xED
+                    int flag = value[1] & 0xFF;// read or write
+                    int cmd = value[2] & 0xFF;
+                    if (header == 0xED) {
+                        ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
+                        if (configKeyEnum == null) {
                             return;
+                        }
                         int length = value[3] & 0xFF;
-                        if (flag == 0x01 && cmd == 0x01 && length == 0x01) {
-                            int result = value[4] & 0xFF;
-                            if (1 == result) {
-                                mSavedPassword = mPassword;
-                                SPUtiles.setStringValue(this, AppConstants.SP_KEY_PASSWORD, mSavedPassword);
-                                XLog.i("Success");
-
+                        if (flag == 0x00 && length != 0) {
+                            // read
+                            if (configKeyEnum == ParamsKeyEnum.KEY_DEVICE_MODE) {
+                                mIsFirstConfig = value[4] == 0;
                                 // 跳转配置页面
                                 Intent intent = new Intent(this, DeviceConfigKgw3Activity.class);
                                 intent.putExtra(AppConstants.EXTRA_KEY_SELECTED_DEVICE_TYPE, mSelectedDeviceType);
                                 intent.putExtra(AppConstants.EXTRA_KEY_FIRST_CONFIG, mIsFirstConfig);
                                 startLauncher.launch(intent);
                             }
-                            if (0 == result) {
-                                isPasswordError = true;
-                                ToastUtils.showToast(this, "Password Error");
-                                MokoSupport.getInstance().disConnectBle();
-                            }
                         }
                     }
+                }
             }
         }
     }

@@ -49,7 +49,7 @@ public class BXPSGW3Activity extends BaseActivity<ActivityBxpSInfoKgw3Binding> {
     private String mAppTopic;
     private BeaconInfo mBeaconInfo;
     private Handler mHandler;
-    private String[] mAdvMode = {"Battery voltage", "Battery percentage"};
+    private String[] mAdvMode = {"Battery percentage", "Battery voltage"};
 
 
     @Override
@@ -74,7 +74,6 @@ public class BXPSGW3Activity extends BaseActivity<ActivityBxpSInfoKgw3Binding> {
         mBind.tvDeviceHardwareVersion.setText(mBeaconInfo.hardware_version);
         mBind.tvDeviceSoftwareVersion.setText(mBeaconInfo.software_version);
         mBind.tvDeviceMac.setText(mBeaconInfo.mac.toUpperCase());
-        mBind.tvBatteryVoltage.setText(String.format("%d%%", mBeaconInfo.battery_level));
 
         StringBuilder builder = new StringBuilder();
         builder.append(mBeaconInfo.th_type != 0 ? "TH&" : "")
@@ -94,12 +93,9 @@ public class BXPSGW3Activity extends BaseActivity<ActivityBxpSInfoKgw3Binding> {
         mBind.tvThSampleRate.setOnClickListener(v -> gotoTHSampleRate());
         mBind.tvAdvParams.setOnClickListener(v -> gotoAdvParams());
         mBind.tvRemoteReminder.setOnClickListener(v -> gotoRemoteReminder());
-        mBind.llBatteryAdvMode.setVisibility(mMokoDeviceKgw3.deviceType != 0 ? View.VISIBLE : View.GONE);
-        if (Integer.parseInt(mBeaconInfo.firmware_version.substring(1, 2)) > 1) {
-            mBind.tvBattery.setText("Battery voltage/level");
-            mBind.tvBatteryVoltage.setText(String.format("%dmv/%d%%", mBeaconInfo.battery_v, mBeaconInfo.battery_level));
-            getBatteryMode();
-        }
+        mBind.tvBattery.setText("Battery voltage/level");
+        mBind.tvBatteryVoltage.setText(String.format("%dmv/%d%%", mBeaconInfo.battery_v, mBeaconInfo.battery_level));
+        getBatteryMode();
     }
 
     private void getBatteryMode() {

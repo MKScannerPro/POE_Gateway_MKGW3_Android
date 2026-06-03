@@ -82,7 +82,7 @@ public class ScannerUploadOptionKgw3Activity extends BaseActivity<ActivityScanne
         mRelationshipValues.add("MAC&ADV name&Raw data");
         mRelationshipValues.add("ADV name | Raw data");
         mRelationshipValues.add("ADV NAME & MAC");
-        mRelationshipValues.add("MAC | ADV name | Raw data");
+        mRelationshipValues.add("MAC/ADV name/Raw data");
         mHandler.postDelayed(() -> {
             dismissLoadingProgressDialog();
             finish();

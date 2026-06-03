@@ -46,7 +46,7 @@ public class BXPBDGW3Activity extends BaseActivity<ActivityBxpBDInfoKgw3Binding>
     private String mAppTopic;
     private BeaconInfo mBeaconInfo;
     private Handler mHandler;
-    private String[] mAdvMode = {"Battery voltage", "Battery percentage"};
+    private String[] mAdvMode = {"Battery percentage", "Battery voltage"};
 
     @Override
     protected void onCreate() {
@@ -90,11 +90,13 @@ public class BXPBDGW3Activity extends BaseActivity<ActivityBxpBDInfoKgw3Binding>
         mBind.tvAccData.setOnClickListener(v -> gotoAccData());
         mBind.tvAdvParams.setOnClickListener(v -> gotoAdvParams());
         mBind.tvPowerOff.setOnClickListener(v -> showPowerOffDialog());
-        mBind.llBatteryAdvMode.setVisibility(mMokoDeviceKgw3.deviceType != 0 ? View.VISIBLE : View.GONE);
         if (Integer.parseInt(mBeaconInfo.firmware_version.substring(1, 2)) > 1) {
+            mBind.llBatteryAdvMode.setVisibility(View.VISIBLE);
             mBind.tvBattery.setText("Battery voltage/level");
             mBind.tvBatteryVoltage.setText(String.format("%dmv/%d%%", mBeaconInfo.battery_v, mBeaconInfo.battery_level));
             getBatteryMode();
+        } else {
+            mBind.llBatteryAdvMode.setVisibility(View.GONE);
         }
     }
 

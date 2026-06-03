@@ -21,7 +21,6 @@ import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityUploadDataParsingKgw3Binding;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
-import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
 import com.moko.support.mkgw3.MQTTConstants;
 
