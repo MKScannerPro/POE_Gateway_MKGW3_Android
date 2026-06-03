@@ -9,6 +9,9 @@ buildscript {
 }
 allprojects {
     repositories {
+        // 添加阿里云 Google 镜像
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
         jcenter()
         google()
         maven { url "https://jitpack.io" }

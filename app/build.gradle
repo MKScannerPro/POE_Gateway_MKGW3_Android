@@ -101,11 +101,11 @@ dependencies {
     implementation 'org.apache.poi:poi-ooxml:5.2.3'
     if (!isLibrary.toBoolean()) {
         implementation project(path: ':mokosupport')
-        implementation 'com.github.MOKO-Android-Base-Library:MKScannerIoTLib:1.1.0'
+        implementation 'com.github.MOKO-Android-Base-Library:MKScannerIoTLib:1.1.4'
         implementation 'com.github.MOKO-Android-Base-Library:MKMqttLib:1.0.5'
     } else {
         implementation files('libs/mokoSupport.jar')
-        compileOnly 'com.github.MOKO-Android-Base-Library:MKScannerIoTLib:1.1.0'
+        compileOnly 'com.github.MOKO-Android-Base-Library:MKScannerIoTLib:1.1.4'
         compileOnly 'com.github.MOKO-Android-Base-Library:MKMqttLib:1.0.5'
         compileOnly 'com.github.MOKO-Android-Base-Library:MKBleLib:1.0.1'
     }
