@@ -367,7 +367,10 @@ public class BleOtherInfoKgw3Activity extends BaseActivity<ActivityOtherInfoKgw3
         jsonObject.addProperty("mac", bleOtherChar.mac);
         jsonObject.addProperty("service_uuid", bleOtherChar.serviceUUID);
         jsonObject.addProperty("char_uuid", bleOtherChar.characteristicUUID);
-        jsonObject.addProperty("switch_value", bleOtherChar.characteristicNotifyStatus == 1 ? 0 : 1);
+        if ((bleOtherChar.characteristicProperties & 0x10) == 0x10)
+            jsonObject.addProperty("switch_value", bleOtherChar.characteristicNotifyStatus == 1 ? 0 : 1);
+        else if ((bleOtherChar.characteristicProperties & 0x20) == 0x20)
+            jsonObject.addProperty("switch_value", bleOtherChar.characteristicNotifyStatus == 1 ? 0 : 2);
         String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);

@@ -23,6 +23,7 @@ import com.moko.mkgw3.activity.MKGW3MainActivity;
 import com.moko.mkgw3.adapter.THDataAdapter;
 import com.moko.mkgw3.base.BaseActivity;
 import com.moko.mkgw3.databinding.ActivityThDataBinding;
+import com.moko.mkgw3.dialog.TipsDialogFragment;
 import com.moko.mkgw3.entity.MQTTConfigKgw3;
 import com.moko.mkgw3.entity.MokoDeviceKgw3;
 import com.moko.mkgw3.utils.SPUtiles;
@@ -32,7 +33,6 @@ import com.moko.support.mkgw3.entity.THData;
 import com.moko.support.mkgw3.entity.THDataHistory;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -108,19 +108,19 @@ public class BXPSTHHistoryDataActivity extends BaseActivity<ActivityThDataBindin
             mHandler.removeMessages(0);
             int code = result.data.get("result_code").getAsInt();
             ToastUtils.showToast(this, code == 0 ? "Setup succeed！" : "setup failed");
-            if (code == 0) {
-                if (!isSync) {
-                    isSync = true;
-                    dataList.clear();
-                    adapter.replaceData(dataList);
-                    mBind.ivSync.startAnimation(animation);
-                    mBind.tvSync.setText("Stop");
-                } else {
-                    isSync = false;
-                    mBind.ivSync.clearAnimation();
-                    mBind.tvSync.setText("Sync");
-                }
-            }
+            if (code != 0) return;
+            isSync = true;
+            dataList.clear();
+            adapter.replaceData(dataList);
+            mBind.ivSync.startAnimation(animation);
+            mBind.tvSync.setText("Stop");
+            showTips("Reading data ...... ,update " + dataList.size() + " records", "total");
+            mHandler.postDelayed(() -> {
+                isSync = false;
+                mBind.ivSync.clearAnimation();
+                mBind.tvSync.setText("Sync");
+                if (null != dialogFragment) dialogFragment.dismiss();
+            }, 3000);
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_S_TH_HISTORY_DATA) {
             //历史温湿度数据
@@ -128,12 +128,21 @@ public class BXPSTHHistoryDataActivity extends BaseActivity<ActivityThDataBindin
             }.getType();
             MsgNotify<THDataHistory> result = new Gson().fromJson(message, type);
             if (!mMokoDeviceKgw3.mac.equalsIgnoreCase(result.device_info.mac)) return;
+            mHandler.removeMessages(0);
             for (THData data : result.data.history) {
                 dataList.add(0, data);
                 exportStr.insert(0, "\n" + sdf.format(new Date(data.timestamp * 1000)) + "\t" + data.temperature + "\t" + data.humidity);
             }
             adapter.replaceData(dataList);
             mBind.tvExport.setEnabled(true);
+            if (null != dialogFragment)
+                dialogFragment.updateContent("Reading data ...... ,update " + dataList.size() + " records");
+            mHandler.postDelayed(() -> {
+                isSync = false;
+                mBind.ivSync.clearAnimation();
+                mBind.tvSync.setText("Sync");
+                if (null != dialogFragment) dialogFragment.dismiss();
+            }, 3000);
         }
         if (msg_id == MQTTConstants.NOTIFY_MSG_ID_BLE_BXP_S_TH_HISTORY_CLEAR) {
             Type type = new TypeToken<MsgNotify<JsonObject>>() {
@@ -155,12 +164,20 @@ public class BXPSTHHistoryDataActivity extends BaseActivity<ActivityThDataBindin
 
     public void onSync(View view) {
         if (isWindowLocked()) return;
+        if (isSync) return;
         mHandler.postDelayed(() -> {
             dismissLoadingProgressDialog();
             ToastUtils.showToast(this, "Set up failed");
         }, 30 * 1000);
         showLoadingProgressDialog();
-        changeNotifyStatus(!isSync ? 1 : 0);
+        startSync();
+    }
+
+    private TipsDialogFragment dialogFragment;
+
+    private void showTips(String content, String flag) {
+        dialogFragment = new TipsDialogFragment(content);
+        dialogFragment.showNow(getSupportFragmentManager(), flag);
     }
 
     private void onEmpty() {
@@ -233,11 +250,10 @@ public class BXPSTHHistoryDataActivity extends BaseActivity<ActivityThDataBindin
         return file;
     }
 
-    private void changeNotifyStatus(int status) {
+    private void startSync() {
         int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_BXP_S_TH_HISTORY_ENABLE;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", mMac);
-        jsonObject.addProperty("switch_value", status);
         String message = assembleWriteCommonData(msgId, mMokoDeviceKgw3.mac, jsonObject);
         try {
             MQTTSupport.getInstance().publish(mAppTopic, message, msgId, appMqttConfig.qos);
@@ -256,8 +272,6 @@ public class BXPSTHHistoryDataActivity extends BaseActivity<ActivityThDataBindin
     }
 
     private void back() {
-        EventBus.getDefault().unregister(this);
-        if (isSync) changeNotifyStatus(0);
         finish();
     }
 }

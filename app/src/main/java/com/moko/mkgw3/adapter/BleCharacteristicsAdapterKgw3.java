@@ -30,15 +30,18 @@ public class BleCharacteristicsAdapterKgw3 extends BaseMultiItemQuickAdapter<Ble
                 boolean writeNoRespFlag = (item.characteristicProperties & 0x04) == 0x04;
                 boolean writeFlag = (item.characteristicProperties & 0x08) == 0x08;
                 boolean notifyFlag = (item.characteristicProperties & 0x10) == 0x10;
+                boolean indicateFlag = (item.characteristicProperties & 0x20) == 0x20;
                 helper.setGone(R.id.iv_read, readFlag);
                 helper.setGone(R.id.iv_write, writeNoRespFlag | writeFlag);
-                helper.setGone(R.id.iv_notify, notifyFlag);
+                helper.setGone(R.id.iv_notify, notifyFlag | indicateFlag);
                 helper.setImageResource(R.id.iv_notify, item.characteristicNotifyStatus == 1 ? R
                         .drawable.ic_char_notify_open : R.drawable.ic_char_notify_close);
                 StringBuilder properties = new StringBuilder("");
                 String propertiesStr;
                 if (notifyFlag)
                     properties.append("NOTIFY,");
+                if (indicateFlag)
+                    properties.append("INDICATE,");
                 if (readFlag)
                     properties.append("READ,");
                 if (writeNoRespFlag)
@@ -62,7 +65,7 @@ public class BleCharacteristicsAdapterKgw3 extends BaseMultiItemQuickAdapter<Ble
                     helper.addOnClickListener(R.id.iv_read);
                 if (writeNoRespFlag | writeFlag)
                     helper.addOnClickListener(R.id.iv_write);
-                if (notifyFlag)
+                if (notifyFlag | indicateFlag)
                     helper.addOnClickListener(R.id.iv_notify);
                 break;
         }
