@@ -808,9 +808,9 @@ public class MqttSettingsKgw3Activity extends BaseActivity<ActivityMqttDeviceKgw
                             Cell postCell = sheet.getRow(2).getCell(1);
                             if (postCell != null)
                                 mqttDeviceConfig.port = postCell.getStringCellValue().replaceAll("value:", "");
-                            Cell clientCell = sheet.getRow(3).getCell(1);
-                            if (clientCell != null)
-                                mqttDeviceConfig.clientId = clientCell.getStringCellValue().replaceAll("value:", "");
+//                            Cell clientCell = sheet.getRow(3).getCell(1);
+//                            if (clientCell != null)
+//                                mqttDeviceConfig.clientId = clientCell.getStringCellValue().replaceAll("value:", "");
                             Cell topicSubscribeCell = sheet.getRow(4).getCell(1);
                             if (topicSubscribeCell != null) {
                                 mqttDeviceConfig.topicSubscribe = topicSubscribeCell.getStringCellValue().replaceAll("value:", "");

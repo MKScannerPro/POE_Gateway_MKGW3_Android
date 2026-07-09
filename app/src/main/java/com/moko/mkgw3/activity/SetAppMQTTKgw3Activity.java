@@ -485,9 +485,9 @@ public class SetAppMQTTKgw3Activity extends BaseActivity<ActivityMqttAppKgw3Bind
                             Cell postCell = sheet.getRow(2).getCell(1);
                             if (postCell != null)
                                 mqttConfig.port = postCell.getStringCellValue().replaceAll("value:", "");
-                            Cell clientCell = sheet.getRow(3).getCell(1);
-                            if (clientCell != null)
-                                mqttConfig.clientId = clientCell.getStringCellValue().replaceAll("value:", "");
+//                            Cell clientCell = sheet.getRow(3).getCell(1);
+//                            if (clientCell != null)
+//                                mqttConfig.clientId = clientCell.getStringCellValue().replaceAll("value:", "");
                             Cell topicSubscribeCell = sheet.getRow(4).getCell(1);
                             if (topicSubscribeCell != null) {
                                 mqttConfig.topicSubscribe = topicSubscribeCell.getStringCellValue().replaceAll("value:", "");
