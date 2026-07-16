@@ -2,7 +2,7 @@
 
 Android configuration and management app for the MKGW3 Bluetooth gateway. Provision the gateway over BLE, then manage it remotely via MQTT. After the gateway is online, you can connect to scanned Beacons through the gateway and configure them downlink.
 
-Cross-platform reference (same protocol): [MKGW3_Flutter.git](https://github.com/MKScannerPro/MKGW3_Flutter.git).
+Cross-platform reference (same protocol): [MKGW3_Flutter](https://github.com/MKScannerPro/MKGW3_Flutter.git).
 
 
 ---
@@ -24,7 +24,7 @@ Cross-platform reference (same protocol): [MKGW3_Flutter.git](https://github.com
 Main flow:
 
 1. **Connect APP MQTT** — Connect to the broker using locally saved MQTT settings.
-2. **Scan and add a gateway** — Long-press the device button to enter config mode, then scan for `MKGW3-XXXX`.
+2. **Scan and add a gateway** — Long-press the device button to enter config mode, then scan for Service Data 0xAA0F (device type 0x00 / 0x01).
 3. **Provision over BLE** — Write MQTT, Wi‑Fi/Ethernet, NTP, and related params; after leaving config mode the gateway joins the network.
 4. **Subscribe to device topics** — Subscribe to the gateway Publish / LWT topics; inbound data means the device is online.
 5. **Device detail (remote)** — Configure filters, upload options, and system features (LED, time, OTA, device info, etc.).
@@ -79,8 +79,9 @@ Entry: `DeviceScannerKgw3Activity` → `DeviceConfigKgw3Activity`
 Long-press the device button so the gateway enters config advertising. Identification:
 
 - Service Data: `0xAA0F` + device type (`0x00` = V1.X, `0x01` = V2.X)
-- Name: `MKGW3-XXXX` (XXXX is usually the last two bytes of the MAC)
-- Default password: `Moko4321` (super password: `MOKOMOKO`)
+- Manufacturer Specific Data company ID `0xAA0F` (or no MS data) → first-config flag
+- Password: entered by user on connect (last value remembered locally)
+
 
 Custom BLE service `0xAA00`:
 
@@ -114,8 +115,8 @@ Default topic format:
 
 | Direction | Default topic |
 |-----------|---------------|
-| Device subscribe (APP → device) | `/{model}/{mac}/receive` |
-| Device publish (device → APP) | `/{model}/{mac}/send` |
+| Device subscribe (APP → device) | `/MKGW3/{mac}/receive` |
+| Device publish (device → APP) | `/MKGW3/{mac}/send` |
 | LWT | Usually same as Publish |
 
 The APP publishes config/read commands to the device Publish topic path used for downlink (device subscribe), and listens on Publish/LWT for results and reports.
@@ -128,7 +129,7 @@ Entry: `DeviceDetailKgw3Activity`
 |------------|----------------|
 | Scan filter & upload | `ScannerUploadOptionKgw3Activity` → filter / upload |
 | Gateway system settings | `DeviceSettingKgw3Activity` |
-| BLE manager (connected list) | `BleManagerKgw3Activity` / `BleManagerKgw3V2Activity` |
+| BLE manager (connected list) | `BleManagerKgw3Activity`(V1) / `BleManagerKgw3V2Activity` (V2)|
 | Modify MQTT / network | `modify/*` |
 
 **Filters** (MQTT config `104x` / read `204x`): RSSI, MAC, Adv Name, iBeacon, Eddystone UID/URL/TLM, BXP-DeviceInfo/ACC/TH/Button/Tag, PIR, Other, TOF, NanoBeacon, PHY, duplicate filter, filter relationship, etc.
@@ -160,7 +161,7 @@ Supported connection types (pages differ by product):
 
 | Type | Connect `msg_id` | Example screen |
 |------|------------------|----------------|
-| BXP-B-D | `1100` | `BXPBDGW3Activity` |
+| BXP-B-D | `1100` | `BXPBDGW3Activity` (V2) / `BXPButtonInfoKgw3Activity`  |
 | BXP-B-CR | `1150` | `BXPBCRGW3Activity` |
 | BXP-C | `1350` | `BXPCGW3Activity` |
 | BXP-D | `1400` | `BXPDGW3Activity` |
