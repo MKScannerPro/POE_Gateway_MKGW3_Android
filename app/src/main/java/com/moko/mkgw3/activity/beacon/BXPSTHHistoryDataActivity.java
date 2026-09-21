@@ -266,11 +266,6 @@ public class BXPSTHHistoryDataActivity extends BaseActivity<ActivityThDataBindin
         back();
     }
 
-    @Override
-    public void onBackPressed() {
-        back();
-    }
-
     private void back() {
         finish();
     }

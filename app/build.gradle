@@ -6,13 +6,13 @@ if (!isLibrary.toBoolean()) {
 
 android {
     namespace "com.moko.mkgw3"
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         minSdk 28
-        targetSdk 35
-        versionCode 114
-        versionName "1.1.4"
+        targetSdk 36
+        versionCode 115
+        versionName "1.1.5"
         def formatDate = new Date().format("yyyyMMddHHmm")
         setProperty("archivesBaseName", "MKGW3_${versionName}_${formatDate}")
     }
@@ -101,11 +101,11 @@ dependencies {
     implementation 'org.apache.poi:poi-ooxml:5.2.3'
     if (!isLibrary.toBoolean()) {
         implementation project(path: ':mokosupport')
-        implementation 'com.github.MOKO-Android-Base-Library:MKScannerIoTLib:1.1.4'
+        implementation 'com.github.MOKO-Android-Base-Library:MKScannerIoTLib:1.1.5'
         implementation 'com.github.MOKO-Android-Base-Library:MKMqttLib:1.0.5'
     } else {
         implementation files('libs/mokoSupport.jar')
-        compileOnly 'com.github.MOKO-Android-Base-Library:MKScannerIoTLib:1.1.4'
+        compileOnly 'com.github.MOKO-Android-Base-Library:MKScannerIoTLib:1.1.5'
         compileOnly 'com.github.MOKO-Android-Base-Library:MKMqttLib:1.0.5'
         compileOnly 'com.github.MOKO-Android-Base-Library:MKBleLib:1.0.1'
     }
